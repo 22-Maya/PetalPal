@@ -31,7 +31,7 @@ struct PlantsView: View {
             .background(Color(red: 195/255, green: 225/255, blue: 243/255))
             .padding(.bottom, 15)
             
-            Text("Shows all plants")
+            Text("Plants")
             
             //        bottom navbar
             Spacer()
@@ -39,7 +39,7 @@ struct PlantsView: View {
                 NavigationLink{
                     JournalView()
                 } label: {
-                    Image(systemName: "book.fill")
+                    Image(systemName: "house.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
@@ -57,7 +57,7 @@ struct PlantsView: View {
                 NavigationLink{
                     BluetoothView()
                 } label: {
-                    Image(systemName: "plus.app")
+                    Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
@@ -66,7 +66,7 @@ struct PlantsView: View {
                 NavigationLink{
                     JournalView()
                 } label: {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "book.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)

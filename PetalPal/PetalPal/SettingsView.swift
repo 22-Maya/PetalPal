@@ -39,7 +39,7 @@ struct SettingsView: View {
                 NavigationLink{
                     JournalView()
                 } label: {
-                    Image(systemName: "book.fill")
+                    Image(systemName: "house.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
@@ -57,7 +57,7 @@ struct SettingsView: View {
                 NavigationLink{
                     BluetoothView()
                 } label: {
-                    Image(systemName: "plus.app")
+                    Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
@@ -66,7 +66,7 @@ struct SettingsView: View {
                 NavigationLink{
                     JournalView()
                 } label: {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "book.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
