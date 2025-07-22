@@ -333,19 +333,18 @@ struct BluetoothView: View {
 
             // Bottom Navigation Bar
             HStack {
-                NavigationLink {
+                NavigationLink{
                     ContentView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "house.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                 }
-                NavigationLink {
+                NavigationLink{
                     PlantsView()
-                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "leaf.fill")
                         .resizable()
@@ -353,17 +352,16 @@ struct BluetoothView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                 }
-                NavigationLink {
+                NavigationLink{
                     BluetoothView()
-                        .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "plus.app")
+                    Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                         .frame(maxWidth: .infinity)
                 }
-                NavigationLink {
+                NavigationLink{
                     JournalView()
                         .navigationBarBackButtonHidden(true)
                 } label: {

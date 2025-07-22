@@ -82,7 +82,8 @@ struct ContentView: View {
                             .font(.custom("MadimiOne-Regular", size: 25))
                             .padding(.top, 18)
                             .padding(.leading, 20)
-                        Spacer().frame(height: 12)
+                        
+                        Spacer()
                         HStack(alignment: .center) {
                             // Key
                             VStack(alignment: .leading, spacing: 16) {
@@ -137,8 +138,8 @@ struct ContentView: View {
                     }
                     .frame(width: 325, height: 200, alignment: .topLeading)
                 }
-                .padding(.bottom, 30)
-                .padding(.top, 30)
+                .padding(.bottom, 20)
+                .padding(.top, 10)
                 
                 //            bottom nav bar
                 Spacer()
@@ -147,7 +148,7 @@ struct ContentView: View {
                         ContentView()
                             .navigationBarBackButtonHidden(true)
                     } label: {
-                        Image(systemName: "questionmark.circle")
+                        Image(systemName: "house.fill")
                             .resizable()
                             .frame(width: 28, height: 28)
                             .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
@@ -199,12 +200,14 @@ struct ContentView: View {
                 .background(Color(red: 195/255, green: 225/255, blue: 243/255))
                 
             }
-            .background(Color(red: 240/255, green: 238/255, blue: 221/255))
+
         }
+        .background(Color(red: 240/255, green: 238/255, blue: 221/255))
     }
 }
     
 #Preview {
     ContentView()
 }
+
 

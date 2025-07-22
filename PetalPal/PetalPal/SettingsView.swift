@@ -41,7 +41,7 @@ struct SettingsView: View {
                     ContentView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "house.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
@@ -61,7 +61,7 @@ struct SettingsView: View {
                     BluetoothView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "plus.app")
+                    Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
