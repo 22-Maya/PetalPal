@@ -22,9 +22,6 @@ struct Plant: Identifiable, Codable {
     var id = UUID()
     var name: String
     var type: PlantType
-    var wateringFrequency: Int // days between watering
-    var lastWatered: Date
-    var notes: String?
 }
 
 // Sample Plant Data
@@ -32,17 +29,12 @@ class PlantData {
     static let samplePlants: [Plant] = [
         Plant(
             name: "Hibiscus",
-            type: .flower,
-            wateringFrequency: 2,
-            lastWatered: Date(),
-            notes: "Cherry tomato variety"
+            type: .flower
+
         ),
         Plant(
             name: "Basil",
-            type: .herb,
-            wateringFrequency: 1,
-            lastWatered: Date(),
-            notes: "Sweet basil"
+            type: .herb
         )
     ]
 }
@@ -52,7 +44,7 @@ struct PlantsView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            //            navbar
+            //    navbar
             HStack {
                 Text("Petal Pal")
                     .font(.custom("MadimiOne-Regular", size: 28))
@@ -74,25 +66,31 @@ struct PlantsView: View {
             .padding(.bottom, 15)
             
             // Plants List
-            List(plants) { plant in
-                VStack(alignment: .leading) {
-                    Text(plant.name)
-                        .font(.headline)
-                    Text(plant.type.rawValue)
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    if let notes = plant.notes {
-                        Text(notes)
-                            .font(.caption)
-                            .foregroundColor(.gray)
+            ScrollView {
+                LazyVGrid(columns: [
+                    GridItem(.flexible()),
+                    GridItem(.flexible())
+                ], spacing: 20) {
+                    ForEach(plants) { plant in
+                        ZStack(alignment: .topLeading) {
+                            RoundedRectangle(cornerRadius: 25)
+                                .frame(height: 175)
+                                .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(plant.name)
+                                    .font(.custom("MadimiOne-Regular", size: 20))
+                                    .foregroundColor(.black)
+                                Text(plant.type.rawValue)
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.black.opacity(0.7))
+                            }
+                            .padding(15)
+                        }
                     }
-                    Text("Water every \(plant.wateringFrequency) days")
-                        .font(.caption)
-                        .foregroundColor(.blue)
                 }
-                .padding(.vertical, 8)
+                .padding(.horizontal, 20)
             }
-            .listStyle(PlainListStyle())
             
             //        bottom navbar
             HStack {
@@ -143,7 +141,7 @@ struct PlantsView: View {
                 }
             }
             .frame(width: UIScreen.main.bounds.width, height: 56)
-            .background(Color(red: 195/255, green: 225/255, blue: 243/255))
+            .background(Color(red: 216/255, green: 232/255, blue: 202/255))
         }
         .navigationBarHidden(true)
     }
