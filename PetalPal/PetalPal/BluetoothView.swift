@@ -217,7 +217,8 @@ struct BluetoothView: View {
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink {
-                    HelpbotView() // Placeholder for your HelpbotView
+                    HelpbotView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "questionmark.circle")
                         .resizable()
@@ -333,16 +334,18 @@ struct BluetoothView: View {
             // Bottom Navigation Bar
             HStack {
                 NavigationLink {
-                    JournalView() // Placeholder for your JournalView
+                    ContentView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "book.fill")
+                    Image(systemName: "questionmark.circle")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink {
-                    PlantsView() // Placeholder for your PlantsView
+                    PlantsView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "leaf.fill")
                         .resizable()
@@ -351,28 +354,28 @@ struct BluetoothView: View {
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink {
-                    // This link goes to the current BluetoothView, so it's highlighted/active
                     BluetoothView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "plus.app")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(.blue) // Highlight active tab
+                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink {
-                    // Assuming this was meant to be a different view, like a 'Tips' or 'FAQ' view
-                    // For now, it points to JournalView as per your original code.
                     JournalView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "questionmark.circle") // Changed to a different icon if it's not Helpbot
+                    Image(systemName: "book.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink {
-                    SettingsView() // Placeholder for your SettingsView
+                    SettingsView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "gearshape.fill")
                         .resizable()
@@ -387,7 +390,6 @@ struct BluetoothView: View {
     }
 }
 
-// MARK: - Preview
 #Preview {
     BluetoothView()
 }

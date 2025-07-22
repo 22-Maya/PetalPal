@@ -144,13 +144,13 @@ struct ContentView: View {
                 Spacer()
                 HStack {
                     NavigationLink{
-                        JournalView()
+                        ContentView()
                             .navigationBarBackButtonHidden(true)
                     } label: {
-                        Image(systemName: "book.fill")
+                        Image(systemName: "questionmark.circle")
                             .resizable()
                             .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                             .frame(maxWidth: .infinity)
                     }
                     NavigationLink{
@@ -177,7 +177,7 @@ struct ContentView: View {
                         JournalView()
                             .navigationBarBackButtonHidden(true)
                     } label: {
-                        Image(systemName: "questionmark.circle")
+                        Image(systemName: "book.fill")
                             .resizable()
                             .frame(width: 28, height: 28)
                             .foregroundColor(.white)
