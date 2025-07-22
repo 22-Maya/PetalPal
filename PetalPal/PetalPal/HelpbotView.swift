@@ -19,6 +19,7 @@ struct HelpbotView: View {
                 Spacer()
                 NavigationLink{
                     HelpbotView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "questionmark.circle")
                         .resizable()
@@ -38,6 +39,7 @@ struct HelpbotView: View {
             HStack {
                 NavigationLink{
                     JournalView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "book.fill")
                         .resizable()
@@ -47,6 +49,7 @@ struct HelpbotView: View {
                 }
                 NavigationLink{
                     PlantsView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "leaf.fill")
                         .resizable()
@@ -56,6 +59,7 @@ struct HelpbotView: View {
                 }
                 NavigationLink{
                     BluetoothView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "plus.app")
                         .resizable()
@@ -65,6 +69,7 @@ struct HelpbotView: View {
                 }
                 NavigationLink{
                     JournalView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "questionmark.circle")
                         .resizable()
@@ -74,6 +79,7 @@ struct HelpbotView: View {
                 }
                 NavigationLink{
                     SettingsView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "gearshape.fill")
                         .resizable()

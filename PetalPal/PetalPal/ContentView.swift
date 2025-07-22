@@ -18,6 +18,7 @@ struct ContentView: View {
                     Spacer()
                     NavigationLink{
                         HelpbotView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         Image(systemName: "questionmark.circle")
                             .resizable()
@@ -43,7 +44,7 @@ struct ContentView: View {
                             .padding(.top, 16)
                             .padding(.leading, 20)
                         // Filler task list
-                        HStack {
+                        /*HStack {
                             Image(systemName: "drop.fill")
                                 .foregroundColor(.blue)
                             Text("Add water to your plant")
@@ -64,7 +65,7 @@ struct ContentView: View {
                                 .font(.system(size: 18))
                         }
                         .padding(.leading, 20)
-                        .padding(.bottom, 20)
+                        .padding(.bottom, 20)*/
                     }
                     .frame(width: 325, height: 150, alignment: .topLeading)
                 }
@@ -144,6 +145,7 @@ struct ContentView: View {
                 HStack {
                     NavigationLink{
                         JournalView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         Image(systemName: "book.fill")
                             .resizable()
@@ -153,6 +155,7 @@ struct ContentView: View {
                     }
                     NavigationLink{
                         PlantsView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         Image(systemName: "leaf.fill")
                             .resizable()
@@ -162,6 +165,7 @@ struct ContentView: View {
                     }
                     NavigationLink{
                         BluetoothView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         Image(systemName: "plus.app")
                             .resizable()
@@ -171,6 +175,7 @@ struct ContentView: View {
                     }
                     NavigationLink{
                         JournalView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         Image(systemName: "questionmark.circle")
                             .resizable()
@@ -180,6 +185,7 @@ struct ContentView: View {
                     }
                     NavigationLink{
                         SettingsView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         Image(systemName: "gearshape.fill")
                             .resizable()
