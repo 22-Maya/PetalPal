@@ -129,7 +129,7 @@ struct PlantsView: View {
                     JournalView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "house.fill")
+                    Image(systemName: "book.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
