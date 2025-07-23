@@ -232,102 +232,104 @@ struct BluetoothView: View {
             .padding(.bottom, 15)
 
             // Main Content Area
-            VStack {
-                Text("Bluetooth Devices")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding(.bottom, 10)
-
-                // Bluetooth Status
-                Text("Status: \(bluetoothManager.connectionStatus)")
-                    .font(.headline)
-                    .foregroundColor(.gray)
-                    .padding(.bottom, 5)
-
-                // Error Message Display
-                if let errorMessage = bluetoothManager.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
+            ScrollView {
+                VStack {
+                    Text("Bluetooth Devices")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
                         .padding(.bottom, 10)
-                }
-
-                // Scan/Stop Scan Button
-                Button(action: {
-                    if bluetoothManager.isScanning {
-                        bluetoothManager.stopScanning()
-                    } else {
-                        bluetoothManager.startScanning()
+                    
+                    // Bluetooth Status
+                    Text("Status: \(bluetoothManager.connectionStatus)")
+                        .font(.headline)
+                        .foregroundColor(.gray)
+                        .padding(.bottom, 5)
+                    
+                    // Error Message Display
+                    if let errorMessage = bluetoothManager.errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                            .padding(.bottom, 10)
                     }
-                }) {
-                    Text(bluetoothManager.isScanning ? "Stop Scanning" : "Start Scanning")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(bluetoothManager.isScanning ? Color.red : Color.blue)
-                        .cornerRadius(15)
-                        .padding(.horizontal)
-                }
-                .padding(.bottom, 20)
-
-                // Discovered Devices List
-                List {
-                    Section(header: Text("Discovered Devices").font(.title3)) {
-                        if bluetoothManager.discoveredPeripherals.isEmpty {
-                            Text(bluetoothManager.isScanning ? "Searching for devices..." : "No devices found. Tap 'Start Scanning'.")
-                                .foregroundColor(.gray)
+                    
+                    // Scan/Stop Scan Button
+                    Button(action: {
+                        if bluetoothManager.isScanning {
+                            bluetoothManager.stopScanning()
                         } else {
-                            ForEach(bluetoothManager.discoveredPeripherals, id: \.identifier) { peripheral in
-                                HStack {
-                                    VStack(alignment: .leading) {
-                                        Text(peripheral.name ?? "Unknown Device")
-                                            .font(.headline)
-                                        Text(peripheral.identifier.uuidString)
-                                            .font(.caption)
-                                            .foregroundColor(.gray)
-                                    }
-                                    Spacer()
-                                    if bluetoothManager.connectedPeripheral?.identifier == peripheral.identifier {
-                                        // Connected state
-                                        Text("Connected")
-                                            .font(.subheadline)
-                                            .foregroundColor(.green)
-                                        Button(action: {
-                                            bluetoothManager.disconnect()
-                                        }) {
-                                            Text("Disconnect")
-                                                .font(.subheadline)
-                                                .foregroundColor(.white)
-                                                .padding(.vertical, 5)
-                                                .padding(.horizontal, 10)
-                                                .background(Color.orange)
-                                                .cornerRadius(10)
+                            bluetoothManager.startScanning()
+                        }
+                    }) {
+                        Text(bluetoothManager.isScanning ? "Stop Scanning" : "Start Scanning")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(bluetoothManager.isScanning ? Color.red : Color.blue)
+                            .cornerRadius(15)
+                            .padding(.horizontal)
+                    }
+                    .padding(.bottom, 20)
+                    
+                    // Discovered Devices List
+                    List {
+                        Section(header: Text("Discovered Devices").font(.title3)) {
+                            if bluetoothManager.discoveredPeripherals.isEmpty {
+                                Text(bluetoothManager.isScanning ? "Searching for devices..." : "No devices found. Tap 'Start Scanning'.")
+                                    .foregroundColor(.gray)
+                            } else {
+                                ForEach(bluetoothManager.discoveredPeripherals, id: \.identifier) { peripheral in
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text(peripheral.name ?? "Unknown Device")
+                                                .font(.headline)
+                                            Text(peripheral.identifier.uuidString)
+                                                .font(.caption)
+                                                .foregroundColor(.gray)
                                         }
-                                    } else {
-                                        // Not connected state
-                                        Button(action: {
-                                            bluetoothManager.connect(peripheral: peripheral)
-                                        }) {
-                                            Text("Connect")
+                                        Spacer()
+                                        if bluetoothManager.connectedPeripheral?.identifier == peripheral.identifier {
+                                            // Connected state
+                                            Text("Connected")
                                                 .font(.subheadline)
-                                                .foregroundColor(.white)
-                                                .padding(.vertical, 5)
-                                                .padding(.horizontal, 10)
-                                                .background(Color.green)
-                                                .cornerRadius(10)
+                                                .foregroundColor(.green)
+                                            Button(action: {
+                                                bluetoothManager.disconnect()
+                                            }) {
+                                                Text("Disconnect")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.white)
+                                                    .padding(.vertical, 5)
+                                                    .padding(.horizontal, 10)
+                                                    .background(Color.orange)
+                                                    .cornerRadius(10)
+                                            }
+                                        } else {
+                                            // Not connected state
+                                            Button(action: {
+                                                bluetoothManager.connect(peripheral: peripheral)
+                                            }) {
+                                                Text("Connect")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.white)
+                                                    .padding(.vertical, 5)
+                                                    .padding(.horizontal, 10)
+                                                    .background(Color.green)
+                                                    .cornerRadius(10)
+                                            }
+                                            .disabled(bluetoothManager.connectedPeripheral != nil) // Disable if another device is connected
                                         }
-                                        .disabled(bluetoothManager.connectedPeripheral != nil) // Disable if another device is connected
                                     }
+                                    .padding(.vertical, 5)
                                 }
-                                .padding(.vertical, 5)
                             }
                         }
                     }
+                    .listStyle(.plain) // Use plain list style for better control
                 }
-                .listStyle(.plain) // Use plain list style for better control
             }
             Spacer() // Pushes content to the top
 

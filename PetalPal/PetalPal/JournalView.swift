@@ -32,7 +32,9 @@ struct JournalView: View {
             .background(Color(red: 195/255, green: 225/255, blue: 243/255))
             .padding(.bottom, 15)
             
-            Text("Journal-work in progress")
+            ScrollView {
+                Text("Journal-work in progress")
+            }
             
             //        bottom navbar
             Spacer()

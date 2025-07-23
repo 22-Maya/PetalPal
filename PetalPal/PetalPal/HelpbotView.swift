@@ -32,7 +32,9 @@ struct HelpbotView: View {
             .background(Color(red: 195/255, green: 225/255, blue: 243/255))
             .padding(.bottom, 15)
             
-            Text("FAQ & ai helpbot view")
+            ScrollView {
+                Text("FAQ & ai helpbot view")
+            }
             
             //        bottom navbar
             Spacer()

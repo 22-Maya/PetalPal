@@ -32,7 +32,9 @@ struct SettingsView: View {
             .background(Color(red: 195/255, green: 225/255, blue: 243/255))
             .padding(.bottom, 15)
             
-            Text("Settings view")
+            ScrollView {
+                Text("Settings view")
+            }
             
             //        bottom navbar
             Spacer()
