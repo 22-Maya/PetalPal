@@ -93,7 +93,9 @@ struct HelpbotView: View {
             }
             .frame(width: UIScreen.main.bounds.width, height: 56)
             .background(Color(red: 195/255, green: 225/255, blue: 243/255))
-        }    }
+        }
+        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+    }
 }
 
 #Preview {
