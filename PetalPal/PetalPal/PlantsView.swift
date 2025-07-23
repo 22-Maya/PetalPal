@@ -85,6 +85,33 @@ struct PlantsView: View {
                                 Text(plant.type.rawValue)
                                     .font(.system(size: 16))
                                     .foregroundColor(.black.opacity(0.7))
+                                    .padding(.bottom, 0)
+//                                shows images based on plant type
+                                HStack {
+                                    Spacer()
+                                    switch plant.type {
+                                    case .flower:
+                                        Image(.flower)
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .padding(.top, 0)
+                                    case .vegetable:
+                                        Image(.veggie)
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .padding(.top, 0)
+                                    case .herb:
+                                        Image(.herb)
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .padding(.top, 0)
+                                    case .fruit:
+                                        Image(.fruit)
+                                            .resizable()
+                                            .frame(width: 100, height: 100)
+                                            .padding(.top, 0)
+                                    }
+                                }
                             }
                             .padding(15)
                         }
@@ -147,7 +174,7 @@ struct PlantsView: View {
                 }
             }
             .frame(width: UIScreen.main.bounds.width, height: 56)
-            .background(Color(red: 216/255, green: 232/255, blue: 202/255))
+            .background(Color(red: 195/255, green: 225/255, blue: 243/255))
         }
         .navigationBarHidden(true)
     }
