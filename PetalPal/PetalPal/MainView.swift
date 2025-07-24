@@ -27,6 +27,7 @@ struct MainView: View {
                             .foregroundColor(.white)
                             .padding(.trailing, 20)
                     }
+<<<<<<< Updated upstream
                 }
                 .frame(height: 56)
                 .background(Color(red: 195/255, green: 225/255, blue: 243/255))
@@ -119,6 +120,39 @@ struct MainView: View {
             .frame(width: UIScreen.main.bounds.width, height: 56)
             .background(Color(red: 174/255, green: 213/255, blue: 214/255))
 =======
+            
+            
+>>>>>>> Stashed changes
+=======
+                }
+                .frame(height: 56)
+                .background(Color(red: 195/255, green: 225/255, blue: 243/255))
+                .padding(.bottom, 15)
+                
+                // Plant Display
+                
+                VStack(spacing: 10) {
+                    Image(.herb)
+                        .resizable()
+                        .frame(width: 250, height: 350)
+                        
+                    Text("Basil")
+                        .font(.custom("MadimiOne-Regular", size: 50))
+                        .foregroundColor(.black)
+                        
+                    Text("Herb")
+                        .font(.system(size: 25))
+                        .foregroundColor(.black.opacity(0.7))
+                    }
+                    .padding(.vertical, 30)
+                
+                Text("Water Plant in"+" 2 days")
+                    .padding(20)
+                    .background(Color(red: 67/255, green: 137/255, blue: 124/255))
+                    .font(.custom("MadimiOne-Regular",size: 25))
+                
+                Spacer()
+                }
             
             
 >>>>>>> Stashed changes
