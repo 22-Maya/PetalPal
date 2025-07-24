@@ -74,7 +74,7 @@ struct PlantsView: View {
                     ], spacing: 20) {
                         ForEach(plants) { plant in
                             NavigationLink {
-                                MainView()
+                                MainView(plant: plant)
                                     .navigationBarBackButtonHidden(true)
                             } label: {
                                 ZStack(alignment: .topLeading) {
