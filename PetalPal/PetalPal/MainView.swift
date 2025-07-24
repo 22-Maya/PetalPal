@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
+    let plant: Plant
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -15,7 +17,7 @@ struct MainView: View {
                 HStack {
                     Text("Petal Pal")
                         .font(.custom("MadimiOne-Regular", size: 28))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)
                     Spacer()
                     NavigationLink{
@@ -27,172 +29,54 @@ struct MainView: View {
                             .foregroundColor(.white)
                             .padding(.trailing, 20)
                     }
-<<<<<<< Updated upstream
                 }
                 .frame(height: 56)
-                .background(Color(red: 195/255, green: 225/255, blue: 243/255))
+                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
                 .padding(.bottom, 15)
                 
                 // Plant Display
-                
                 VStack(spacing: 10) {
-                    Image(.herb)
-                        .resizable()
-                        .frame(width: 250, height: 350)
-                        
-                    Text("Basil")
+                    switch plant.type {
+                    case .flower:
+                        Image(.flower)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    case .vegetable:
+                        Image(.veggie)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    case .herb:
+                        Image(.herb)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    case .fruit:
+                        Image(.fruit)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    }
+                    
+                    Text(plant.name)
                         .font(.custom("MadimiOne-Regular", size: 50))
                         .foregroundColor(.black)
-                        
-                    Text("Herb")
+                    
+                    Text(plant.type.rawValue)
                         .font(.system(size: 25))
                         .foregroundColor(.black.opacity(0.7))
-                    }
-                    .padding(.vertical, 30)
+                }
+                .padding(.vertical, 30)
                 
-                Text("Water Plant in"+" 2 days")
+                Text("Water Plant in 2 days")
                     .padding(20)
                     .background(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .font(.custom("MadimiOne-Regular",size: 25))
+                    .foregroundColor(.white)
                 
                 Spacer()
-                }
-<<<<<<< Updated upstream
             }
-            .frame(height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
-            .padding(.bottom, 15)
-            
-            
-            //        bottom navbar
-            HStack {
-                NavigationLink{
-                    ContentView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "house.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    PlantsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "leaf.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    BluetoothView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "plus.app.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    JournalView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "book.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    SettingsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .frame(width: UIScreen.main.bounds.width, height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
-=======
-            
-            
->>>>>>> Stashed changes
-=======
-                }
-                .frame(height: 56)
-                .background(Color(red: 195/255, green: 225/255, blue: 243/255))
-                .padding(.bottom, 15)
-                
-                // Plant Display
-                
-                VStack(spacing: 10) {
-                    Image(.herb)
-                        .resizable()
-                        .frame(width: 250, height: 350)
-                        
-                    Text("Basil")
-                        .font(.custom("MadimiOne-Regular", size: 50))
-                        .foregroundColor(.black)
-                        
-                    Text("Herb")
-                        .font(.system(size: 25))
-                        .foregroundColor(.black.opacity(0.7))
-                    }
-                    .padding(.vertical, 30)
-                
-                Text("Water Plant in"+" 2 days")
-                    .padding(20)
-                    .background(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .font(.custom("MadimiOne-Regular",size: 25))
-                
-                Spacer()
-                }
-            
-            
->>>>>>> Stashed changes
-=======
-                }
-                .frame(height: 56)
-                .background(Color(red: 195/255, green: 225/255, blue: 243/255))
-                .padding(.bottom, 15)
-                
-                // Plant Display
-                
-                VStack(spacing: 10) {
-                    Image(.herb)
-                        .resizable()
-                        .frame(width: 250, height: 350)
-                        
-                    Text("Basil")
-                        .font(.custom("MadimiOne-Regular", size: 50))
-                        .foregroundColor(.black)
-                        
-                    Text("Herb")
-                        .font(.system(size: 25))
-                        .foregroundColor(.black.opacity(0.7))
-                    }
-                    .padding(.vertical, 30)
-                
-                Text("Water Plant in"+" 2 days")
-                    .padding(20)
-                    .background(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .font(.custom("MadimiOne-Regular",size: 25))
-                
-                Spacer()
-                }
-            
-            
->>>>>>> Stashed changes
         }
     }
 }
 
 #Preview {
-    MainView()
+    MainView(plant: Plant(name: "Basil", type: .herb))
 }
