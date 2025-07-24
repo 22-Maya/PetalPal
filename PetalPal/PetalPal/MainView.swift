@@ -14,7 +14,7 @@ struct MainView: View {
                 HStack {
                     Text("Petal Pal")
                         .font(.custom("MadimiOne-Regular", size: 28))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)
                     Spacer()
                     NavigationLink{
@@ -28,7 +28,7 @@ struct MainView: View {
                     }
                 }
                 .frame(height: 56)
-                .background(Color(red: 195/255, green: 225/255, blue: 243/255))
+                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
                 .padding(.bottom, 15)
                 
                 // Plant Display
@@ -54,62 +54,6 @@ struct MainView: View {
                     .foregroundColor(.white)
                 
                 Spacer()
-                
-                // Bottom navbar
-                HStack {
-                    NavigationLink{
-                        ContentView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        PlantsView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "leaf.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        BluetoothView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "plus.app.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        JournalView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "book.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        SettingsView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                .frame(width: UIScreen.main.bounds.width, height: 56)
-                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
             }
         }
     }
