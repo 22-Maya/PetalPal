@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct MainView: View {
+    let plant: Plant
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -33,21 +35,36 @@ struct MainView: View {
                 
                 // Plant Display
                 VStack(spacing: 10) {
-                    Image(.herb)
-                        .resizable()
-                        .frame(width: 250, height: 350)
+                    switch plant.type {
+                    case .flower:
+                        Image(.flower)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    case .vegetable:
+                        Image(.veggie)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    case .herb:
+                        Image(.herb)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    case .fruit:
+                        Image(.fruit)
+                            .resizable()
+                            .frame(width: 250, height: 350)
+                    }
                     
-                    Text("Basil")
+                    Text(plant.name)
                         .font(.custom("MadimiOne-Regular", size: 50))
                         .foregroundColor(.black)
                     
-                    Text("Herb")
+                    Text(plant.type.rawValue)
                         .font(.system(size: 25))
                         .foregroundColor(.black.opacity(0.7))
                 }
                 .padding(.vertical, 30)
                 
-                Text("Water Plant in"+" 2 days")
+                Text("Water Plant in 2 days")
                     .padding(20)
                     .background(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .font(.custom("MadimiOne-Regular",size: 25))
@@ -60,5 +77,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    MainView(plant: Plant(name: "Basil", type: .herb))
 }
