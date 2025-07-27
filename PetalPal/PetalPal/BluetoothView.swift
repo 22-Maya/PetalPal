@@ -6,83 +6,52 @@
 //
 
 import SwiftUI
-import CoreBluetooth // Import CoreBluetooth for Bluetooth functionality
+import CoreBluetooth
 
-// MARK: - BluetoothManager
-// This class manages all Core Bluetooth interactions.
+// Bluetooth Manager Class
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 
-    // MARK: - Published Properties
-    // These properties will automatically notify SwiftUI views of changes.
-    @Published var centralManager: CBCentralManager! // The central manager to manage Bluetooth operations.
-    @Published var discoveredPeripherals: [CBPeripheral] = [] // List of discovered Bluetooth peripherals.
-    @Published var connectedPeripheral: CBPeripheral? // The currently connected peripheral.
-    @Published var isScanning: Bool = false // Indicates if the central manager is currently scanning.
-    @Published var connectionStatus: String = "Disconnected" // Current connection status.
-    @Published var errorMessage: String? // To display any error messages.
+    @Published var centralManager: CBCentralManager!
+    @Published var discoveredPeripherals: [CBPeripheral] = []
+    @Published var connectedPeripheral: CBPeripheral?
+    @Published var isScanning: Bool = false
+    @Published var connectionStatus: String = "Disconnected"
+    @Published var errorMessage: String?
 
-    // MARK: - Initialization
-    // Initializes the BluetoothManager and sets up the central manager.
     override init() {
         super.init()
-        // Initialize the central manager with this class as its delegate.
-        // The queue is nil, meaning it will use the main dispatch queue.
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
 
-    // MARK: - Bluetooth State Handling
-    // Called when the central manager's state changes (e.g., Bluetooth is powered on/off).
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
-            print("Bluetooth is Powered On and ready to use.")
             connectionStatus = "Ready to Scan"
-            // Optionally start scanning immediately if desired, or wait for user action.
-            // startScanning()
         case .poweredOff:
-            print("Bluetooth is Powered Off. Please turn it on.")
             connectionStatus = "Bluetooth Off"
             stopScanning()
             discoveredPeripherals.removeAll()
             connectedPeripheral = nil
-        case .resetting:
-            print("Bluetooth is Resetting.")
-            connectionStatus = "Resetting"
         case .unauthorized:
-            print("Bluetooth is Unauthorized. Check app permissions.")
             connectionStatus = "Unauthorized"
             errorMessage = "Bluetooth permissions denied. Please enable them in Settings."
-        case .unsupported:
-            print("Bluetooth is Unsupported on this device.")
-            connectionStatus = "Unsupported"
-            errorMessage = "This device does not support Bluetooth Low Energy."
-        case .unknown:
-            print("Bluetooth state is Unknown.")
-            connectionStatus = "Unknown State"
-        @unknown default:
-            print("A new, unknown Bluetooth state occurred.")
-            connectionStatus = "Unknown State"
+        default:
+            connectionStatus = "Error"
         }
     }
 
-    // MARK: - Scanning Operations
-    // Starts scanning for Bluetooth peripherals.
     func startScanning() {
         guard centralManager.state == .poweredOn else {
             errorMessage = "Bluetooth is not powered on."
             return
         }
-        print("Starting scan for peripherals...")
-        discoveredPeripherals.removeAll() // Clear previous scan results
-        // Scan for all peripherals (passing nil for services)
+        discoveredPeripherals.removeAll()
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
         isScanning = true
         connectionStatus = "Scanning..."
     }
 
-    // Stops scanning for Bluetooth peripherals.
     func stopScanning() {
-        print("Stopping scan for peripherals.")
         centralManager.stopScan()
         isScanning = false
         if connectedPeripheral == nil {
@@ -90,130 +59,57 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         }
     }
 
-    // Called when a peripheral is discovered.
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        // Ensure the peripheral is not already in our list (based on identifier).
         if !discoveredPeripherals.contains(where: { $0.identifier == peripheral.identifier }) {
             discoveredPeripherals.append(peripheral)
-            print("Discovered peripheral: \(peripheral.name ?? "Unknown Device") (\(peripheral.identifier.uuidString))")
         }
     }
 
-    // MARK: - Connection Operations
-    // Connects to a specific peripheral.
     func connect(peripheral: CBPeripheral) {
-        guard centralManager.state == .poweredOn else {
-            errorMessage = "Bluetooth is not powered on to connect."
-            return
-        }
-        stopScanning() // Stop scanning before connecting to save power.
+        guard centralManager.state == .poweredOn else { return }
+        stopScanning()
         centralManager.connect(peripheral, options: nil)
-        connectionStatus = "Connecting to \(peripheral.name ?? "Unknown Device")..."
-        print("Attempting to connect to \(peripheral.name ?? "Unknown Device")...")
+        connectionStatus = "Connecting..."
     }
 
-    // Called when a peripheral successfully connects.
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        connectedPeripheral = peripheral
-        peripheral.delegate = self // Set the peripheral's delegate to this manager for further interactions.
-        connectionStatus = "Connected to \(peripheral.name ?? "Unknown Device")"
-        print("Successfully connected to \(peripheral.name ?? "Unknown Device").")
-        // Now you can discover services and characteristics if needed:
-        // peripheral.discoverServices(nil)
-    }
-
-    // Called when a peripheral fails to connect.
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        connectedPeripheral = nil
-        connectionStatus = "Connection Failed"
-        errorMessage = "Failed to connect to \(peripheral.name ?? "Unknown Device"): \(error?.localizedDescription ?? "Unknown error")"
-        print("Failed to connect to \(peripheral.name ?? "Unknown Device"): \(error?.localizedDescription ?? "Unknown error")")
-    }
-
-    // Called when a peripheral disconnects.
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        connectedPeripheral = nil
-        connectionStatus = "Disconnected"
-        if let error = error {
-            errorMessage = "Disconnected from \(peripheral.name ?? "Unknown Device") with error: \(error.localizedDescription)"
-            print("Disconnected from \(peripheral.name ?? "Unknown Device") with error: \(error.localizedDescription)")
-        } else {
-            print("Disconnected from \(peripheral.name ?? "Unknown Device").")
-        }
-        // Optionally restart scanning after disconnection.
-        // startScanning()
-    }
-
-    // Disconnects from the currently connected peripheral.
     func disconnect() {
         if let peripheral = connectedPeripheral {
             centralManager.cancelPeripheralConnection(peripheral)
             connectionStatus = "Disconnecting..."
-            print("Attempting to disconnect from \(peripheral.name ?? "Unknown Device")...")
         }
     }
 
-    // MARK: - CBPeripheralDelegate (Optional, for service/characteristic discovery)
-    // You would implement these methods if you need to interact with services and characteristics
-    // on the connected peripheral (e.g., read sensor data, send commands).
-    /*
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        if let error = error {
-            print("Error discovering services: \(error.localizedDescription)")
-            return
-        }
-        guard let services = peripheral.services else { return }
-        for service in services {
-            print("Discovered service: \(service.uuid)")
-            // Discover characteristics for each service
-            // peripheral.discoverCharacteristics(nil, for: service)
-        }
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        connectedPeripheral = peripheral
+        peripheral.delegate = self
+        connectionStatus = "Connected to \(peripheral.name ?? "Device")"
     }
 
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        if let error = error {
-            print("Error discovering characteristics: \(error.localizedDescription)")
-            return
-        }
-        guard let characteristics = service.characteristics else { return }
-        for characteristic in characteristics {
-            print("Discovered characteristic: \(characteristic.uuid)")
-            // You can read, write, or subscribe to notifications for characteristics here
-            // if characteristic.properties.contains(.read) {
-            //     peripheral.readValue(for: characteristic)
-            // }
-        }
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        connectionStatus = "Connection Failed"
+        errorMessage = error?.localizedDescription ?? "Unknown error"
     }
 
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        connectedPeripheral = nil
+        connectionStatus = "Disconnected"
         if let error = error {
-            print("Error updating characteristic value: \(error.localizedDescription)")
-            return
-        }
-        // Handle incoming data from the characteristic
-        if let value = characteristic.value {
-            let dataString = String(data: value, encoding: .utf8) ?? value.description
-            print("Received data from \(characteristic.uuid): \(dataString)")
-            // Update UI or process data
+            errorMessage = "Disconnected with error: \(error.localizedDescription)"
         }
     }
-    */
 }
 
-// MARK: - BluetoothView
-// The SwiftUI view for displaying and interacting with Bluetooth devices.
+// Bluetooth View
 struct BluetoothView: View {
-    // State object to observe changes in the BluetoothManager.
     @StateObject private var bluetoothManager = BluetoothManager()
 
-    // MARK: - Body
     var body: some View {
         NavigationStack {
             // Top Navigation Bar
             HStack {
                 Text("Petal Pal")
-                    .font(.custom("MadimiOne-Regular", size: 28)) // Ensure this font is available in your project
-                    .foregroundColor(.black)
+                    .font(.custom("KaushanScript-Regular", size: 28))
+                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink {
@@ -233,105 +129,89 @@ struct BluetoothView: View {
 
             // Main Content Area
             ScrollView {
-                VStack {
-                    Text("Bluetooth Devices")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.bottom, 10)
+                ZStack(alignment: .topLeading) {
+                    RoundedRectangle(cornerRadius: 25)
+                        .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255))
                     
-                    // Bluetooth Status
-                    Text("Status: \(bluetoothManager.connectionStatus)")
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                        .padding(.bottom, 5)
-                    
-                    // Error Message Display
-                    if let errorMessage = bluetoothManager.errorMessage {
-                        Text(errorMessage)
-                            .foregroundColor(.red)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                            .padding(.bottom, 10)
-                    }
-                    
-                    // Scan/Stop Scan Button
-                    Button(action: {
-                        if bluetoothManager.isScanning {
-                            bluetoothManager.stopScanning()
-                        } else {
-                            bluetoothManager.startScanning()
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Connect a Device")
+                            .font(.custom("Lato-Bold", size: 25))
+                        
+                        Text("Status: \(bluetoothManager.connectionStatus)")
+                            .font(.custom("Lato-Regular", size: 18))
+                            .foregroundColor(.black.opacity(0.7))
+                        
+                        if let errorMessage = bluetoothManager.errorMessage {
+                            Text(errorMessage)
+                                .font(.custom("Lato-Regular", size: 16))
+                                .foregroundColor(.red)
                         }
-                    }) {
-                        Text(bluetoothManager.isScanning ? "Stop Scanning" : "Start Scanning")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(bluetoothManager.isScanning ? Color.red : Color.blue)
-                            .cornerRadius(15)
-                            .padding(.horizontal)
-                    }
-                    .padding(.bottom, 20)
-                    
-                    // Discovered Devices List
-                    List {
-                        Section(header: Text("Discovered Devices").font(.title3)) {
-                            if bluetoothManager.discoveredPeripherals.isEmpty {
-                                Text(bluetoothManager.isScanning ? "Searching for devices..." : "No devices found. Tap 'Start Scanning'.")
-                                    .foregroundColor(.gray)
+                        
+                        Button(action: {
+                            if bluetoothManager.isScanning {
+                                bluetoothManager.stopScanning()
                             } else {
+                                bluetoothManager.startScanning()
+                            }
+                        }) {
+                            Text(bluetoothManager.isScanning ? "Stop Scanning" : "Scan for Devices")
+                                .font(.custom("Lato-Bold", size: 20))
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(bluetoothManager.isScanning ? Color.red : Color(red: 82/255, green: 166/255, blue: 69/255))
+                                .cornerRadius(15)
+                        }
+                        
+                        // Discovered Devices List
+                        List {
+                            if !bluetoothManager.discoveredPeripherals.isEmpty {
                                 ForEach(bluetoothManager.discoveredPeripherals, id: \.identifier) { peripheral in
                                     HStack {
                                         VStack(alignment: .leading) {
                                             Text(peripheral.name ?? "Unknown Device")
-                                                .font(.headline)
+                                                .font(.custom("Lato-Bold", size: 18))
                                             Text(peripheral.identifier.uuidString)
-                                                .font(.caption)
+                                                .font(.custom("Lato-Regular", size: 12))
                                                 .foregroundColor(.gray)
                                         }
                                         Spacer()
                                         if bluetoothManager.connectedPeripheral?.identifier == peripheral.identifier {
-                                            // Connected state
-                                            Text("Connected")
-                                                .font(.subheadline)
-                                                .foregroundColor(.green)
-                                            Button(action: {
-                                                bluetoothManager.disconnect()
-                                            }) {
+                                            Button(action: { bluetoothManager.disconnect() }) {
                                                 Text("Disconnect")
-                                                    .font(.subheadline)
+                                                    .font(.custom("Lato-Regular", size: 16))
                                                     .foregroundColor(.white)
-                                                    .padding(.vertical, 5)
-                                                    .padding(.horizontal, 10)
+                                                    .padding(.init(top: 6, leading: 12, bottom: 6, trailing: 12))
                                                     .background(Color.orange)
                                                     .cornerRadius(10)
                                             }
                                         } else {
-                                            // Not connected state
-                                            Button(action: {
-                                                bluetoothManager.connect(peripheral: peripheral)
-                                            }) {
+                                            Button(action: { bluetoothManager.connect(peripheral: peripheral) }) {
                                                 Text("Connect")
-                                                    .font(.subheadline)
+                                                    .font(.custom("Lato-Regular", size: 16))
                                                     .foregroundColor(.white)
-                                                    .padding(.vertical, 5)
-                                                    .padding(.horizontal, 10)
-                                                    .background(Color.green)
+                                                    .padding(.init(top: 6, leading: 12, bottom: 6, trailing: 12))
+                                                    .background(Color(red: 82/255, green: 166/255, blue: 69/255))
                                                     .cornerRadius(10)
                                             }
-                                            .disabled(bluetoothManager.connectedPeripheral != nil) // Disable if another device is connected
+                                            .disabled(bluetoothManager.connectedPeripheral != nil)
                                         }
                                     }
-                                    .padding(.vertical, 5)
+                                    .listRowBackground(Color.clear)
                                 }
                             }
                         }
+                        .listStyle(.plain)
+                        .background(Color.clear)
+                        .frame(height: 350) // Adjust height as needed
+                        
                     }
-                    .listStyle(.plain) // Use plain list style for better control
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 18)
                 }
+                .padding(.horizontal)
             }
-            Spacer() // Pushes content to the top
+            Spacer()
 
             // Bottom Navigation Bar
             HStack {
@@ -347,6 +227,7 @@ struct BluetoothView: View {
                 }
                 NavigationLink{
                     PlantsView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "leaf.fill")
                         .resizable()
@@ -356,11 +237,12 @@ struct BluetoothView: View {
                 }
                 NavigationLink{
                     BluetoothView()
+                        .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                        .foregroundColor(Color(red: 82/255, green: 166/255, blue: 69/255))
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink{
@@ -387,6 +269,8 @@ struct BluetoothView: View {
             .frame(width: UIScreen.main.bounds.width, height: 56)
             .background(Color(red: 174/255, green: 213/255, blue: 214/255))
         }
+        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
+        .font(.custom("Lato-Regular", size: 20))
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
     }
 }

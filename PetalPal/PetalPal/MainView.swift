@@ -12,11 +12,11 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Navbar
+                //    navbar
                 HStack {
                     Text("Petal Pal")
-                        .font(.custom("MadimiOne-Regular", size: 28))
-                        .foregroundColor(.black)
+                        .font(.custom("KaushanScript-Regular", size: 28))
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)
                     Spacer()
                     NavigationLink{
@@ -73,6 +73,10 @@ struct MainView: View {
                 Spacer()
             }
         }
+        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
+        .font(.custom("Lato-Regular", size: 20))
+        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+        .navigationBarHidden(true)
     }
 }
 

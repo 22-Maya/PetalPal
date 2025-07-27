@@ -5,14 +5,15 @@
 //  Created by Adishree Das on 7/21/25.
 //
 import SwiftUI
+
 struct ContentView: View {
     var body: some View {
         NavigationStack {
-            //            navbar
+            // navbar
             HStack {
                 Text("Petal Pal")
-                    .font(.custom("MadimiOne-Regular", size: 28))
-                    .foregroundColor(.black)
+                    .font(.custom("KaushanScript-Regular", size: 28))
+                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink{
@@ -29,119 +30,96 @@ struct ContentView: View {
             .frame(height: 56)
             .background(Color(red: 174/255, green: 213/255, blue: 214/255))
             .padding(.bottom, 15)
-            
+
             ScrollView {
-                VStack(spacing: 0) {
-                    //            today's tasks section
+                VStack(spacing: 30) {
+                    // today's tasks section
                     ZStack(alignment: .topLeading) {
                         RoundedRectangle(cornerRadius: 25)
                             .frame(width:325, height:150)
                             .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255))
                         VStack(alignment: .leading) {
                             Text("Today's Tasks")
-                                .font(.custom("MadimiOne-Regular", size:25))
+                                .font(.custom("Lato-Bold", size:25))
                                 .padding(.top, 16)
                                 .padding(.leading, 20)
-                            // Filler task list
-                            /*HStack {
-                             Image(systemName: "drop.fill")
-                             .foregroundColor(.blue)
-                             Text("Add water to your plant")
-                             .font(.system(size: 18))
-                             }
-                             .padding(.leading, 20)
-                             HStack {
-                             Image(systemName: "leaf.fill")
-                             .foregroundColor(.green)
-                             Text("Check if weeding is needed")
-                             .font(.system(size: 18))
-                             }
-                             .padding(.leading, 20)
-                             HStack {
-                             Image(systemName: "book.pages.fill")
-                             .foregroundColor(.orange)
-                             Text("Record a journal entry")
-                             .font(.system(size: 18))
-                             }
-                             .padding(.leading, 20)
-                             .padding(.bottom, 20)*/
                         }
-                        .frame(width: 325, height: 150, alignment: .topLeading)
                     }
-                    .padding(.bottom, 30)
-                    .padding(.top, 30)
-                    
-                    //            watering overview
+
+                    // last watered
                     ZStack(alignment: .topLeading) {
                         RoundedRectangle(cornerRadius: 25)
-                            .frame(width: 325, height: 200)
-                            .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
-                        VStack(alignment: .leading, spacing: 0) {
-                            Text("Watering Overview")
-                                .font(.custom("MadimiOne-Regular", size: 25))
-                                .padding(.top, 18)
+                            .frame(width:325, height:150)
+                            .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255))
+                        VStack(alignment: .leading) {
+                            Text("Last Watered")
+                                .font(.custom("Lato-Bold", size:25))
+                                .padding(.top, 16)
                                 .padding(.leading, 20)
-                            
-                            Spacer()
-                            HStack(alignment: .center) {
-                                // Key
-                                VStack(alignment: .leading, spacing: 16) {
-                                    HStack {
-                                        Circle()
-                                            .fill(Color.blue)
-                                            .frame(width: 16, height: 16)
-                                        Text("Watered on time")
-                                            .font(.system(size: 20))
-                                    }
-                                    HStack {
-                                        Circle()
-                                            .fill(Color.red)
-                                            .frame(width: 16, height: 16)
-                                        Text("Skipped/Late")
-                                            .font(.system(size: 20))
-                                    }
-                                    HStack {
-                                        Circle()
-                                            .fill(Color.yellow)
-                                            .frame(width: 16, height: 16)
-                                        Text("Due soon")
-                                            .font(.system(size: 20))
-                                    }
-                                }
-                                .padding(.leading, 20)
-                                Spacer()
-                                // Pie Chart
-                                ZStack {
-                                    Circle()
-                                        .stroke(Color.gray.opacity(0.2), lineWidth: 24)
-                                        .frame(width: 100, height: 100)
-                                    Circle()
-                                        .trim(from: 0.0, to: 0.5)
-                                        .stroke(Color.blue, lineWidth: 24)
-                                        .rotationEffect(.degrees(-90))
-                                        .frame(width: 100, height: 100)
-                                    Circle()
-                                        .trim(from: 0.5, to: 0.7)
-                                        .stroke(Color.red, lineWidth: 24)
-                                        .rotationEffect(.degrees(-90))
-                                        .frame(width: 100, height: 100)
-                                    Circle()
-                                        .trim(from: 0.7, to: 1.0)
-                                        .stroke(Color.yellow, lineWidth: 24)
-                                        .rotationEffect(.degrees(-90))
-                                        .frame(width: 100, height: 100)
-                                }
-                                .padding(.trailing, 20)
-                            }
-                            Spacer()
                         }
-                        .frame(width: 325, height: 200, alignment: .topLeading)
+                    }
+
+                    // watering overview
+                    ZStack(alignment: .top) {
+                        RoundedRectangle(cornerRadius: 25)
+                            .frame(width: 325, height: 320)
+                            .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
+
+                        VStack(alignment: .leading, spacing: 20) {
+                            Text("Watering Overview")
+                                .font(.custom("Lato-Bold", size: 25))
+                                .padding(.top, 16)
+                                .padding(.leading, 20)
+
+                            // Pie Chart
+                            ZStack {
+                                Circle()
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 24)
+
+                                Circle()
+                                    .trim(from: 0.0, to: 0.5)
+                                    .stroke(Color.blue, style: StrokeStyle(lineWidth: 24))
+                                    .rotationEffect(.degrees(-90))
+
+                                Circle()
+                                    .trim(from: 0.5, to: 0.7)
+                                    .stroke(Color.red, style: StrokeStyle(lineWidth: 24))
+                                    .rotationEffect(.degrees(-90))
+
+                                Circle()
+                                    .trim(from: 0.7, to: 1.0)
+                                    .stroke(Color.yellow, style: StrokeStyle(lineWidth: 24))
+                                    .rotationEffect(.degrees(-90))
+                            }
+                            .frame(width: 100, height: 100)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.vertical, 10)
+
+                            // Key
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Circle().fill(Color.blue).frame(width: 16, height: 16)
+                                    Text("Watered on time")
+                                }
+                                HStack {
+                                    Circle().fill(Color.red).frame(width: 16, height: 16)
+                                    Text("Skipped/Late")
+                                }
+                                HStack {
+                                    Circle().fill(Color.yellow).frame(width: 16, height: 16)
+                                    Text("Due soon")
+                                }
+                            }
+                            .padding(.leading, 20)
+                        }
+                        .frame(width: 325, alignment: .topLeading)
                     }
                     .padding(.bottom, 20)
-                    .padding(.top, 10)
                 }
+                .padding(.top, 10)
             }
-            //            bottom nav bar
+
+            // bottom nav bar
             Spacer()
             HStack {
                 NavigationLink{
@@ -168,7 +146,7 @@ struct ContentView: View {
                     BluetoothView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "plus.app")
+                    Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(.white)
@@ -194,17 +172,17 @@ struct ContentView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                 }
-                
+
             }
             .frame(width: UIScreen.main.bounds.width, height: 56)
             .background(Color(red: 174/255, green: 213/255, blue: 214/255))
         }
+        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
+        .font(.custom("Lato-Regular", size: 20))
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
     }
 }
-    
+
 #Preview {
     ContentView()
 }
-
-
