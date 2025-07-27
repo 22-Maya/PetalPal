@@ -21,6 +21,7 @@ struct MainView: View {
                     Spacer()
                     NavigationLink{
                         HelpbotView()
+                            .navigationBarBackButtonHidden(true)
                     } label: {
                         Image(systemName: "questionmark.circle")
                             .resizable()
@@ -76,7 +77,7 @@ struct MainView: View {
         .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
         .font(.custom("Lato-Regular", size: 20))
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
-        .navigationBarHidden(true)
+        
     }
 }
 

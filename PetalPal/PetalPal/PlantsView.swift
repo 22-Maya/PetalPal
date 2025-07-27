@@ -42,78 +42,24 @@ struct PlantsView: View {
     @State private var plants: [Plant] = PlantData.samplePlants
     
     var body: some View {
-        VStack(spacing: 0) {
-            //    navbar
-            HStack {
-                Text("Petal Pal")
-                    .font(.custom("KaushanScript-Regular", size: 28))
-                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .padding(.leading, 20)
-                Spacer()
-                NavigationLink{
-                    HelpbotView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .padding(.trailing, 20)
-                }
-            }
-            .frame(height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
-            .padding(.bottom, 15)
-            
-            // Plants List
-            ScrollView {
-                LazyVGrid(columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ], spacing: 20) {
-                    ForEach(plants) { plant in
-                        ZStack(alignment: .topLeading) {
-                            RoundedRectangle(cornerRadius: 25)
-                                .frame(height: 175)
-                                .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
-                            
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(plant.name)
-                                    .font(.custom("MadimiOne-Regular", size: 20))
-                                    .foregroundColor(.black)
-                                Text(plant.type.rawValue)
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.black.opacity(0.7))
-                                    .padding(.bottom, 0)
-//                                shows images based on plant type
-                                HStack {
-                                    Spacer()
-                                    switch plant.type {
-                                    case .flower:
-                                        Image(.flower)
-                                            .resizable()
-                                            .frame(width: 100, height: 100)
-                                            .padding(.top, 0)
-                                    case .vegetable:
-                                        Image(.veggie)
-                                            .resizable()
-                                            .frame(width: 100, height: 100)
-                                            .padding(.top, 0)
-                                    case .herb:
-                                        Image(.herb)
-                                            .resizable()
-                                            .frame(width: 100, height: 100)
-                                            .padding(.top, 0)
-                                    case .fruit:
-                                        Image(.fruit)
-                                            .resizable()
-                                            .frame(width: 100, height: 100)
-                                            .padding(.top, 0)
-                                    }
-                                }
-                            }
-                            .padding(15)
-                        }
+        NavigationStack {
+            VStack(spacing: 0) {
+                //    navbar
+                HStack {
+                    Text("Petal Pal")
+                        .font(.custom("KaushanScript-Regular", size: 28))
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .padding(.leading, 20)
+                    Spacer()
+                    NavigationLink {
+                        HelpbotView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
+                            .padding(.trailing, 20)
                     }
                 }
                 .frame(height: 56)
@@ -129,7 +75,7 @@ struct PlantsView: View {
                         ForEach(plants) { plant in
                             NavigationLink {
                                 MainView(plant: plant)
-                                    .navigationBarBackButtonHidden(true)
+                                //.navigationBarBackButtonHidden(true)
                             } label: {
                                 ZStack(alignment: .topLeading) {
                                     RoundedRectangle(cornerRadius: 25)
@@ -138,13 +84,12 @@ struct PlantsView: View {
                                     
                                     VStack(alignment: .leading, spacing: 8) {
                                         Text(plant.name)
-                                            .font(.custom("MadimiOne-Regular", size: 20))
-                                            .foregroundColor(.black)
+                                            .font(.custom("Lato-Bold", size: 20))
+                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255)) // need to re-color
                                         Text(plant.type.rawValue)
-                                            .font(.system(size: 16))
-                                            .foregroundColor(.black.opacity(0.7))
+                                            .font(.custom("Lato-Regular", size: 16))
+                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
                                             .padding(.bottom, 0)
-                                        //  shows images based on plant type
                                         HStack {
                                             Spacer()
                                             switch plant.type {
@@ -179,9 +124,9 @@ struct PlantsView: View {
                     .padding(.horizontal, 20)
                 }
                 
-                //        bottom navbar
+                //    bottom navbar
                 HStack {
-                    NavigationLink{
+                    NavigationLink {
                         ContentView()
                             .navigationBarBackButtonHidden(true)
                     } label: {
@@ -201,7 +146,7 @@ struct PlantsView: View {
                             .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                             .frame(maxWidth: .infinity)
                     }
-                    NavigationLink{
+                    NavigationLink {
                         BluetoothView()
                             .navigationBarBackButtonHidden(true)
                     } label: {
@@ -211,7 +156,7 @@ struct PlantsView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                     }
-                    NavigationLink{
+                    NavigationLink {
                         JournalView()
                             .navigationBarBackButtonHidden(true)
                     } label: {
@@ -221,7 +166,7 @@ struct PlantsView: View {
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                     }
-                    NavigationLink{
+                    NavigationLink {
                         SettingsView()
                             .navigationBarBackButtonHidden(true)
                     } label: {
@@ -238,10 +183,6 @@ struct PlantsView: View {
             .navigationBarHidden(true)
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
-        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
-        .font(.custom("Lato-Regular", size: 20))
-        .navigationBarHidden(true)
-        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
     }
 }
 
