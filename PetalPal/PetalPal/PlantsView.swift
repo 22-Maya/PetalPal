@@ -47,8 +47,8 @@ struct PlantsView: View {
             //    navbar
             HStack {
                 Text("Petal Pal")
-                    .font(.custom("MadimiOne-Regular", size: 28))
-                    .foregroundColor(.black)
+                    .font(.custom("KaushanScript-Regular", size: 28))
+                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink{
@@ -176,6 +176,8 @@ struct PlantsView: View {
             .frame(width: UIScreen.main.bounds.width, height: 56)
             .background(Color(red: 174/255, green: 213/255, blue: 214/255))
         }
+        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
+        .font(.custom("Lato-Regular", size: 20))
         .navigationBarHidden(true)
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
     }

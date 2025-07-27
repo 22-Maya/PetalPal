@@ -4,7 +4,10 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>MadimiOne-Regular.ttf</string>
+		<string>Lato-Bold.ttf</string>
+		<string>Lato-Italic.ttf</string>
+		<string>Lato-Regular.ttf</string>
+		<string>KaushanScript-Regular.ttf</string>
 	</array>
 </dict>
 </plist>
