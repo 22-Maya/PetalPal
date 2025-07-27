@@ -10,20 +10,13 @@ struct MainView: View {
     let plant: Plant
     
     var body: some View {
-        VStack(spacing: 0) {
-            //    navbar
-            HStack {
-                Text("Petal Pal")
-                    .font(.custom("KaushanScript-Regular", size: 28))
-                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .padding(.leading, 20)
         NavigationStack {
             VStack(spacing: 0) {
-                // Navbar
+                //    navbar
                 HStack {
                     Text("Petal Pal")
-                        .font(.custom("MadimiOne-Regular", size: 28))
-                        .foregroundColor(.black)
+                        .font(.custom("KaushanScript-Regular", size: 28))
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)
                     Spacer()
                     NavigationLink{
