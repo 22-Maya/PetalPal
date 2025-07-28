@@ -62,7 +62,7 @@ struct ContentView: View {
                     // watering overview
                     ZStack(alignment: .top) {
                         RoundedRectangle(cornerRadius: 25)
-                            .frame(width: 325, height: 320)
+                            .frame(width: 325, height: 340)
                             .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
 
                         VStack(alignment: .leading, spacing: 20) {

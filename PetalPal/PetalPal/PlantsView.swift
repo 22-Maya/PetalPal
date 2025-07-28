@@ -80,76 +80,78 @@ struct PlantsView: View {
     @State private var plants: [Plant] = PlantData.samplePlants
     
     var body: some View {
-        VStack(spacing: 0) {
-            // navbar
-            HStack {
-                Text("Petal Pal")
-                    .font(.custom("KaushanScript-Regular", size: 28))
-                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .padding(.leading, 20)
-                Spacer()
-                NavigationLink{
-                    HelpbotView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .padding(.trailing, 20)
+        NavigationStack {
+            VStack(spacing: 0) {
+                //    navbar
+                HStack {
+                    Text("Petal Pal")
+                        .font(.custom("KaushanScript-Regular", size: 28))
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .padding(.leading, 20)
+                    Spacer()
+                    NavigationLink {
+                        HelpbotView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
+                            .padding(.trailing, 20)
+                    }
                 }
-            }
-            .frame(height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
-            .padding(.bottom, 15)
-            
-            // Plants List
-            ScrollView {
-                LazyVGrid(columns: [
-                    GridItem(.flexible()),
-                    GridItem(.flexible())
-                ], spacing: 20) {
-                    ForEach(plants) { plant in
-                        NavigationLink {
-                            MainView(plant: plant)
-                        } label: {
-                            ZStack(alignment: .topLeading) {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .frame(height: 175)
-                                    .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
-                                
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(plant.name)
-                                        .font(.custom("Lato-Bold", size: 20))
-                                        .foregroundColor(.black)
-                                    Text(plant.type.rawValue)
-                                        .font(.custom("Lato-Regular", size: 16))
-                                        .foregroundColor(.black.opacity(0.7))
-                                        .padding(.bottom, 0)
-                                    // shows images based on plant type
-                                    HStack {
-                                        Spacer()
-                                        switch plant.type {
-                                        case .flower:
-                                            Image(.flower)
-                                                .resizable()
-                                                .frame(width: 100, height: 100)
-                                                .padding(.top, 0)
-                                        case .vegetable:
-                                            Image(.veggie)
-                                                .resizable()
-                                                .frame(width: 100, height: 100)
-                                                .padding(.top, 0)
-                                        case .herb:
-                                            Image(.herb)
-                                                .resizable()
-                                                .frame(width: 100, height: 100)
-                                                .padding(.top, 0)
-                                        case .fruit:
-                                            Image(.fruit)
-                                                .resizable()
-                                                .frame(width: 100, height: 100)
-                                                .padding(.top, 0)
+                .frame(height: 56)
+                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                .padding(.bottom, 15)
+                
+                // Plants List
+                ScrollView {
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: 20) {
+                        ForEach(plants) { plant in
+                            NavigationLink {
+                                MainView(plant: plant)
+                                //.navigationBarBackButtonHidden(true)
+                            } label: {
+                                ZStack(alignment: .topLeading) {
+                                    RoundedRectangle(cornerRadius: 25)
+                                        .frame(height: 175)
+                                        .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                    
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text(plant.name)
+                                            .font(.custom("Lato-Bold", size: 20))
+                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255)) // need to re-color
+                                        Text(plant.type.rawValue)
+                                            .font(.custom("Lato-Regular", size: 16))
+                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                            .padding(.bottom, 0)
+                                        HStack {
+                                            Spacer()
+                                            switch plant.type {
+                                            case .flower:
+                                                Image(.flower)
+                                                    .resizable()
+                                                    .frame(width: 100, height: 100)
+                                                    .padding(.top, 0)
+                                            case .vegetable:
+                                                Image(.veggie)
+                                                    .resizable()
+                                                    .frame(width: 100, height: 100)
+                                                    .padding(.top, 0)
+                                            case .herb:
+                                                Image(.herb)
+                                                    .resizable()
+                                                    .frame(width: 100, height: 100)
+                                                    .padding(.top, 0)
+                                            case .fruit:
+                                                Image(.fruit)
+                                                    .resizable()
+                                                    .frame(width: 100, height: 100)
+                                                    .padding(.top, 0)
+                                            }
                                         }
                                     }
                                 }
