@@ -143,7 +143,7 @@ struct ContentView: View {
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink{
-                    BluetoothView()
+                    WifiView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "plus.app.fill")

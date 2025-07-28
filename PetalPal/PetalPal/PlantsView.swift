@@ -1,10 +1,3 @@
-//
-//  PlantsView.swift
-//  PetalPal
-//
-//  Created by Adishree Das on 7/22/25.
-//
-
 import SwiftUI
 
 // define plant types
@@ -13,8 +6,21 @@ enum PlantType: String, Codable, Identifiable {
     case vegetable = "Vegetable"
     case herb = "Herb"
     case flower = "Flower"
-    
+
     var id: String { self.rawValue }
+
+    var plantImage: Image {
+        switch self {
+        case .fruit:
+            return Image(.fruit)
+        case .vegetable:
+            return Image(.veggie)
+        case .herb:
+            return Image(.herb)
+        case .flower:
+            return Image(.flower)
+        }
+    }
 }
 
 // Plant Model
@@ -22,20 +28,10 @@ struct Plant: Identifiable, Codable {
     var id = UUID()
     var name: String
     var type: PlantType
-    var wateringFrequency: String 
-    var wateringAmount: String
-    var sunlightNeeds: String 
-    var careInstructions: String
-    
-    init(name: String, type: PlantType, wateringFrequency: String = "", wateringAmount: String = "", sunlightNeeds: String = "", careInstructions: String = "") {
-        self.id = UUID()
-        self.name = name
-        self.type = type
-        self.wateringFrequency = wateringFrequency
-        self.wateringAmount = wateringAmount
-        self.sunlightNeeds = sunlightNeeds
-        self.careInstructions = careInstructions
-    }
+    var wateringFrequency: String = ""
+    var wateringAmount: String = ""
+    var sunlightNeeds: String = ""
+    var careInstructions: String = ""
 }
 
 // Sample Plant Data
@@ -78,11 +74,11 @@ class PlantData {
 
 struct PlantsView: View {
     @State private var plants: [Plant] = PlantData.samplePlants
-    
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                //    navbar
+                // navbar
                 HStack {
                     Text("Petal Pal")
                         .font(.custom("KaushanScript-Regular", size: 28))
@@ -103,7 +99,7 @@ struct PlantsView: View {
                 .frame(height: 56)
                 .background(Color(red: 174/255, green: 213/255, blue: 214/255))
                 .padding(.bottom, 15)
-                
+
                 // Plants List
                 ScrollView {
                     LazyVGrid(columns: [
@@ -113,116 +109,76 @@ struct PlantsView: View {
                         ForEach(plants) { plant in
                             NavigationLink {
                                 MainView(plant: plant)
-                                //.navigationBarBackButtonHidden(true)
                             } label: {
-                                ZStack(alignment: .topLeading) {
-                                    RoundedRectangle(cornerRadius: 25)
-                                        .frame(height: 175)
-                                        .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
-                                    
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        Text(plant.name)
-                                            .font(.custom("Lato-Bold", size: 20))
-                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255)) // need to re-color
-                                        Text(plant.type.rawValue)
-                                            .font(.custom("Lato-Regular", size: 16))
-                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
-                                            .padding(.bottom, 0)
-                                        HStack {
-                                            Spacer()
-                                            switch plant.type {
-                                            case .flower:
-                                                Image(.flower)
-                                                    .resizable()
-                                                    .frame(width: 100, height: 100)
-                                                    .padding(.top, 0)
-                                            case .vegetable:
-                                                Image(.veggie)
-                                                    .resizable()
-                                                    .frame(width: 100, height: 100)
-                                                    .padding(.top, 0)
-                                            case .herb:
-                                                Image(.herb)
-                                                    .resizable()
-                                                    .frame(width: 100, height: 100)
-                                                    .padding(.top, 0)
-                                            case .fruit:
-                                                Image(.fruit)
-                                                    .resizable()
-                                                    .frame(width: 100, height: 100)
-                                                    .padding(.top, 0)
-                                            }
-                                        }
-                                    }
-                                }
-                                .padding(15)
+                                PlantCardView(plant: plant)
                             }
                         }
                     }
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
+
+                Spacer()
+
+                // bottom navbar
+                HStack {
+                    NavigationLink{
+                        ContentView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "house.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                    }
+                    NavigationLink{
+                        PlantsView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "leaf.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                            .frame(maxWidth: .infinity)
+                    }
+                    NavigationLink{
+                        WifiView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "plus.app.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                    }
+                    NavigationLink{
+                        JournalView()
+                        Text("Journal View")
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "book.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                    }
+                    NavigationLink{
+                        SettingsView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .frame(height: 56)
+                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
             }
-            
-            Spacer()
-            
-            // bottom navbar
-            HStack {
-                NavigationLink{
-                    ContentView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "house.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    PlantsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "leaf.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    BluetoothView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "plus.app.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    JournalView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "book.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    SettingsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-            }
-            .frame(height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+            .navigationBarHidden(true)
+            .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
-        .navigationBarHidden(true)
-        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
     }
 }
 

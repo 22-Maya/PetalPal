@@ -9,5 +9,11 @@
 		<string>Lato-Regular.ttf</string>
 		<string>KaushanScript-Regular.ttf</string>
 	</array>
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>PetalPal needs to access your local network to find and connect to other PetalPal devices for data sharing.</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_petalpal-wifi._tcp.</string>
+    </array>
 </dict>
 </plist>
