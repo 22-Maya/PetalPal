@@ -11,7 +11,11 @@ import SwiftUI
 struct PetalPalApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ContentView()
+                    .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+            }
+            .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
     }
 }

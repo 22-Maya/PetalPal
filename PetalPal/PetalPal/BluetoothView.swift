@@ -12,7 +12,7 @@ import CoreBluetooth
 class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     @Published var centralManager: CBCentralManager!
-    @Published var discoveredPeripherals: [CBPeripheral] = []
+    @Published var discoveredPeripherals: [(peripheral: CBPeripheral, advertisedName: String)] = []
     @Published var connectedPeripheral: CBPeripheral?
     @Published var isScanning: Bool = false
     @Published var connectionStatus: String = "Disconnected"
@@ -46,7 +46,10 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
             return
         }
         discoveredPeripherals.removeAll()
-        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+        let options: [String: Any] = [
+            CBCentralManagerScanOptionAllowDuplicatesKey: true
+        ]
+        centralManager.scanForPeripherals(withServices: nil, options: options)
         isScanning = true
         connectionStatus = "Scanning..."
     }
@@ -60,8 +63,17 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        if !discoveredPeripherals.contains(where: { $0.identifier == peripheral.identifier }) {
-            discoveredPeripherals.append(peripheral)
+        // Get the actual advertised name of the device
+        let advertisedName = advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? peripheral.name ?? "Unknown Device"
+        
+        if let existingIndex = discoveredPeripherals.firstIndex(where: { $0.peripheral.identifier == peripheral.identifier }) {
+            // Update existing peripheral if name changed
+            if discoveredPeripherals[existingIndex].advertisedName != advertisedName {
+                discoveredPeripherals[existingIndex] = (peripheral: peripheral, advertisedName: advertisedName)
+            }
+        } else {
+            // Add new peripheral
+            discoveredPeripherals.append((peripheral: peripheral, advertisedName: advertisedName))
         }
     }
 
@@ -82,6 +94,7 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         connectedPeripheral = peripheral
         peripheral.delegate = self
+        peripheral.discoverServices(nil)
         connectionStatus = "Connected to \(peripheral.name ?? "Device")"
     }
 
@@ -95,6 +108,13 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
         connectionStatus = "Disconnected"
         if let error = error {
             errorMessage = "Disconnected with error: \(error.localizedDescription)"
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else { return }
+        for service in services {
+            peripheral.discoverCharacteristics(nil, for: service)
         }
     }
 }
@@ -166,17 +186,17 @@ struct BluetoothView: View {
                         // Discovered Devices List
                         List {
                             if !bluetoothManager.discoveredPeripherals.isEmpty {
-                                ForEach(bluetoothManager.discoveredPeripherals, id: \.identifier) { peripheral in
+                                ForEach(bluetoothManager.discoveredPeripherals, id: \.peripheral.identifier) { device in
                                     HStack {
                                         VStack(alignment: .leading) {
-                                            Text(peripheral.name ?? "Unknown Device")
+                                            Text(device.advertisedName)
                                                 .font(.custom("Lato-Bold", size: 18))
-                                            Text(peripheral.identifier.uuidString)
+                                            Text(device.peripheral.identifier.uuidString)
                                                 .font(.custom("Lato-Regular", size: 12))
                                                 .foregroundColor(.gray)
                                         }
                                         Spacer()
-                                        if bluetoothManager.connectedPeripheral?.identifier == peripheral.identifier {
+                                        if bluetoothManager.connectedPeripheral?.identifier == device.peripheral.identifier {
                                             Button(action: { bluetoothManager.disconnect() }) {
                                                 Text("Disconnect")
                                                     .font(.custom("Lato-Regular", size: 16))
@@ -186,7 +206,7 @@ struct BluetoothView: View {
                                                     .cornerRadius(10)
                                             }
                                         } else {
-                                            Button(action: { bluetoothManager.connect(peripheral: peripheral) }) {
+                                            Button(action: { bluetoothManager.connect(peripheral: device.peripheral) }) {
                                                 Text("Connect")
                                                     .font(.custom("Lato-Regular", size: 16))
                                                     .foregroundColor(.white)

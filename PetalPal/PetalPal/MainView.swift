@@ -7,12 +7,16 @@
 import SwiftUI
 
 struct MainView: View {
+    @Environment(\.dismiss) private var dismiss
     let plant: Plant
     
     var body: some View {
-        NavigationStack {
+        ZStack {
+            Color(red: 249/255, green: 248/255, blue: 241/255)
+                .ignoresSafeArea()
+            
             VStack(spacing: 0) {
-                //    navbar
+                // navbar
                 HStack {
                     Text("Petal Pal")
                         .font(.custom("KaushanScript-Regular", size: 28))
@@ -29,9 +33,25 @@ struct MainView: View {
                             .padding(.trailing, 20)
                     }
                 }
-                .frame(height: 56)
+                .frame(width: UIScreen.main.bounds.width, height: 56)
                 .background(Color(red: 174/255, green: 213/255, blue: 214/255))
-                .padding(.bottom, 15)
+                
+                // Custom back button
+                HStack {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                            Text("Back")
+                        }
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .font(.custom("Lato-Regular", size: 18))
+                    }
+                    .padding(.leading, 20)
+                    Spacer()
+                }
+                .padding(.vertical, 10)
                 
                 // Plant Display
                 VStack(spacing: 10) {
@@ -55,7 +75,7 @@ struct MainView: View {
                     }
                     
                     Text(plant.name)
-                        .font(.custom("MadimiOne-Regular", size: 50))
+                        .font(.custom("Lato-Bold", size: 50))
                         .foregroundColor(.black)
                     
                     Text(plant.type.rawValue)
@@ -67,19 +87,20 @@ struct MainView: View {
                 Text("Water Plant in 2 days")
                     .padding(20)
                     .background(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .font(.custom("MadimiOne-Regular",size: 25))
+                    .font(.custom("Lato-Regular",size: 25))
                     .foregroundColor(.white)
+                    .cornerRadius(10)
                 
                 Spacer()
             }
+            .frame(maxWidth: .infinity)
         }
-        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
-        .font(.custom("Lato-Regular", size: 20))
-        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         .navigationBarHidden(true)
     }
 }
 
 #Preview {
-    MainView(plant: Plant(name: "Basil", type: .herb))
+    NavigationStack {
+        MainView(plant: Plant(name: "Basil", type: .herb))
+    }
 }
