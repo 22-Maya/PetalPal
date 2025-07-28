@@ -125,48 +125,83 @@ struct AddPlantSheet: View {
     @State private var selectedType = PlantType.flower
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Add New Plant")
-                .font(.custom("Lato-Bold", size: 24))
-            
-            TextField("Plant Name", text: $plantName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            Picker("Type", selection: $selectedType) {
-                Text("Flower").tag(PlantType.flower)
-                Text("Herb").tag(PlantType.herb)
-                Text("Vegetable").tag(PlantType.vegetable)
-                Text("Fruit").tag(PlantType.fruit)
+        NavigationView {
+            ZStack {
+                Color(red: 249/255, green: 248/255, blue: 241/255)
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 25) {
+                    // Title
+                    Text("Add New Plant")
+                        .font(.custom("KaushanScript-Regular", size: 50))
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .padding(.top, 20)
+                    
+                    // Plant Name Field
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Plant Name")
+                            .font(.custom("Lato-Bold", size: 16))
+                            .foregroundColor(.black.opacity(0.7))
+                        TextField("Enter plant name", text: $plantName)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .font(.custom("Lato-Regular", size: 18))
+                            .background(Color.pink.opacity(0.2))
+                            .cornerRadius(8)
+                    }
+                    .padding(.horizontal, 25)
+                    
+                    // Plant Type Picker
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Plant Type")
+                            .font(.custom("Lato-Bold", size: 16))
+                            .foregroundColor(.black.opacity(0.7))
+                        Picker("Type", selection: $selectedType) {
+                            Text("Flower").tag(PlantType.flower)
+                            Text("Herb").tag(PlantType.herb)
+                            Text("Vegetable").tag(PlantType.vegetable)
+                            Text("Fruit").tag(PlantType.fruit)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding(.vertical, 5)
+                        .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                        .cornerRadius(8)
+                    }
+                    .padding(.horizontal, 25)
+                    
+                    Spacer()
+                    
+                    // Add Button
+                    Button(action: {
+                        let newPlant = Plant(name: plantName, type: selectedType)
+                        PlantData.samplePlants.append(newPlant)
+                        isPresented = false
+                    }) {
+                        Text("Add Plant")
+                            .font(.custom("Lato-Bold", size: 18))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color(red: 67/255, green: 137/255, blue: 124/255))
+                                    .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
+                            )
+                    }
+                    .disabled(plantName.isEmpty)
+                    .padding(.horizontal, 25)
+                    .padding(.bottom, 30)
+                }
             }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding()
-            
-            Button(action: {
-                let newPlant = Plant(name: plantName, type: selectedType)
-                PlantData.samplePlants.append(newPlant)
-                isPresented = false
-            }) {
-                Text("Add Plant")
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .cornerRadius(10)
-            }
-            .padding()
-            .disabled(plantName.isEmpty)
-            
-            Button(action: {
-                isPresented = false
-            }) {
-                Text("Cancel")
-                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-            }
+            .navigationBarItems(
+                trailing: Button(action: {
+                    isPresented = false
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .font(.system(size: 24))
+                }
+            )
         }
-        .padding()
-        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
-        .cornerRadius(15)
     }
 }
 
