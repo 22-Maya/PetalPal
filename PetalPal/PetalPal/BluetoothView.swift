@@ -119,9 +119,61 @@ class BluetoothManager: NSObject, ObservableObject, CBCentralManagerDelegate, CB
     }
 }
 
+struct AddPlantSheet: View {
+    @Binding var isPresented: Bool
+    @State private var plantName = ""
+    @State private var selectedType = PlantType.flower
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Add New Plant")
+                .font(.custom("Lato-Bold", size: 24))
+            
+            TextField("Plant Name", text: $plantName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            Picker("Type", selection: $selectedType) {
+                Text("Flower").tag(PlantType.flower)
+                Text("Herb").tag(PlantType.herb)
+                Text("Vegetable").tag(PlantType.vegetable)
+                Text("Fruit").tag(PlantType.fruit)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
+            
+            Button(action: {
+                let newPlant = Plant(name: plantName, type: selectedType)
+                PlantData.samplePlants.append(newPlant)
+                isPresented = false
+            }) {
+                Text("Add Plant")
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(red: 67/255, green: 137/255, blue: 124/255))
+                    .cornerRadius(10)
+            }
+            .padding()
+            .disabled(plantName.isEmpty)
+            
+            Button(action: {
+                isPresented = false
+            }) {
+                Text("Cancel")
+                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+            }
+        }
+        .padding()
+        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+        .cornerRadius(15)
+    }
+}
+
 // Bluetooth View
 struct BluetoothView: View {
     @StateObject private var bluetoothManager = BluetoothManager()
+    @State private var showAddPlant = false
 
     var body: some View {
         NavigationStack {
@@ -197,12 +249,14 @@ struct BluetoothView: View {
                                         }
                                         Spacer()
                                         if bluetoothManager.connectedPeripheral?.identifier == device.peripheral.identifier {
-                                            Button(action: { bluetoothManager.disconnect() }) {
-                                                Text("Disconnect")
+                                            Button(action: {
+                                                showAddPlant = true
+                                            }) {
+                                                Text("Add Plant")
                                                     .font(.custom("Lato-Regular", size: 16))
                                                     .foregroundColor(.white)
                                                     .padding(.init(top: 6, leading: 12, bottom: 6, trailing: 12))
-                                                    .background(Color.orange)
+                                                    .background(Color(red: 82/255, green: 166/255, blue: 69/255))
                                                     .cornerRadius(10)
                                             }
                                         } else {
@@ -292,6 +346,9 @@ struct BluetoothView: View {
         .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
         .font(.custom("Lato-Regular", size: 20))
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+        .sheet(isPresented: $showAddPlant) {
+            AddPlantSheet(isPresented: $showAddPlant)
+        }
     }
 }
 

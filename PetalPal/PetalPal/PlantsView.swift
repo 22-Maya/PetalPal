@@ -40,38 +40,14 @@ struct Plant: Identifiable, Codable {
 
 // Sample Plant Data
 class PlantData {
-    static let samplePlants: [Plant] = [
+    static var samplePlants: [Plant] = [
         Plant(
             name: "Hibiscus",
-            type: .flower,
-            wateringFrequency: "Every 2-3 days",
-            wateringAmount: "2 cups",
-            sunlightNeeds: "Full sun to partial shade",
-            careInstructions: "Keep soil consistently moist but not waterlogged. Prefers temperatures between 60-85°F. Fertilize every 2-3 weeks during growing season."
+            type: .flower
         ),
         Plant(
             name: "Basil",
-            type: .herb,
-            wateringFrequency: "Every 3-4 days",
-            wateringAmount: "1 cup",
-            sunlightNeeds: "Full sun",
-            careInstructions: "Water when top inch of soil feels dry. Pinch off flower buds to promote leaf growth. Harvest leaves regularly to encourage bushier growth."
-        ),
-        Plant(
-            name: "Cherry Tomato",
-            type: .vegetable,
-            wateringFrequency: "Daily",
-            wateringAmount: "2-3 cups",
-            sunlightNeeds: "Full sun (6-8 hours)",
-            careInstructions: "Support with cage or stakes. Keep soil consistently moist. Remove suckers for better fruit production."
-        ),
-        Plant(
-            name: "Strawberry",
-            type: .fruit,
-            wateringFrequency: "Every 2-3 days",
-            wateringAmount: "1-2 cups",
-            sunlightNeeds: "Full sun to partial shade",
-            careInstructions: "Mulch around plants to retain moisture and prevent fruit contact with soil. Remove runners unless propagating."
+            type: .herb
         )
     ]
 }
