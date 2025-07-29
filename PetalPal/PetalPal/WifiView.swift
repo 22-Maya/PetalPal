@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreBluetooth
 
 // WifiManager Class
 // This class will handle network requests to the smart pot.
@@ -26,6 +27,9 @@ class WifiManager: ObservableObject {
             return
         }
 
+        // Add http:// if not present
+        let fullAddress = deviceAddress.hasPrefix("http://") ? deviceAddress : "http://" + deviceAddress
+
         isConnecting = true
         connectionStatus = "Connecting..."
         errorMessage = nil
@@ -39,12 +43,13 @@ class WifiManager: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             guard let self = self else { return }
             // For demonstration, let's assume successful connection if the address is not empty
-            if !self.deviceAddress.isEmpty {
-                self.connectionStatus = "Connected to \(self.deviceAddress)"
+            if !fullAddress.isEmpty {
+                self.deviceAddress = fullAddress // Update with the full address
+                self.connectionStatus = "Connected to \(fullAddress)"
                 self.isConnecting = false
-                self.fetchSmartPotData() // Automatically fetch data after connection
+                self.lastReceivedData = "Temperature: 22°C\nHumidity: 65%\nSoil Moisture: 80%"
             } else {
-                self.errorMessage = "Failed to connect to \(self.deviceAddress). Check the address or network."
+                self.errorMessage = "Failed to connect to \(fullAddress). Check the address or network."
                 self.connectionStatus = "Disconnected"
                 self.isConnecting = false
             }
@@ -145,7 +150,9 @@ class WifiManager: ObservableObject {
 struct WifiView: View {
     @StateObject private var wifiManager = WifiManager()
     @State private var newDeviceAddress: String = ""
-
+    @State private var plantName = ""
+    @State private var selectedType = PlantType.flower
+    
     var body: some View {
         NavigationStack {
             // Top Navigation Bar (similar to original)
@@ -205,9 +212,38 @@ struct WifiView: View {
                                 newDeviceAddress = wifiManager.deviceAddress // Initialize from manager
                             }
 
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Plant Name")
+                                .font(.custom("Lato-Bold", size: 16))
+                                .foregroundColor(.black.opacity(0.7))
+                            TextField("Enter plant name", text: $plantName)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .font(.custom("Lato-Regular", size: 18))
+                                .background(Color.white)
+                                .cornerRadius(8)
+                            
+                            Text("Plant Type")
+                                .font(.custom("Lato-Bold", size: 16))
+                                .foregroundColor(.black.opacity(0.7))
+                                .padding(.top, 8)
+                            Picker("Type", selection: $selectedType) {
+                                Text("Flower").tag(PlantType.flower)
+                                Text("Herb").tag(PlantType.herb)
+                                Text("Vegetable").tag(PlantType.vegetable)
+                                Text("Fruit").tag(PlantType.fruit)
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            .padding(.vertical, 5)
+                            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                            .cornerRadius(8)
+                        }
+                        .padding(.vertical, 15)
+
                         HStack {
                             Button(action: {
-                                wifiManager.connect()
+                                if !plantName.isEmpty {
+                                    wifiManager.connect()
+                                }
                             }) {
                                 Text("Connect")
                                     .font(.custom("Lato-Bold", size: 20))
@@ -217,7 +253,7 @@ struct WifiView: View {
                                     .background(Color(red: 82/255, green: 166/255, blue: 69/255))
                                     .cornerRadius(15)
                             }
-                            .disabled(wifiManager.isConnecting || wifiManager.connectionStatus.contains("Connected"))
+                            .disabled(wifiManager.isConnecting || wifiManager.connectionStatus.contains("Connected") || plantName.isEmpty)
 
                             Button(action: {
                                 wifiManager.disconnect()
@@ -231,6 +267,15 @@ struct WifiView: View {
                                     .cornerRadius(15)
                             }
                             .disabled(!wifiManager.connectionStatus.contains("Connected"))
+                        }
+                        .onChange(of: wifiManager.connectionStatus) { newStatus in
+                            if newStatus.contains("Connected") && !plantName.isEmpty {
+                                let newPlant = Plant(name: plantName, type: selectedType)
+                                var currentPlants = PlantData.samplePlants
+                                currentPlants.append(newPlant)
+                                PlantData.samplePlants = currentPlants // This will save to UserDefaults
+                                plantName = ""
+                            }
                         }
 
                         Button(action: {
@@ -257,37 +302,6 @@ struct WifiView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color.white.opacity(0.7))
                             .cornerRadius(10)
-
-                        // Example controls for smart pot (assuming simple commands)
-                        Text("Smart Pot Controls:")
-                            .font(.custom("Lato-Bold", size: 18))
-                            .padding(.top, 10)
-
-                        HStack {
-                            Button(action: {
-                                wifiManager.sendCommand(command: "water")
-                            }) {
-                                Text("Water Plant")
-                                    .font(.custom("Lato-Regular", size: 16))
-                                    .foregroundColor(.white)
-                                    .padding(.init(top: 8, leading: 15, bottom: 8, trailing: 15))
-                                    .background(Color(red: 40/255, green: 120/255, blue: 200/255))
-                                    .cornerRadius(10)
-                            }
-                            .disabled(!wifiManager.connectionStatus.contains("Connected"))
-
-                            Button(action: {
-                                wifiManager.sendCommand(command: "light_on")
-                            }) {
-                                Text("Lights On")
-                                    .font(.custom("Lato-Regular", size: 16))
-                                    .foregroundColor(.white)
-                                    .padding(.init(top: 8, leading: 15, bottom: 8, trailing: 15))
-                                    .background(Color(red: 255/255, green: 165/255, blue: 0/255))
-                                    .cornerRadius(10)
-                            }
-                            .disabled(!wifiManager.connectionStatus.contains("Connected"))
-                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 18)
@@ -296,7 +310,7 @@ struct WifiView: View {
             }
             Spacer()
 
-            // Bottom Navigation Bar (update the link for "Connect a Device")
+            // Bottom Navigation Bar
             HStack {
                 NavigationLink{
                     ContentView()
@@ -319,7 +333,7 @@ struct WifiView: View {
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink{
-                    WifiView() // Changed to WifiView
+                    WifiView() 
                         .navigationBarBackButtonHidden(true)
                 } label: {
                     Image(systemName: "plus.app.fill")

@@ -36,20 +36,39 @@ struct Plant: Identifiable, Codable {
 
 // Sample Plant Data
 class PlantData {
-    static var samplePlants: [Plant] = [
-        Plant(
-            name: "Hibiscus",
-            type: .flower
-        ),
-        Plant(
-            name: "Basil",
-            type: .herb
-        )
-    ]
+    private static let plantsKey = "savedPlants"
+    
+    static var samplePlants: [Plant] {
+        get {
+            if let data = UserDefaults.standard.data(forKey: plantsKey),
+               let plants = try? JSONDecoder().decode([Plant].self, from: data) {
+                return plants
+            }
+            // Return default plants if no saved data exists
+            return [
+                Plant(name: "Hibiscus", type: .flower),
+                Plant(name: "Basil", type: .herb)
+            ]
+        }
+        set {
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                UserDefaults.standard.set(encoded, forKey: plantsKey)
+            }
+        }
+    }
 }
 
 struct PlantsView: View {
     @State private var plants: [Plant] = PlantData.samplePlants
+
+    func deletePlant(_ plant: Plant) {
+        DispatchQueue.main.async {
+            if let index = plants.firstIndex(where: { $0.id == plant.id }) {
+                plants.remove(at: index)
+                PlantData.samplePlants = plants // This will now save to UserDefaults
+            }
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -83,10 +102,22 @@ struct PlantsView: View {
                         GridItem(.flexible())
                     ], spacing: 20) {
                         ForEach(plants) { plant in
-                            NavigationLink {
-                                MainView(plant: plant)
-                            } label: {
-                                PlantCardView(plant: plant)
+                            ZStack(alignment: .topTrailing) {
+                                NavigationLink {
+                                    MainView(plant: plant)
+                                } label: {
+                                    PlantCardView(plant: plant)
+                                }
+                                
+                                Button {
+                                    deletePlant(plant)
+                                } label: {
+                                    Image(systemName: "minus.circle.fill")
+                                        .foregroundColor(Color(.pink))
+                                        .font(.system(size: 24))
+                                }
+                                .padding(8)
+                                .offset(x: -5, y: 5)
                             }
                         }
                     }
