@@ -19,7 +19,7 @@ struct MainView: View {
                 // navbar
                 HStack {
                     Text("Petal Pal")
-                        .font(.custom("KaushanScript-Regular", size: 28))
+                        .font(.custom("Prata-Regular", size: 28))
                         .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)
                     Spacer()

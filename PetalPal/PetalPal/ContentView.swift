@@ -12,8 +12,8 @@ struct ContentView: View {
             // navbar
             HStack {
                 Text("Petal Pal")
-                    .font(.custom("KaushanScript-Regular", size: 28))
-                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                    .font(.custom("Prata-Regular", size: 28))
+                    .foregroundColor(Color(.tealShade))
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink{
@@ -23,12 +23,12 @@ struct ContentView: View {
                     Image(systemName: "questionmark.circle")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(.backgroundShade))
                         .padding(.trailing, 20)
                 }
             }
             .frame(height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+            .background(Color(.blueShade))
             .padding(.bottom, 15)
 
             ScrollView {
@@ -129,7 +129,7 @@ struct ContentView: View {
                     Image(systemName: "house.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 82/255, green: 166/255, blue: 69/255))
+                        .foregroundColor(Color(.greenShade))
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink{
@@ -139,7 +139,7 @@ struct ContentView: View {
                     Image(systemName: "leaf.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink{
@@ -149,7 +149,7 @@ struct ContentView: View {
                     Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink{
@@ -159,7 +159,7 @@ struct ContentView: View {
                     Image(systemName: "book.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
                 NavigationLink{
@@ -169,17 +169,17 @@ struct ContentView: View {
                     Image(systemName: "gearshape.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
 
             }
             .frame(width: UIScreen.main.bounds.width, height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+            .background(Color(.blueShade))
         }
-        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
+        .foregroundStyle(Color(.text))
         .font(.custom("Lato-Regular", size: 20))
-        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+        .background(Color(.backgroundShade))
     }
 }
 
