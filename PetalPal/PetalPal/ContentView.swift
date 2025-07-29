@@ -5,18 +5,34 @@
 //  Created by Adishree Das on 7/21/25.
 //
 import SwiftUI
+import Charts
 
 struct ContentView: View {
+    @State private var wateringData: [WateringStatus] = [
+        .init(status: "Watered on time", count: 70, color: Color(.blueShade)),
+        .init(status: "Skipped/Late", count: 15, color: Color(.pinkShade)),
+        .init(status: "Due soon", count: 15, color: Color(red: 255/255, green: 215/255, blue: 0/255))
+    ]
+
+    @State private var selectedStatusID: UUID?
+
+    private var selectedStatus: WateringStatus? {
+        wateringData.first(where: { $0.id == selectedStatusID })
+    }
+
+    private var totalWaterings: Double {
+        wateringData.reduce(0) { $0 + $1.count }
+    }
+
     var body: some View {
         NavigationStack {
-            // navbar
             HStack {
                 Text("Petal Pal")
                     .font(.custom("Prata-Regular", size: 28))
                     .foregroundColor(Color(.tealShade))
                     .padding(.leading, 20)
                 Spacer()
-                NavigationLink{
+                NavigationLink {
                     HelpbotView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
@@ -33,26 +49,26 @@ struct ContentView: View {
 
             ScrollView {
                 VStack(spacing: 30) {
-                    // today's tasks section
+                    // tasks
                     ZStack(alignment: .topLeading) {
                         RoundedRectangle(cornerRadius: 25)
-                            .frame(width:325, height:150)
-                            .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255))
+                            .frame(width:325)
+                            .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
                         VStack(alignment: .leading) {
-                            Text("Today's Tasks")
+                            Text("Today's Tasks\n")
                                 .font(.custom("Lato-Bold", size:25))
                                 .padding(.top, 16)
                                 .padding(.leading, 20)
                         }
                     }
 
-                    // last watered
+                    // last watered section
                     ZStack(alignment: .topLeading) {
                         RoundedRectangle(cornerRadius: 25)
-                            .frame(width:325, height:150)
-                            .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255))
+                            .frame(width: 325)
+                            .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
                         VStack(alignment: .leading) {
-                            Text("Last Watered")
+                            Text("Last Watered \n")
                                 .font(.custom("Lato-Bold", size:25))
                                 .padding(.top, 16)
                                 .padding(.leading, 20)
@@ -62,8 +78,8 @@ struct ContentView: View {
                     // watering overview
                     ZStack(alignment: .top) {
                         RoundedRectangle(cornerRadius: 25)
-                            .frame(width: 325, height: 340)
-                            .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
+                            .frame(width: 325)
+                            .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255)) // Original color, consider dark mode
 
                         VStack(alignment: .leading, spacing: 20) {
                             Text("Watering Overview")
@@ -71,46 +87,51 @@ struct ContentView: View {
                                 .padding(.top, 16)
                                 .padding(.leading, 20)
 
-                            // Pie Chart
-                            ZStack {
-                                Circle()
-                                    .stroke(Color.gray.opacity(0.2), lineWidth: 24)
+                            PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
+                                .frame(width: 200, height: 200)
+                                .frame(maxWidth: .infinity, alignment: .center) // Center the chart
+                                .padding(.vertical, 10)
 
-                                Circle()
-                                    .trim(from: 0.0, to: 0.5)
-                                    .stroke(Color.blue, style: StrokeStyle(lineWidth: 24))
-                                    .rotationEffect(.degrees(-90))
-
-                                Circle()
-                                    .trim(from: 0.5, to: 0.7)
-                                    .stroke(Color.red, style: StrokeStyle(lineWidth: 24))
-                                    .rotationEffect(.degrees(-90))
-
-                                Circle()
-                                    .trim(from: 0.7, to: 1.0)
-                                    .stroke(Color.yellow, style: StrokeStyle(lineWidth: 24))
-                                    .rotationEffect(.degrees(-90))
+                            if let selectedStatus = selectedStatus {
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text("Selected:")
+                                        .font(.caption)
+                                        .foregroundColor(Color(.text))
+                                    HStack {
+                                        Circle()
+                                            .fill(selectedStatus.color)
+                                            .frame(width: 12, height: 12)
+                                        Text("\(selectedStatus.status): \(selectedStatus.count, specifier: "%.0f") plants")
+                                            .font(.callout)
+                                            .fontWeight(.medium)
+                                            .foregroundColor(Color(.text))
+                                    }
+                                    Text(String(format: "%.0f%% of total", (selectedStatus.count / totalWaterings) * 100))
+                                        .font(.caption)
+                                        .foregroundColor(Color(.text))
+                                }
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 10)
                             }
-                            .frame(width: 100, height: 100)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(.vertical, 10)
 
-                            // Key
+                            // key
                             VStack(alignment: .leading, spacing: 12) {
-                                HStack {
-                                    Circle().fill(Color.blue).frame(width: 16, height: 16)
-                                    Text("Watered on time")
-                                }
-                                HStack {
-                                    Circle().fill(Color.red).frame(width: 16, height: 16)
-                                    Text("Skipped/Late")
-                                }
-                                HStack {
-                                    Circle().fill(Color.yellow).frame(width: 16, height: 16)
-                                    Text("Due soon")
+                                ForEach(wateringData) { dataPoint in
+                                    HStack {
+                                        Circle()
+                                            .fill(dataPoint.color)
+                                            .frame(width: 16, height: 16)
+                                        Text(dataPoint.status)
+                                            .foregroundColor(Color(.text))
+                                    }
+                                    
+                                    .onTapGesture {
+                                        self.selectedStatusID = (self.selectedStatusID == dataPoint.id) ? nil : dataPoint.id
+                                    }
                                 }
                             }
                             .padding(.leading, 20)
+                            .padding(.bottom, 16)
                         }
                         .frame(width: 325, alignment: .topLeading)
                     }
@@ -122,7 +143,7 @@ struct ContentView: View {
             // bottom nav bar
             Spacer()
             HStack {
-                NavigationLink{
+                NavigationLink {
                     ContentView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
@@ -132,7 +153,7 @@ struct ContentView: View {
                         .foregroundColor(Color(.greenShade))
                         .frame(maxWidth: .infinity)
                 }
-                NavigationLink{
+                NavigationLink {
                     PlantsView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
@@ -142,7 +163,7 @@ struct ContentView: View {
                         .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
-                NavigationLink{
+                NavigationLink {
                     WifiView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
@@ -152,7 +173,7 @@ struct ContentView: View {
                         .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
-                NavigationLink{
+                NavigationLink {
                     JournalView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
@@ -162,7 +183,7 @@ struct ContentView: View {
                         .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
-                NavigationLink{
+                NavigationLink {
                     SettingsView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
@@ -172,7 +193,6 @@ struct ContentView: View {
                         .foregroundColor(Color(.backgroundShade))
                         .frame(maxWidth: .infinity)
                 }
-
             }
             .frame(width: UIScreen.main.bounds.width, height: 56)
             .background(Color(.blueShade))
