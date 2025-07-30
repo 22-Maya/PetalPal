@@ -181,11 +181,11 @@ struct ContentView: View {
                 }
 
             // Settings Tab
-            SettingsView()
+            ProfileView()
                 .tabItem {
                     VStack {
-                        Image(systemName: "gearshape.fill")
-                        Text("Settings")
+                        Image(systemName: "person.crop.circle.fill")
+                        Text("Profile")
                     }
                 }
         }
