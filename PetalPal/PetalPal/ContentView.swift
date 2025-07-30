@@ -148,10 +148,11 @@ struct ContentView: View {
                     Text("Home")
                 }
             }
-            .toolbarBackground(Color(.blueShade), for: .tabBar) // Set tab bar background color
-            .toolbarBackground(.visible, for: .tabBar) // Make background visible
-            .accentColor(Color(.greenShade)) // Set selected tab item color
-
+            .toolbarBackground(Color(.blueShade), for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .tint(Color(.greenShade))
+            .accentColor(Color(.greenShade))
+            
             // Plants Tab
             PlantsView()
                 .tabItem {
@@ -188,9 +189,9 @@ struct ContentView: View {
                     }
                 }
         }
-        .foregroundStyle(Color(.text)) // This sets the default text color for the views
+        .foregroundStyle(Color(.text))
         .font(.custom("Lato-Regular", size: 20))
-        .background(Color(.backgroundShade)) // This sets the background color for the overall view
+        .background(Color(.backgroundShade))
     }
 }
 
