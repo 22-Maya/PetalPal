@@ -8,92 +8,40 @@
 import SwiftUI
 
 struct HelpbotView: View {
+    
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
-        NavigationStack{
-            //            navbar
+        NavigationStack {
             HStack {
-                Text("Petal Pal")
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                        .padding(.leading, 20)
+                }
+
+                Text("PetalPal")
                     .font(.custom("Prata-Regular", size: 28))
                     .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .padding(.leading, 20)
+                    .padding(.leading, 5)
                 Spacer()
-                NavigationLink{
-                    HelpbotView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
-                        .padding(.trailing, 20)
-                }
             }
             .frame(height: 56)
             .background(Color(red: 174/255, green: 213/255, blue: 214/255))
             .padding(.bottom, 15)
-            
+
             ScrollView {
-                Text("FAQ & ai helpbot view")
+                Text("FAQ & AI Helpbot View")
+                    .font(.custom("Lato-Bold", size: 25))
+                    .padding()
             }
-            
-            //        bottom navbar
-            Spacer()
-            HStack {
-                NavigationLink{
-                    ContentView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "house.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    PlantsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "leaf.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    WifiView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "plus.app.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    JournalView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "book.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink{
-                    SettingsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                }
-                
-            }
-            .frame(width: UIScreen.main.bounds.width, height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+
         }
+        .navigationBarBackButtonHidden(true)
         .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
         .font(.custom("Lato-Regular", size: 20))
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))

@@ -1,7 +1,7 @@
 import SwiftUI
 
 // define plant types
-enum PlantType: String, Codable, Identifiable {
+enum PlantType: String, Codable, Identifiable, CaseIterable {
     case fruit = "Fruit"
     case vegetable = "Vegetable"
     case herb = "Herb"
@@ -37,14 +37,14 @@ struct Plant: Identifiable, Codable {
 // Sample Plant Data
 class PlantData {
     private static let plantsKey = "savedPlants"
-    
+
     static var samplePlants: [Plant] {
         get {
             if let data = UserDefaults.standard.data(forKey: plantsKey),
                let plants = try? JSONDecoder().decode([Plant].self, from: data) {
                 return plants
             }
-            // Return default plants if no saved data exists
+            
             return [
                 Plant(name: "Hibiscus", type: .flower),
                 Plant(name: "Basil", type: .herb)
@@ -65,7 +65,7 @@ struct PlantsView: View {
         DispatchQueue.main.async {
             if let index = plants.firstIndex(where: { $0.id == plant.id }) {
                 plants.remove(at: index)
-                PlantData.samplePlants = plants // This will now save to UserDefaults
+                PlantData.samplePlants = plants
             }
         }
     }
@@ -73,9 +73,8 @@ struct PlantsView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // navbar
                 HStack {
-                    Text("Petal Pal")
+                    Text("PetalPal")
                         .font(.custom("Prata-Regular", size: 28))
                         .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)
@@ -87,7 +86,7 @@ struct PlantsView: View {
                         Image(systemName: "questionmark.circle")
                             .resizable()
                             .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                             .padding(.trailing, 20)
                     }
                 }
@@ -95,7 +94,6 @@ struct PlantsView: View {
                 .background(Color(red: 174/255, green: 213/255, blue: 214/255))
                 .padding(.bottom, 15)
 
-                // Plants List
                 ScrollView {
                     LazyVGrid(columns: [
                         GridItem(.flexible()),
@@ -108,12 +106,12 @@ struct PlantsView: View {
                                 } label: {
                                     PlantCardView(plant: plant)
                                 }
-                                
+
                                 Button {
                                     deletePlant(plant)
                                 } label: {
                                     Image(systemName: "minus.circle.fill")
-                                        .foregroundColor(Color(.pink))
+                                        .foregroundColor(Color(.pink)) // Assuming .pink is a custom color or system pink
                                         .font(.system(size: 24))
                                 }
                                 .padding(8)
@@ -126,63 +124,11 @@ struct PlantsView: View {
 
                 Spacer()
 
-                // bottom navbar
-                HStack {
-                    NavigationLink{
-                        ContentView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "house.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        PlantsView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "leaf.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        WifiView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "plus.app.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        JournalView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "book.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                    NavigationLink{
-                        SettingsView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                    }
-                }
-                .frame(height: 56)
-                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
             }
             .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
+            .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
+            .font(.custom("Lato-Regular", size: 20))
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
     }

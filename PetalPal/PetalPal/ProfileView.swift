@@ -1,13 +1,6 @@
-//
-//  JournalView.swift
-//  PetalPal
-//
-//  Created by Adishree Das on 7/22/25.
-//
-
 import SwiftUI
 
-struct JournalView: View {
+struct ProfileView: View {
     var body: some View {
         NavigationStack {
             HStack {
@@ -17,10 +10,10 @@ struct JournalView: View {
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink {
-                    HelpbotView()
+                    SettingsView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "gearshape.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
                         .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
@@ -32,9 +25,14 @@ struct JournalView: View {
             .padding(.bottom, 15)
 
             ScrollView {
-                Text("Journal - Work in Progress")
-                    .font(.custom("Lato-Bold", size: 25))
-                    .padding()
+                VStack {
+                    Text("Profile - Work in Progress")
+                        .font(.custom("Lato-Bold", size: 25))
+                        .padding()
+                    Circle()
+                        .fill(Color(.tealShade))
+                        .frame(width: 250, height: 250)
+                }
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -45,5 +43,5 @@ struct JournalView: View {
 }
 
 #Preview {
-    JournalView()
+    ProfileView()
 }
