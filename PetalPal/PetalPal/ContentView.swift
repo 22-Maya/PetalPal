@@ -91,30 +91,8 @@ struct ContentView: View {
 
                                 PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
                                     .frame(width: 200, height: 200)
-                                    .frame(maxWidth: .infinity, alignment: .center) // Center the chart
-                                    .padding(.vertical, 10)
+                                    .frame(maxWidth: .infinity, alignment: .center)
 
-                                if let selectedStatus = selectedStatus {
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        Text("Selected:")
-                                            .font(.caption)
-                                            .foregroundColor(Color(.text))
-                                        HStack {
-                                            Circle()
-                                                .fill(selectedStatus.color)
-                                                .frame(width: 12, height: 12)
-                                            Text("\(selectedStatus.status): \(selectedStatus.count, specifier: "%.0f") plants")
-                                                .font(.callout)
-                                                .fontWeight(.medium)
-                                                .foregroundColor(Color(.text))
-                                        }
-                                        Text(String(format: "%.0f%% of total", (selectedStatus.count / totalWaterings) * 100))
-                                            .font(.caption)
-                                            .foregroundColor(Color(.text))
-                                    }
-                                    .padding(.horizontal, 20)
-                                    .padding(.bottom, 10)
-                                }
 
                                 // key
                                 VStack(alignment: .leading, spacing: 12) {
@@ -142,16 +120,16 @@ struct ContentView: View {
                     .padding(.top, 10)
                 }
             }
+            .toolbarBackground(Color(.blueShade), for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .tint(Color(.greenShade))
+            .accentColor(Color(.greenShade))
             .tabItem {
                 VStack {
                     Image(systemName: "house.fill")
                     Text("Home")
                 }
             }
-            .toolbarBackground(Color(.blueShade), for: .tabBar)
-            .toolbarBackground(.visible, for: .tabBar)
-            .tint(Color(.greenShade))
-            .accentColor(Color(.greenShade))
             
             // Plants Tab
             PlantsView()

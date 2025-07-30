@@ -29,7 +29,7 @@ struct PieChartView: View {
         Chart(data) { dataPoint in
             SectorMark(
                 angle: .value("Count", dataPoint.count),
-                innerRadius: 45,
+                innerRadius: 30,
                 outerRadius: selectedStatusID == dataPoint.id ? 100 : 80,
                 angularInset: 1.0
             )
@@ -37,8 +37,7 @@ struct PieChartView: View {
             .annotation(position: .overlay) {
                 if selectedStatusID == nil || dataPoint.id == selectedStatusID {
                     Text(String(format: "%.0f%%", (dataPoint.count / totalValue) * 100))
-                        .font(.caption)
-                        .fontWeight(.bold)
+                        .font(.custom("Lato-Bold", size: 12))
                         .foregroundColor(Color(red: 26/255, green: 26/255, blue: 26/255))
                         .shadow(color: .white.opacity(0.5), radius: 1)
                 }
@@ -49,7 +48,7 @@ struct PieChartView: View {
     }
 }
 
-struct PieChartView_Previews: PreviewProvider {
+/*struct PieChartView_Previews: PreviewProvider {
     @State static var previewSelectedStatusID: UUID? = nil
     static var previewData: [WateringStatus] = [
         .init(status: "Watered on time", count: 70, color: Color(red: 174/255, green: 213/255, blue: 214/255)),
@@ -64,4 +63,4 @@ struct PieChartView_Previews: PreviewProvider {
             .cornerRadius(20)
             .shadow(radius: 10)
     }
-}
+}*/
