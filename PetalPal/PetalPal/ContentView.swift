@@ -24,12 +24,33 @@ struct ContentView: View {
         wateringData.reduce(0) { $0 + $1.count }
     }
 
+    // tabview colors
+    init() {
+        let appearance = UITabBarAppearance()
+
+        appearance.backgroundColor = UIColor(Color(.blueShade))
+        appearance.selectionIndicatorTintColor = UIColor(Color(.text))
+        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color(.text))
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+            .foregroundColor: UIColor(Color(.text)),
+            .font: UIFont(name: "Lato-Regular", size: 12)!
+        ]
+
+        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(Color(.tealShade))
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+            .foregroundColor: UIColor(Color(.tealShade)),
+            .font: UIFont(name: "Lato-Regular", size: 12)!
+        ]
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     var body: some View {
         TabView {
             // Home Tab
             NavigationStack {
                 HStack {
-                    Text("Petal Pal")
+                    Text("PetalPal")
                         .font(.custom("Prata-Regular", size: 28))
                         .foregroundColor(Color(.tealShade))
                         .padding(.leading, 20)
@@ -120,10 +141,6 @@ struct ContentView: View {
                     .padding(.top, 10)
                 }
             }
-            .toolbarBackground(Color(.blueShade), for: .tabBar)
-            .toolbarBackground(.visible, for: .tabBar)
-            .tint(Color(.greenShade))
-            .accentColor(Color(.greenShade))
             .tabItem {
                 VStack {
                     Image(systemName: "house.fill")

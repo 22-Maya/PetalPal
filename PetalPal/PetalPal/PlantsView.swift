@@ -74,7 +74,7 @@ struct PlantsView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 HStack {
-                    Text("Petal Pal")
+                    Text("PetalPal")
                         .font(.custom("Prata-Regular", size: 28))
                         .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)

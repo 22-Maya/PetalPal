@@ -8,24 +8,28 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         NavigationStack {
             HStack {
-                Text("Petal Pal")
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                        .padding(.leading, 20)
+                }
+
+                Text("PetalPal")
                     .font(.custom("Prata-Regular", size: 28))
                     .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .padding(.leading, 20)
+                    .padding(.leading, 5)
+                
                 Spacer()
-                NavigationLink {
-                    HelpbotView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255)) // Consistent icon color
-                        .padding(.trailing, 20)
-                }
             }
             .frame(height: 56)
             .background(Color(red: 174/255, green: 213/255, blue: 214/255))
