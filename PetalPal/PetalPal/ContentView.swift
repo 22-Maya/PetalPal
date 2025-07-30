@@ -25,181 +25,172 @@ struct ContentView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            HStack {
-                Text("Petal Pal")
-                    .font(.custom("Prata-Regular", size: 28))
-                    .foregroundColor(Color(.tealShade))
-                    .padding(.leading, 20)
-                Spacer()
-                NavigationLink {
-                    HelpbotView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.backgroundShade))
-                        .padding(.trailing, 20)
+        TabView {
+            // Home Tab
+            NavigationStack {
+                HStack {
+                    Text("Petal Pal")
+                        .font(.custom("Prata-Regular", size: 28))
+                        .foregroundColor(Color(.tealShade))
+                        .padding(.leading, 20)
+                    Spacer()
+                    NavigationLink {
+                        HelpbotView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(Color(.backgroundShade))
+                            .padding(.trailing, 20)
+                    }
                 }
-            }
-            .frame(height: 56)
-            .background(Color(.blueShade))
-            .padding(.bottom, 15)
+                .frame(height: 56)
+                .background(Color(.blueShade))
+                .padding(.bottom, 15)
 
-            ScrollView {
-                VStack(spacing: 30) {
-                    // tasks
-                    ZStack(alignment: .topLeading) {
-                        RoundedRectangle(cornerRadius: 25)
-                            .frame(width:325)
-                            .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
-                        VStack(alignment: .leading) {
-                            Text("Today's Tasks\n")
-                                .font(.custom("Lato-Bold", size:25))
-                                .padding(.top, 16)
-                                .padding(.leading, 20)
+                ScrollView {
+                    VStack(spacing: 30) {
+                        // tasks
+                        ZStack(alignment: .topLeading) {
+                            RoundedRectangle(cornerRadius: 25)
+                                .frame(width:325)
+                                .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
+                            VStack(alignment: .leading) {
+                                Text("Today's Tasks\n")
+                                    .font(.custom("Lato-Bold", size:25))
+                                    .padding(.top, 16)
+                                    .padding(.leading, 20)
+                            }
                         }
-                    }
 
-                    // last watered section
-                    ZStack(alignment: .topLeading) {
-                        RoundedRectangle(cornerRadius: 25)
-                            .frame(width: 325)
-                            .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
-                        VStack(alignment: .leading) {
-                            Text("Last Watered \n")
-                                .font(.custom("Lato-Bold", size:25))
-                                .padding(.top, 16)
-                                .padding(.leading, 20)
+                        // last watered section
+                        ZStack(alignment: .topLeading) {
+                            RoundedRectangle(cornerRadius: 25)
+                                .frame(width: 325)
+                                .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
+                            VStack(alignment: .leading) {
+                                Text("Last Watered \n")
+                                    .font(.custom("Lato-Bold", size:25))
+                                    .padding(.top, 16)
+                                    .padding(.leading, 20)
+                            }
                         }
-                    }
 
-                    // watering overview
-                    ZStack(alignment: .top) {
-                        RoundedRectangle(cornerRadius: 25)
-                            .frame(width: 325)
-                            .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255)) // Original color, consider dark mode
+                        // watering overview
+                        ZStack(alignment: .top) {
+                            RoundedRectangle(cornerRadius: 25)
+                                .frame(width: 325)
+                                .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255)) // Original color, consider dark mode
 
-                        VStack(alignment: .leading, spacing: 20) {
-                            Text("Watering Overview")
-                                .font(.custom("Lato-Bold", size: 25))
-                                .padding(.top, 16)
-                                .padding(.leading, 20)
+                            VStack(alignment: .leading, spacing: 20) {
+                                Text("Watering Overview")
+                                    .font(.custom("Lato-Bold", size: 25))
+                                    .padding(.top, 16)
+                                    .padding(.leading, 20)
 
-                            PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
-                                .frame(width: 200, height: 200)
-                                .frame(maxWidth: .infinity, alignment: .center) // Center the chart
-                                .padding(.vertical, 10)
+                                PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
+                                    .frame(width: 200, height: 200)
+                                    .frame(maxWidth: .infinity, alignment: .center) // Center the chart
+                                    .padding(.vertical, 10)
 
-                            if let selectedStatus = selectedStatus {
-                                VStack(alignment: .leading, spacing: 5) {
-                                    Text("Selected:")
-                                        .font(.caption)
-                                        .foregroundColor(Color(.text))
-                                    HStack {
-                                        Circle()
-                                            .fill(selectedStatus.color)
-                                            .frame(width: 12, height: 12)
-                                        Text("\(selectedStatus.status): \(selectedStatus.count, specifier: "%.0f") plants")
-                                            .font(.callout)
-                                            .fontWeight(.medium)
+                                if let selectedStatus = selectedStatus {
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Text("Selected:")
+                                            .font(.caption)
+                                            .foregroundColor(Color(.text))
+                                        HStack {
+                                            Circle()
+                                                .fill(selectedStatus.color)
+                                                .frame(width: 12, height: 12)
+                                            Text("\(selectedStatus.status): \(selectedStatus.count, specifier: "%.0f") plants")
+                                                .font(.callout)
+                                                .fontWeight(.medium)
+                                                .foregroundColor(Color(.text))
+                                        }
+                                        Text(String(format: "%.0f%% of total", (selectedStatus.count / totalWaterings) * 100))
+                                            .font(.caption)
                                             .foregroundColor(Color(.text))
                                     }
-                                    Text(String(format: "%.0f%% of total", (selectedStatus.count / totalWaterings) * 100))
-                                        .font(.caption)
-                                        .foregroundColor(Color(.text))
+                                    .padding(.horizontal, 20)
+                                    .padding(.bottom, 10)
                                 }
-                                .padding(.horizontal, 20)
-                                .padding(.bottom, 10)
-                            }
 
-                            // key
-                            VStack(alignment: .leading, spacing: 12) {
-                                ForEach(wateringData) { dataPoint in
-                                    HStack {
-                                        Circle()
-                                            .fill(dataPoint.color)
-                                            .frame(width: 16, height: 16)
-                                        Text(dataPoint.status)
-                                            .foregroundColor(Color(.text))
-                                    }
-                                    
-                                    .onTapGesture {
-                                        self.selectedStatusID = (self.selectedStatusID == dataPoint.id) ? nil : dataPoint.id
+                                // key
+                                VStack(alignment: .leading, spacing: 12) {
+                                    ForEach(wateringData) { dataPoint in
+                                        HStack {
+                                            Circle()
+                                                .fill(dataPoint.color)
+                                                .frame(width: 16, height: 16)
+                                            Text(dataPoint.status)
+                                                .foregroundColor(Color(.text))
+                                        }
+
+                                        .onTapGesture {
+                                            self.selectedStatusID = (self.selectedStatusID == dataPoint.id) ? nil : dataPoint.id
+                                        }
                                     }
                                 }
+                                .padding(.leading, 20)
+                                .padding(.bottom, 16)
                             }
-                            .padding(.leading, 20)
-                            .padding(.bottom, 16)
+                            .frame(width: 325, alignment: .topLeading)
                         }
-                        .frame(width: 325, alignment: .topLeading)
+                        .padding(.bottom, 20)
                     }
-                    .padding(.bottom, 20)
+                    .padding(.top, 10)
                 }
-                .padding(.top, 10)
             }
-
-            // bottom nav bar
-            Spacer()
-            HStack {
-                NavigationLink {
-                    ContentView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
+            .tabItem {
+                VStack {
                     Image(systemName: "house.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.greenShade))
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink {
-                    PlantsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "leaf.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.backgroundShade))
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink {
-                    WifiView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "plus.app.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.backgroundShade))
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink {
-                    JournalView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "book.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.backgroundShade))
-                        .frame(maxWidth: .infinity)
-                }
-                NavigationLink {
-                    SettingsView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.backgroundShade))
-                        .frame(maxWidth: .infinity)
+                    Text("Home")
                 }
             }
-            .frame(width: UIScreen.main.bounds.width, height: 56)
-            .background(Color(.blueShade))
+            .toolbarBackground(Color(.blueShade), for: .tabBar) // Set tab bar background color
+            .toolbarBackground(.visible, for: .tabBar) // Make background visible
+            .accentColor(Color(.greenShade)) // Set selected tab item color
+
+            // Plants Tab
+            PlantsView()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "leaf.fill")
+                        Text("Plants")
+                    }
+                }
+
+            // Add Tab
+            WifiView()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "plus.app.fill")
+                        Text("Add")
+                    }
+                }
+
+            // Journal Tab
+            JournalView()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "book.fill")
+                        Text("Journal")
+                    }
+                }
+
+            // Settings Tab
+            SettingsView()
+                .tabItem {
+                    VStack {
+                        Image(systemName: "gearshape.fill")
+                        Text("Settings")
+                    }
+                }
         }
-        .foregroundStyle(Color(.text))
+        .foregroundStyle(Color(.text)) // This sets the default text color for the views
         .font(.custom("Lato-Regular", size: 20))
-        .background(Color(.backgroundShade))
+        .background(Color(.backgroundShade)) // This sets the background color for the overall view
     }
 }
 
