@@ -1,75 +1,21 @@
+//
+//  PlantsView.swift
+//  PetalPal
+//
+//  Created by Adishree Das on 7/22/25.
+//
+
 import SwiftUI
-
-// define plant types
-enum PlantType: String, Codable, Identifiable, CaseIterable {
-    case fruit = "Fruit"
-    case vegetable = "Vegetable"
-    case herb = "Herb"
-    case flower = "Flower"
-
-    var id: String { self.rawValue }
-
-    var plantImage: Image {
-        switch self {
-        case .fruit:
-            return Image(.fruit)
-        case .vegetable:
-            return Image(.veggie)
-        case .herb:
-            return Image(.herb)
-        case .flower:
-            return Image(.flower)
-        }
-    }
-}
-
-// Plant Model
-struct Plant: Identifiable, Codable {
-    var id = UUID()
-    var name: String
-    var type: PlantType
-    var wateringFrequency: String = ""
-    var wateringAmount: String = ""
-    var sunlightNeeds: String = ""
-    var careInstructions: String = ""
-}
-
-// Sample Plant Data
-class PlantData {
-    private static let plantsKey = "savedPlants"
-
-    static var samplePlants: [Plant] {
-        get {
-            if let data = UserDefaults.standard.data(forKey: plantsKey),
-               let plants = try? JSONDecoder().decode([Plant].self, from: data) {
-                return plants
-            }
-            
-            return [
-                Plant(name: "Hibiscus", type: .flower),
-                Plant(name: "Basil", type: .herb)
-            ]
-        }
-        set {
-            if let encoded = try? JSONEncoder().encode(newValue) {
-                UserDefaults.standard.set(encoded, forKey: plantsKey)
-            }
-        }
-    }
-}
+import SwiftData
 
 struct PlantsView: View {
-    @State private var plants: [Plant] = PlantData.samplePlants
-
+    @Environment(\.modelContext) private var modelContext
+    @Query private var plants: [Plant]
+    
     func deletePlant(_ plant: Plant) {
-        DispatchQueue.main.async {
-            if let index = plants.firstIndex(where: { $0.id == plant.id }) {
-                plants.remove(at: index)
-                PlantData.samplePlants = plants
-            }
-        }
+        modelContext.delete(plant)
     }
-
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -93,7 +39,7 @@ struct PlantsView: View {
                 .frame(height: 56)
                 .background(Color(red: 174/255, green: 213/255, blue: 214/255))
                 .padding(.bottom, 15)
-
+                
                 ScrollView {
                     LazyVGrid(columns: [
                         GridItem(.flexible()),
@@ -106,12 +52,12 @@ struct PlantsView: View {
                                 } label: {
                                     PlantCardView(plant: plant)
                                 }
-
+                                
                                 Button {
                                     deletePlant(plant)
                                 } label: {
                                     Image(systemName: "minus.circle.fill")
-                                        .foregroundColor(Color(.pink)) // Assuming .pink is a custom color or system pink
+                                        .foregroundColor(Color(.pink))
                                         .font(.system(size: 24))
                                 }
                                 .padding(8)
@@ -121,9 +67,8 @@ struct PlantsView: View {
                     }
                     .padding(.horizontal, 20)
                 }
-
+                
                 Spacer()
-
             }
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
@@ -136,4 +81,5 @@ struct PlantsView: View {
 
 #Preview {
     PlantsView()
+        .modelContainer(for: Plant.self, inMemory: true)
 }

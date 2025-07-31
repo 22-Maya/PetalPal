@@ -47,7 +47,7 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            // Home Tab
+            // home tab
             NavigationStack {
                 HStack {
                     Text("PetalPal")

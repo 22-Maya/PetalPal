@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct PetalPalApp: App {
@@ -17,5 +18,6 @@ struct PetalPalApp: App {
             }
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
+        .modelContainer(for: [Plant.self, PlantInfo.self, SmartPot.self])
     }
 }

@@ -1,39 +1,41 @@
 //
-// WifiView.swift
-// PetalPal
+//  WifiView.swift
+//  PetalPal
 //
-// Created by Adishree Das on 7/22/25.
+//  Created by Adishree Das on 7/22/25.
 //
 
 import SwiftUI
+import SwiftData
 
 class WifiManager: ObservableObject {
-
     @Published var connectionStatus: String = "Disconnected"
     @Published var errorMessage: String?
     @Published var deviceAddress: String = "http://192.168.1.100"
     @Published var lastReceivedData: String = "N/A"
     @Published var isConnecting: Bool = false
-
+    
     func connect() {
         guard !deviceAddress.isEmpty else {
             errorMessage = "Please enter a device address."
             return
         }
-
+        
         let fullAddress = deviceAddress.hasPrefix("http://") ? deviceAddress : "http://" + deviceAddress
-
+        
         isConnecting = true
         connectionStatus = "Connecting..."
         errorMessage = nil
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
             guard let self = self else { return }
             if !fullAddress.isEmpty {
                 self.deviceAddress = fullAddress
-                self.connectionStatus = "Connected to \(fullAddress)"
+                self.connectionStatus = "Connected: You can now connect another pot"
                 self.isConnecting = false
                 self.lastReceivedData = "Temperature: 22°C\nHumidity: 65%\nSoil Moisture: 80%"
+                // Reset device address for next connection
+                self.deviceAddress = "http://192.168.1.100"
             } else {
                 self.errorMessage = "Failed to connect to \(fullAddress). Check the address or network."
                 self.connectionStatus = "Disconnected"
@@ -41,105 +43,36 @@ class WifiManager: ObservableObject {
             }
         }
     }
-
-    func disconnect() {
-        connectionStatus = "Disconnected"
-        lastReceivedData = "N/A"
-        errorMessage = nil
-        isConnecting = false
-    }
-
-    func sendCommand(command: String, value: String? = nil) {
-        guard !deviceAddress.isEmpty else {
-            errorMessage = "Not connected to a device."
-            return
-        }
-
-        var urlString = "\(deviceAddress)/command?action=\(command)"
-        if let value = value {
-            urlString += "&value=\(value)"
-        }
-
-        guard let url = URL(string: urlString) else {
-            errorMessage = "Invalid command URL."
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.errorMessage = "Failed to send command: \(error.localizedDescription)"
-                    return
-                }
-
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                    self?.errorMessage = "Failed to send command: Invalid server response."
-                    return
-                }
-
-                self?.errorMessage = nil
-                self?.connectionStatus = "Command '\(command)' sent successfully!"
-                self?.fetchSmartPotData()
-            }
-        }.resume()
-    }
-
+    
     func fetchSmartPotData() {
         guard !deviceAddress.isEmpty else {
             errorMessage = "Not connected to a device."
             return
         }
-
-        guard let url = URL(string: "\(deviceAddress)/data") else {
-            errorMessage = "Invalid data URL."
-            return
-        }
-
+        
         connectionStatus = "Fetching data..."
-
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.errorMessage = "Failed to fetch data: \(error.localizedDescription)"
-                    self?.lastReceivedData = "Error"
-                    return
-                }
-
-                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                    self?.errorMessage = "Failed to fetch data: Invalid server response."
-                    self?.lastReceivedData = "Error"
-                    return
-                }
-
-                if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                    self?.lastReceivedData = dataString
-                    self?.connectionStatus = "Data received."
-                    self?.errorMessage = nil
-                } else {
-                    self?.lastReceivedData = "No data"
-                    self?.errorMessage = "No data received or unable to decode."
-                }
-            }
-        }.resume()
+        
+        // Simulate data fetch
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.lastReceivedData = "Temperature: 22°C\nHumidity: 65%\nSoil Moisture: 80%"
+            self?.connectionStatus = "Connected: You can now connect another pot"
+        }
     }
 }
 
 struct WifiView: View {
+    @Environment(\.modelContext) private var modelContext
     @StateObject private var wifiManager = WifiManager()
     @State private var newDeviceAddress: String = ""
     @State private var plantName = ""
     @State private var selectedType = PlantType.flower
-    @State private var plants: [Plant] = PlantData.samplePlants
-
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 // Top Navigation Bar
                 appHeader
-
+                
                 // Main Content Area
                 ScrollView {
                     connectSmartPotSection
@@ -154,7 +87,7 @@ struct WifiView: View {
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
     }
-
+    
     private var appHeader: some View {
         HStack {
             Text("PetalPal")
@@ -177,26 +110,26 @@ struct WifiView: View {
         .background(Color(red: 174/255, green: 213/255, blue: 214/255))
         .padding(.bottom, 15)
     }
-
+    
     private var connectSmartPotSection: some View {
         ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 25)
                 .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255))
-
+            
             VStack(alignment: .leading, spacing: 15) {
                 Text("Connect a Smart Pot (Wi-Fi)")
                     .font(.custom("Lato-Bold", size: 25))
-
+                
                 Text("Status: \(wifiManager.connectionStatus)")
                     .font(.custom("Lato-Regular", size: 18))
                     .foregroundColor(.black.opacity(0.7))
-
+                
                 if let errorMessage = wifiManager.errorMessage {
                     Text(errorMessage)
                         .font(.custom("Lato-Regular", size: 16))
                         .foregroundColor(.red)
                 }
-
+                
                 deviceAddressInput
                 plantInfoInput
                 connectionButtons
@@ -208,7 +141,7 @@ struct WifiView: View {
         }
         .padding(.horizontal)
     }
-
+    
     private var deviceAddressInput: some View {
         TextField("Enter Smart Pot IP Address or Hostname", text: $newDeviceAddress)
             .padding()
@@ -224,7 +157,7 @@ struct WifiView: View {
                 newDeviceAddress = wifiManager.deviceAddress
             }
     }
-
+    
     private var plantInfoInput: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Plant Name")
@@ -235,7 +168,7 @@ struct WifiView: View {
                 .font(.custom("Lato-Regular", size: 18))
                 .background(Color.white)
                 .cornerRadius(8)
-
+            
             Text("Plant Type")
                 .font(.custom("Lato-Bold", size: 16))
                 .foregroundColor(.black.opacity(0.7))
@@ -252,47 +185,35 @@ struct WifiView: View {
         }
         .padding(.vertical, 15)
     }
-
+    
     private var connectionButtons: some View {
-        HStack {
-            Button(action: {
-                if !plantName.isEmpty {
-                    wifiManager.connect()
-                }
-            }) {
-                Text("Connect")
-                    .font(.custom("Lato-Bold", size: 20))
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color(red: 82/255, green: 166/255, blue: 69/255))
-                    .cornerRadius(15)
+        Button(action: {
+            if !plantName.isEmpty {
+                wifiManager.connect()
             }
-            .disabled(wifiManager.isConnecting || wifiManager.connectionStatus.contains("Connected") || plantName.isEmpty)
-
-            Button(action: {
-                wifiManager.disconnect()
-            }) {
-                Text("Disconnect")
-                    .font(.custom("Lato-Bold", size: 20))
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.orange)
-                    .cornerRadius(15)
-            }
-            .disabled(!wifiManager.connectionStatus.contains("Connected"))
+        }) {
+            Text("Connect")
+                .font(.custom("Lato-Bold", size: 20))
+                .foregroundColor(.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color(red: 82/255, green: 166/255, blue: 69/255))
+                .cornerRadius(15)
         }
+        .disabled(wifiManager.isConnecting || plantName.isEmpty)
         .onChange(of: wifiManager.connectionStatus) { newStatus in
             if newStatus.contains("Connected") && !plantName.isEmpty {
+                // Create and save new plant
                 let newPlant = Plant(name: plantName, type: selectedType)
-                plants.append(newPlant)
-                PlantData.samplePlants = plants
+                modelContext.insert(newPlant)
+                
+                // Reset form for next plant
                 plantName = ""
+                selectedType = .flower
             }
         }
     }
-
+    
     private var fetchDataButton: some View {
         Button(action: {
             wifiManager.fetchSmartPotData()
@@ -305,9 +226,8 @@ struct WifiView: View {
                 .background(Color(red: 67/255, green: 137/255, blue: 124/255))
                 .cornerRadius(15)
         }
-        .disabled(!wifiManager.connectionStatus.contains("Connected"))
     }
-
+    
     private var lastReceivedDataDisplay: some View {
         VStack(alignment: .leading) {
             Text("Last Received Data:")
@@ -327,4 +247,5 @@ struct WifiView: View {
 
 #Preview {
     WifiView()
+        .modelContainer(for: Plant.self, inMemory: true)
 }
