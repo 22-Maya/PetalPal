@@ -16,7 +16,7 @@ struct ProfileView: View {
                     Image(systemName: "gearshape.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                        .foregroundColor(Color(.tealShade))
                         .padding(.trailing, 20)
                 }
             }

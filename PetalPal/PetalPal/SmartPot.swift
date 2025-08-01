@@ -2,9 +2,10 @@
 //  SmartPot.swift
 //  PetalPal
 //
-//  Created by AI Assistant
+//  Created by Adishree Das on 7/31/25
 //
 
+//smartpot data settings
 import SwiftUI
 import SwiftData
 

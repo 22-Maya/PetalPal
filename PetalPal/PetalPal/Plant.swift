@@ -5,6 +5,9 @@
 //  Created by Adishree Das on 7/31/25
 //
 
+//this is the database of the plants that the user has
+
+
 import SwiftUI
 import SwiftData
 
@@ -17,6 +20,7 @@ final class Plant {
     var wateringAmount: String
     var sunlightNeeds: String
     var careInstructions: String
+    @Relationship(deleteRule: .cascade) var journalEntries: [JournalEntry] = []
     
     init(name: String, type: PlantType) {
         self.id = UUID()

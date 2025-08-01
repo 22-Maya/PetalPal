@@ -5,6 +5,11 @@
 //  Created by Adishree Das on 7/31/25
 //
 
+
+//this is like the database of plants
+
+
+
 import SwiftUI
 import SwiftData
 

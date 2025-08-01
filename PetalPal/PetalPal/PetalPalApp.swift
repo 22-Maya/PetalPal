@@ -10,6 +10,20 @@ import SwiftData
 
 @main
 struct PetalPalApp: App {
+    let container: ModelContainer
+    
+    init() {
+        do {
+            let config = ModelConfiguration(isStoredInMemoryOnly: false)
+            container = try ModelContainer(
+                for: Plant.self, PlantInfo.self, SmartPot.self, JournalEntry.self,
+                configurations: config
+            )
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error.localizedDescription)")
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             NavigationStack {
@@ -18,6 +32,6 @@ struct PetalPalApp: App {
             }
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
-        .modelContainer(for: [Plant.self, PlantInfo.self, SmartPot.self])
+        .modelContainer(container)
     }
 }

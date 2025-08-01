@@ -75,26 +75,23 @@ struct ContentView: View {
                         // tasks
                         ZStack(alignment: .topLeading) {
                             RoundedRectangle(cornerRadius: 25)
-                                .frame(width:325)
+                                .frame(width:325, height:150)
                                 .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
                             VStack(alignment: .leading) {
-                                Text("Today's Tasks\n")
+                                Text("Today's Tasks")
                                     .font(.custom("Lato-Bold", size:25))
-                                    .padding(.top, 16)
+                                    .padding(.top, 20)
                                     .padding(.leading, 20)
-                            }
-                        }
-
-                        // last watered section
-                        ZStack(alignment: .topLeading) {
-                            RoundedRectangle(cornerRadius: 25)
-                                .frame(width: 325)
-                                .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255)) // Original color, consider dark mode
-                            VStack(alignment: .leading) {
-                                Text("Last Watered \n")
-                                    .font(.custom("Lato-Bold", size:25))
-                                    .padding(.top, 16)
-                                    .padding(.leading, 20)
+                                    .padding(.bottom, 5)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("- Check on all plants")
+                                        .font(.custom("Lato-Regular", size:18))
+                                    Text("- Spend some time outdoors")
+                                        .font(.custom("Lato-Regular", size:18))
+                                    Text("- Water your tomato plant soon")
+                                        .font(.custom("Lato-Regular", size:18))
+                                }
+                                .padding(.leading, 20)
                             }
                         }
 
@@ -136,9 +133,7 @@ struct ContentView: View {
                             }
                             .frame(width: 325, alignment: .topLeading)
                         }
-                        .padding(.bottom, 20)
                     }
-                    .padding(.top, 10)
                 }
             }
             .tabItem {

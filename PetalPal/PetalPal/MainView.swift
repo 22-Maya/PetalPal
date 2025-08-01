@@ -88,21 +88,17 @@ struct MainView: View {
                             .frame(width: 250, height: 350)
                         
                         Text(plant.name)
-                            .font(.custom("Lato-Bold", size: 50))
+                            .font(.custom("Prata-Regular", size: 50))
                             .foregroundColor(.black)
                         
                         Text(plant.type)
                             .font(.system(size: 25))
                             .foregroundColor(.black.opacity(0.7))
                     }
-                    .padding(.vertical, 30)
+                    .padding(.top, 30)
                     
                     // user's plant info
                     VStack(alignment: .leading, spacing: 20) {
-                        Text("My Plant")
-                            .font(.custom("Lato-Bold", size: 24))
-                            .padding(.bottom, 5)
-                        
                         if !plant.wateringFrequency.isEmpty {
                             DetailSection(title: "Watering Frequency", content: plant.wateringFrequency)
                         }
@@ -116,33 +112,58 @@ struct MainView: View {
                             DetailSection(title: "Care Instructions", content: plant.careInstructions)
                         }
                     }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
-                    )
-                    .padding()
                     
                     // plant care details
                     if let info = plantInfo {
                         VStack(alignment: .leading, spacing: 20) {
-                            Text("Plant Care Guide")
-                                .font(.custom("Lato-Bold", size: 24))
-                                .padding(.bottom, 5)
+                            
+                            HStack {
+                                Spacer()
+                                Text("More Info")
+                                    .font(.custom("Lato-Bold", size: 24))
+                                    .padding(.bottom, 5)
+                                Spacer()
+                            }
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                            )
+                            .padding()
                             
                             DetailSection(title: "Watering", content: info.wateringDetails)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                )
+                                .padding()
+                            
                             DetailSection(title: "Sunlight", content: info.sunlight)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                )
+                                .padding()
+                            
                             DetailSection(title: "Soil", content: info.soil)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 15)
+                                        .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                )
+                                .padding()
+                            
                             if let notes = info.notes {
                                 DetailSection(title: "Additional Care Tips", content: notes)
+                                    .padding()
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                    )
+                                    .padding()
                             }
                         }
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
-                        )
-                        .padding()
                     }
                 }
                 
