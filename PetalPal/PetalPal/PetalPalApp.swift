@@ -1,5 +1,4 @@
 import SwiftUI
-import Charts
 import SwiftData
 import FirebaseAuth
 import FirebaseCore
@@ -7,16 +6,17 @@ import FirebaseAppCheck
 
 @main
 struct PetalPalApp: App {
-    let container: ModelContainer
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var textSizeManager = TextSizeManager.shared
     
-    init() {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
+            Plant.self,
+            PlantInfo.self,
+            SmartPot.self,
+            JournalEntry.self,
             Pot.self,
-            UserProfile.self, // Include the UserProfile model in the schema
+            UserProfile.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -29,13 +29,8 @@ struct PetalPalApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                ContentView()
-                    .background(Color(red: 249/255, green: 248/255, blue: 241/255))
-            }
-            .background(Color(red: 249/255, green: 248/255, blue: 241/255))
-            .environmentObject(textSizeManager)
             AppRootView()
+                .environmentObject(textSizeManager)
         }
         .modelContainer(sharedModelContainer)
     }

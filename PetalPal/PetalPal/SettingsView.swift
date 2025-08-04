@@ -3,7 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     
     @Environment(\.dismiss) var dismiss
-    @StateObject private var textSizeManager = TextSizeManager.shared
+    @EnvironmentObject var textSizeManager: TextSizeManager
     
     var body: some View {
         NavigationStack {
@@ -108,4 +108,5 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(TextSizeManager.shared)
 }

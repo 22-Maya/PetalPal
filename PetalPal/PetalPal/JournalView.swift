@@ -19,7 +19,7 @@ struct JournalView: View {
             HStack {
                 Text("PetalPal")
                     .scaledFont("Prata-Regular", size: 28)
-                    .foregroundColor(Color(.tealShade))
+                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink {
@@ -29,12 +29,12 @@ struct JournalView: View {
                     Image(systemName: "questionmark.circle")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.tealShade))
+                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                         .padding(.trailing, 20)
                 }
             }
             .frame(height: 56)
-            .background(Color(.blueShade))
+            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
             .padding(.bottom, 15)
 
             ScrollView {

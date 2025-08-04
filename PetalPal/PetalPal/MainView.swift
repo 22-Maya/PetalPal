@@ -53,11 +53,11 @@ struct MainView: View {
                         Image(systemName: "questionmark.circle")
                             .resizable()
                             .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                             .padding(.trailing, 20)
                     }
                 }
-                .frame(width: UIScreen.main.bounds.width, height: 56)
+                .frame(height: 56)
                 .background(Color(red: 174/255, green: 213/255, blue: 214/255))
                 
                 // back button
@@ -112,54 +112,61 @@ struct MainView: View {
                     
                     // plant care details
                     if let info = plantInfo {
-                        VStack(alignment: .leading, spacing: 20) {
+                        VStack(alignment: .leading, spacing: 25) {
                             
+                            // Header with icon
                             HStack {
-                                Spacer()
-                                Text("More Info")
-                                    .scaledFont("Lato-Bold", size: 24)
-                                    .padding(.bottom, 5)
+                                Image(systemName: "info.circle.fill")
+                                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                                    .font(.system(size: 24))
+                                Text("Care Information")
+                                    .scaledFont("Lato-Bold", size: 26)
+                                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                                 Spacer()
                             }
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 15)
                             .background(
-                                RoundedRectangle(cornerRadius: 15)
-                                    .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
+                                    .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
                             )
-                            .padding()
+                            .padding(.horizontal, 20)
+                            .padding(.top, 20)
                             
-                            DetailSection(title: "Watering", content: info.wateringDetails)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                            // Care sections with improved styling
+                            VStack(spacing: 16) {
+                                CareDetailSection(
+                                    title: "Watering",
+                                    content: info.wateringDetails,
+                                    icon: "drop.fill",
+                                    color: Color(red: 67/255, green: 137/255, blue: 124/255)
                                 )
-                                .padding()
-                            
-                            DetailSection(title: "Sunlight", content: info.sunlight)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                
+                                CareDetailSection(
+                                    title: "Sunlight",
+                                    content: info.sunlight,
+                                    icon: "sun.max.fill",
+                                    color: Color(red: 255/255, green: 193/255, blue: 7/255)
                                 )
-                                .padding()
-                            
-                            DetailSection(title: "Soil", content: info.soil)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                
+                                CareDetailSection(
+                                    title: "Soil",
+                                    content: info.soil,
+                                    icon: "leaf.fill",
+                                    color: Color(red: 139/255, green: 69/255, blue: 19/255)
                                 )
-                                .padding()
-                            
-                            if let notes = info.notes {
-                                DetailSection(title: "Additional Care Tips", content: notes)
-                                    .padding()
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 15)
-                                            .fill(Color(red: 173/255, green: 194/255, blue: 153/255))
+                                
+                                if let notes = info.notes {
+                                    CareDetailSection(
+                                        title: "Additional Care Tips",
+                                        content: notes,
+                                        icon: "lightbulb.fill",
+                                        color: Color(red: 255/255, green: 152/255, blue: 0/255)
                                     )
-                                    .padding()
+                                }
                             }
+                            .padding(.horizontal, 20)
                         }
                     }
                 }
@@ -192,6 +199,42 @@ struct DetailSection: View {
             Text(content)
                 .scaledFont("Lato-Regular", size: 18)
         }
+    }
+}
+
+// Enhanced care detail section with icons and better styling
+struct CareDetailSection: View {
+    let title: String
+    let content: String
+    let icon: String
+    let color: Color
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .foregroundColor(color)
+                    .font(.system(size: 20, weight: .medium))
+                    .frame(width: 24, height: 24)
+                
+                Text(title)
+                    .scaledFont("Lato-Bold", size: 20)
+                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                
+                Spacer()
+            }
+            
+            Text(content)
+                .scaledFont("Lato-Regular", size: 16)
+                .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                .lineSpacing(2)
+        }
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.white)
+                .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
+        )
     }
 }
 
