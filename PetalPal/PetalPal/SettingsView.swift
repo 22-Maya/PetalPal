@@ -4,6 +4,8 @@ struct SettingsView: View {
     
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var textSizeManager: TextSizeManager
+    @StateObject private var wifiManager = WifiManager.shared
+    @State private var isAutomaticMode = false
     
     var body: some View {
         NavigationStack {
@@ -33,11 +35,40 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: 30) {
                     //manual vs automatic mode section
                     VStack(alignment: .leading, spacing: 20) {
-                        Text("Manual / Automatic")
-                            .scaledFont("Lato-Bold", size: 28)
-                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
-                        
+                        VStack(alignment: .leading, spacing: 15) {
+                            Toggle("Automatic Mode", isOn: $isAutomaticMode)
+                                .toggleStyle(SwitchToggleStyle(tint: Color(red: 0/255, green: 122/255, blue: 69/255)))
+                                .onChange(of: isAutomaticMode) { newValue in
+                                    wifiManager.sendModeCommand(isAutomatic: newValue, fromSettings: true)
+                                }
+                            
+                            // Connection status indicator
+                            HStack {
+                                Circle()
+                                    .fill(wifiManager.isSendingCommand ? Color.red : 
+                                          (wifiManager.connectionStatus.contains("Connected") || wifiManager.connectionStatus.contains("Sent:")) ? Color.green : Color.red)
+                                    .frame(width: 8, height: 8)
+                                Text(wifiManager.connectionStatus)
+                                    .scaledFont("Lato-Regular", size: 14)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            if let errorMessage = wifiManager.errorMessage {
+                                Text(errorMessage)
+                                    .scaledFont("Lato-Regular", size: 14)
+                                    .foregroundColor(.red)
+                            }
+            
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
+                                .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
+                        )
                     }
+                    .padding()
+
                     
                     // Accessibility Settings Section
                     VStack(alignment: .leading, spacing: 20) {

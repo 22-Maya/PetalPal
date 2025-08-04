@@ -2,11 +2,14 @@ import SwiftUI
 import SwiftData
 
 class WifiManager: ObservableObject {
+    static let shared = WifiManager()
+    
     @Published var connectionStatus: String = "Disconnected"
     @Published var errorMessage: String?
     @Published var deviceAddress: String = "http://192.168.1.100"
     @Published var lastReceivedData: String = "N/A"
     @Published var isConnecting: Bool = false
+    @Published var isSendingCommand: Bool = false
     
     func connect() {
         guard !deviceAddress.isEmpty else {
@@ -51,11 +54,55 @@ class WifiManager: ObservableObject {
             self?.connectionStatus = "Connected: You can now connect another pot"
         }
     }
+    
+    func sendModeCommand(isAutomatic: Bool, fromSettings: Bool = false) {
+        guard !deviceAddress.isEmpty else {
+            errorMessage = "Not connected to a device."
+            return
+        }
+        
+        let mode = isAutomatic ? "automatic" : "manual"
+        let command = "Mode: \(mode)"
+        
+        connectionStatus = "Sending mode command..."
+        errorMessage = nil
+        isSendingCommand = true
+        
+        // Simulate sending command to WiFi pot
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.isSendingCommand = false
+            if fromSettings {
+                let message = isAutomatic ? 
+                    "Sent: your pot is now automatic, it will water for you." : 
+                    "Sent: your pot is now manual, you must water yourself"
+                self?.connectionStatus = message
+            } else {
+                self?.connectionStatus = "Connected: You can now connect another pot"
+            }
+            self?.lastReceivedData = "Command sent: \(command)"
+            print("Sent to WiFi pot: \(command)")
+        }
+    }
+    
+    func checkCurrentMode() {
+        guard !deviceAddress.isEmpty else {
+            errorMessage = "Not connected to a device."
+            return
+        }
+        
+        connectionStatus = "Checking current mode..."
+        
+        // Simulate checking current mode from WiFi pot
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.connectionStatus = "Connected: You can now connect another pot"
+            self?.lastReceivedData = "Current mode: automatic"
+        }
+    }
 }
 
 struct WifiView: View {
     @Environment(\.modelContext) private var modelContext
-    @StateObject private var wifiManager = WifiManager()
+    @StateObject private var wifiManager = WifiManager.shared
     @State private var newDeviceAddress: String = ""
     @State private var plantName = ""
     @State private var selectedType = PlantType.flower
