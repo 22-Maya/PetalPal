@@ -50,7 +50,7 @@ struct ProfileView: View {
                             // MARK: - Name Display
                             // The user's name is now displayed above the profile image.
                             if !isEditing {
-                                Text(profileName)
+                                Text("Hello, \(profileName)")
                                     .font(.custom("Lato-Bold", size: 24))
                                     .padding(.bottom, 5)
                             }

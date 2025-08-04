@@ -316,7 +316,6 @@ struct CareDetailSection: View {
 #Preview {
     NavigationStack {
         MainView(plant: Plant(name: "Basil", type: .herb))
-            .environmentObject(AuthViewModel())
     }
     .modelContainer(for: [Plant.self, PlantInfo.self], inMemory: true)
 }
