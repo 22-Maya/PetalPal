@@ -31,6 +31,14 @@ struct SettingsView: View {
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 30) {
+                    //manual vs automatic mode section
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("Manual / Automatic")
+                            .scaledFont("Lato-Bold", size: 28)
+                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                        
+                    }
+                    
                     // Accessibility Settings Section
                     VStack(alignment: .leading, spacing: 20) {
                         Text("Accessibility")
