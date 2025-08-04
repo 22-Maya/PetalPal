@@ -120,4 +120,20 @@ class AuthViewModel: ObservableObject {
             self.errorMessage = "Failed to log out: \(error.localizedDescription)"
         }
     }
+    
+    // MARK: - New Refresh Function
+    /// Safely reloads the current user's data from Firebase.
+    func refreshUserData() async {
+        guard let user = self.user else { return }
+        
+        do {
+            try await user.reload()
+            // The AuthStateDidChangeListener will automatically update self.user
+            // after a reload, so we don't need to manually assign it.
+            // Forcing an update just to be safe in all scenarios.
+            self.user = Auth.auth().currentUser
+        } catch {
+            print("Failed to refresh user data: \(error.localizedDescription)")
+        }
+    }
 }

@@ -44,11 +44,17 @@ struct ProfileView: View {
                 .padding(.bottom, 15)
                 
                 // MARK: - Main Content Guard
-                // This is the key fix. We ensure that the user object is available before
-                // attempting to render the rest of the view.
                 if authViewModel.user != nil {
                     ScrollView {
                         VStack {
+                            // MARK: - Name Display
+                            // The user's name is now displayed above the profile image.
+                            if !isEditing {
+                                Text(profileName)
+                                    .font(.custom("Lato-Bold", size: 24))
+                                    .padding(.bottom, 5)
+                            }
+                            
                             // MARK: - Profile Image
                             ProfileImageView(profileImageData: profileImageData, photoURL: authViewModel.user?.photoURL)
                             
@@ -59,6 +65,7 @@ struct ProfileView: View {
                                         .font(.custom("Lato-Regular", size: 16))
                                         .foregroundColor(Color(.tealShade))
                                 }
+                                .padding(.top, 10)
                                 .padding(.bottom)
                             }
                             
@@ -109,9 +116,6 @@ struct ProfileView: View {
     // MARK: - Display View
     private var displayProfileView: some View {
         VStack(spacing: 15) {
-            Text(profileName)
-                .font(.custom("Lato-Bold", size: 24))
-            
             // MARK: - Display Username and Joined Date
             HStack(spacing: 5) {
                 if !username.isEmpty {
@@ -126,6 +130,7 @@ struct ProfileView: View {
                         .foregroundColor(.gray)
                 }
             }
+            .padding(.top, 10)
             
             Text(profileBio)
                 .font(.custom("Lato-Regular", size: 18))
@@ -259,10 +264,8 @@ struct ProfileView: View {
             isEditing = false
             
             // MARK: - Refresh User Data
-            // Reload the user data from Firebase to get the latest updates.
-            try await user.reload()
-            // Manually trigger a refresh in the auth view model
-            authViewModel.user = Auth.auth().currentUser
+            // Call the function on the view model to handle the refresh safely.
+            await authViewModel.refreshUserData()
             
         } catch {
             print("Failed to save or refresh profile: \(error)")
@@ -307,3 +310,7 @@ struct ProfileImageView: View {
     }
 }
 
+#Preview {
+    ProfileView()
+        .environmentObject(AuthViewModel())
+}
