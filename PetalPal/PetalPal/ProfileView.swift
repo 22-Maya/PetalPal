@@ -4,6 +4,7 @@ import SwiftData
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var textSizeManager: TextSizeManager
     @Environment(\.modelContext) private var modelContext
     
     // Fetch the user's profile from SwiftData, filtered by the current user's ID.
@@ -14,57 +15,60 @@ struct ProfileView: View {
     @State private var showSuccessMessage = false
     
     // Initialize the view with existing profile data if it exists.
-    init(authViewModel: AuthViewModel) {
-        let userId = authViewModel.user?.uid ?? "guest"
-        _userProfiles = Query(filter: #Predicate<UserProfile> {
-            $0.userId == userId
-        })
+    init() {
+        _userProfiles = Query()
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        NavigationStack {
+            VStack(spacing: 0) {
             HStack {
                 Text("PetalPal")
-                    .font(.custom("Prata-Regular", size: 28))
-                    .foregroundColor(Color(.tealShade))
+                    .scaledFont("Prata-Regular", size: 28)
+                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .padding(.leading, 20)
                 Spacer()
                 NavigationLink {
-                    HelpbotView()
+                    SettingsView()
                         .navigationBarBackButtonHidden(true)
                 } label: {
-                    Image(systemName: "questionmark.circle")
+                    Image(systemName: "gearshape.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
-                        .foregroundColor(Color(.backgroundShade))
+                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                         .padding(.trailing, 20)
                 }
             }
-            .frame(maxWidth: .infinity)
-            .background(Color(.blueShade))
+            .frame(height: 56)
+            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
             .padding(.bottom, 15)
             
             ScrollView {
-                Text("Profile - Work in Progress")
-                    .font(.custom("Lato-Bold", size: 25))
+                Text("Profile")
+                    .scaledFont("Lato-Bold", size: 25)
                     .padding()
                 
                 // New UI to edit profile information.
                 VStack(alignment: .leading, spacing: 20) {
                     Text("User Profile")
-                        .font(.custom("Lato-Bold", size: 20))
-                    
+                        .scaledFont("Lato-Bold", size: 20)
+
                     TextField("Name", text: $profileName)
                         .textFieldStyle(.roundedBorder)
+                        .scaledFont("Lato-Regular", size: 18)
+
                     
                     TextField("Bio", text: $profileBio)
                         .textFieldStyle(.roundedBorder)
                         .lineLimit(5)
+                        .scaledFont("Lato-Regular", size: 18)
+
                 }
                 .padding(.horizontal)
                 .onAppear {
                     // Load existing profile data when the view appears.
-                    if let existingProfile = userProfiles.first {
+                    let userId = authViewModel.user?.uid ?? "guest"
+                    if let existingProfile = userProfiles.first(where: { $0.userId == userId }) {
                         profileName = existingProfile.name
                         profileBio = existingProfile.bio
                     } else {
@@ -72,13 +76,18 @@ struct ProfileView: View {
                         profileName = ""
                         profileBio = ""
                     }
+                    
+                    // Configure TextSizeManager with current user
+                    if let userId = authViewModel.user?.uid {
+                        textSizeManager.configure(modelContext: modelContext, userId: userId)
+                    }
                 }
                 
                 Button(action: {
                     saveProfile()
                 }) {
                     Text("Save")
-                        .font(.custom("Lato-Bold", size: 20))
+                        .scaledFont("Lato-Regular", size: 20)
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -108,7 +117,7 @@ struct ProfileView: View {
                     }
                 }) {
                     Text("Log Out")
-                        .font(.custom("Lato-Bold", size: 20))
+                        .scaledFont("Lato-Regular", size: 20)
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -125,19 +134,22 @@ struct ProfileView: View {
         .foregroundStyle(Color(.text))
         .font(.custom("Lato-Regular", size: 20))
         .background(Color(.backgroundShade))
+        }
     }
     
     // Function to save or update the user's profile.
     private func saveProfile() {
         guard let userId = authViewModel.user?.uid else { return }
         
-        if let existingProfile = userProfiles.first {
+        if let existingProfile = userProfiles.first(where: { $0.userId == userId }) {
             // Update existing profile.
             existingProfile.name = profileName
             existingProfile.bio = profileBio
+            existingProfile.textSizeMultiplier = textSizeManager.textSizeMultiplier
         } else {
             // Create a new profile.
             let newProfile = UserProfile(name: profileName, bio: profileBio, userId: userId)
+            newProfile.textSizeMultiplier = textSizeManager.textSizeMultiplier
             modelContext.insert(newProfile)
         }
         

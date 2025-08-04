@@ -35,11 +35,11 @@ struct PlantCardView: View {
             
             VStack(alignment: .leading) {
                 Text(plant.name)
-                    .font(.custom("Lato-Bold", size: 20))
+                    .scaledFont("Lato-Bold", size: 20)
                     .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
                 
                 Text(plant.type)
-                    .font(.custom("Lato-Regular", size: 16))
+                    .scaledFont("Lato-Regular", size: 16)
                     .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
                 
                 Spacer()

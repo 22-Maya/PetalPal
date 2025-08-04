@@ -41,7 +41,26 @@ struct LoginView: View {
                 .padding(.horizontal)
                 .padding(.top, 10)
             
-            if let errorMessage = authViewModel.errorMessage, !errorMessage.isEmpty {
+            // Validation messages
+            if email.isEmpty && !password.isEmpty {
+                Text("Please enter an email address")
+                    .foregroundColor(.orange)
+                    .font(.caption)
+                    .padding(.horizontal)
+                    .padding(.top, 5)
+            } else if password.isEmpty && !email.isEmpty {
+                Text("Please enter a password")
+                    .foregroundColor(.orange)
+                    .font(.caption)
+                    .padding(.horizontal)
+                    .padding(.top, 5)
+            } else if !password.isEmpty && password.count < 6 {
+                Text("Password must be at least 6 characters")
+                    .foregroundColor(.orange)
+                    .font(.caption)
+                    .padding(.horizontal)
+                    .padding(.top, 5)
+            } else if let errorMessage = authViewModel.errorMessage, !errorMessage.isEmpty {
                 Text(errorMessage)
                     .foregroundColor(.red)
                     .font(.caption)
@@ -50,6 +69,11 @@ struct LoginView: View {
             }
             
             Button(action: {
+                print("Button tapped! Email: \(email), Password length: \(password.count), IsRegistering: \(isRegistering)")
+                // Add haptic feedback to confirm button tap
+                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                impactFeedback.impactOccurred()
+                
                 Task {
                     authViewModel.errorMessage = nil
                     
@@ -70,18 +94,20 @@ struct LoginView: View {
                     }
                 }
             }) {
-                ZStack {
-                    Text(isRegistering ? "Register" : "Log In")
-                        .font(.custom("Lato-Bold", size: 20))
-                        .foregroundColor(.white)
-                }
+                Text(isRegistering ? "Register" : "Log In")
+                    .font(.custom("Lato-Bold", size: 20))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
             }
-            .padding()
-            .frame(maxWidth: .infinity)
             .background(Color(.blueShade))
             .cornerRadius(15)
             .padding(.horizontal)
             .padding(.top, 20)
+            .padding(.bottom, 10)
+            .disabled(email.isEmpty || password.isEmpty || password.count < 6)
+            .opacity(email.isEmpty || password.isEmpty || password.count < 6 ? 0.6 : 1.0)
+            .contentShape(Rectangle())
             
             Button(action: {
                 isRegistering.toggle()
@@ -94,6 +120,7 @@ struct LoginView: View {
                     .foregroundColor(Color(.tealShade))
                     .padding(.top, 10)
             }
+            .padding(.bottom, 20)
             
             Spacer()
         }
