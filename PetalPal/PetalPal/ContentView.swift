@@ -26,17 +26,23 @@ struct ContentView: View {
     init() {
         let appearance = UITabBarAppearance()
         appearance.backgroundColor = UIColor(Color(.blueShade))
-        appearance.selectionIndicatorTintColor = UIColor(Color(.text))
-        appearance.stackedLayoutAppearance.selected.iconColor = UIColor(Color(.text))
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor(Color(.text)),
-            .font: UIFont(name: "Lato-Regular", size: 12)!
-        ]
-        appearance.stackedLayoutAppearance.normal.iconColor = UIColor(Color(.tealShade))
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+        
+        let itemAppearance = UITabBarItemAppearance()
+        itemAppearance.normal.iconColor = UIColor(Color(.tealShade))
+        itemAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor(Color(.tealShade)),
-            .font: UIFont(name: "Lato-Regular", size: 12)!
+            .font: UIFont(name: "Lato-Regular", size:16)!
         ]
+        itemAppearance.selected.iconColor = UIColor(Color(.text))
+        itemAppearance.selected.titleTextAttributes = [
+            .foregroundColor: UIColor(Color(.text)),
+            .font: UIFont(name: "Lato-Regular", size: 16)!
+        ]
+        
+        appearance.stackedLayoutAppearance =  itemAppearance
+        appearance.inlineLayoutAppearance = itemAppearance
+        appearance.compactInlineLayoutAppearance = itemAppearance
+        
         UITabBar.appearance().standardAppearance = appearance
         UITabBar.appearance().scrollEdgeAppearance = appearance
     }
@@ -45,7 +51,7 @@ struct ContentView: View {
         if authViewModel.isAuthenticated {
             TabView {
                 NavigationStack {
-                                    HStack {
+                    HStack {
                     Text("PetalPal")
                         .scaledFont("Prata-Regular", size: 28)
                         .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
@@ -72,7 +78,6 @@ struct ContentView: View {
                                 Text("Today's Tasks")
                                     .scaledFont("Lato-Bold", size: 25)
                                     .padding(.top, 20)
-                                    .padding(.leading, 20)
                                     .padding(.bottom, 5)
                                 VStack(alignment: .leading, spacing: 8) {
                                     Text("- Weed & prune plants")
@@ -80,50 +85,52 @@ struct ContentView: View {
                                     Text("- Water plants")
                                         .scaledFont("Lato-Regular", size: 18)
                                 }
-                                .padding(.leading, 20)
                                 .padding(.bottom, 20)
                             }
-                            .frame(maxWidth: 325)
+                            .padding(.leading, 20)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
                                 RoundedRectangle(cornerRadius: 25)
                                     .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
                             )
+                            .padding(.leading, 30)
+                            .padding(.trailing, 30)
 
-                            ZStack(alignment: .top) {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .frame(width: 325)
-                                    .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
-                                VStack(alignment: .leading, spacing: 20) {
-                                    Text("Watering Overview")
-                                        .scaledFont("Lato-Bold", size: 25)
-                                        .padding(.top, 16)
-                                        .padding(.leading, 20)
-                                    
-                                    PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
-                                        .frame(width: 200, height: 200)
-                                        .frame(maxWidth: .infinity, alignment: .center)
-                                    
-                                    VStack(alignment: .leading, spacing: 12) {
-                                        ForEach(wateringData) { dataPoint in
-                                            HStack {
-                                                Circle()
-                                                    .fill(dataPoint.color)
-                                                    .frame(width: 16, height: 16)
-                                                Text(dataPoint.status)
-                                                    .scaledFont("Lato-Regular", size: 16)
-                                                    .foregroundColor(Color(.text))
-                                            }
-                                            .onTapGesture {
-                                                self.selectedStatusID = (self.selectedStatusID == dataPoint.id) ? nil : dataPoint.id
-                                            }
+                            VStack(alignment: .leading, spacing: 20) {
+                                Text("Watering Overview")
+                                    .scaledFont("Lato-Bold", size: 25)
+                                    .padding(.top, 16)
+                                    .padding(.leading, 20)
+                                
+                                PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
+                                    .frame(width: 200, height: 200)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                
+                                VStack(alignment: .leading, spacing: 12) {
+                                    ForEach(wateringData) { dataPoint in
+                                        HStack {
+                                            Circle()
+                                                .fill(dataPoint.color)
+                                                .frame(width: 16, height: 16)
+                                            Text(dataPoint.status)
+                                                .scaledFont("Lato-Regular", size: 16)
+                                                .foregroundColor(Color(.text))
+                                        }
+                                        .onTapGesture {
+                                            self.selectedStatusID = (self.selectedStatusID == dataPoint.id) ? nil : dataPoint.id
                                         }
                                     }
-                                    .padding(.leading, 20)
-                                    .padding(.bottom, 16)
                                 }
-                                .frame(width: 325, alignment: .topLeading)
+                                .padding(.leading, 20)
+                                .padding(.bottom, 16)
                             }
-                            .padding(.bottom, 20)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 25)
+                                    .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
+                            )
+                            .padding(.leading, 30)
+                            .padding(.trailing, 30)
                         }
                         .padding(.top, 10)
                     }
