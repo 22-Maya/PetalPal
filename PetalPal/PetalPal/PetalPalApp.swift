@@ -1,12 +1,9 @@
-//
-//  PetalPalApp.swift
-//  PetalPal
-//
-//  Created by Adishree Das on 7/21/25.
-//
-
 import SwiftUI
+import Charts
 import SwiftData
+import FirebaseAuth
+import FirebaseCore
+import FirebaseAppCheck
 
 @main
 struct PetalPalApp: App {
@@ -14,17 +11,22 @@ struct PetalPalApp: App {
     @StateObject private var textSizeManager = TextSizeManager.shared
     
     init() {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Pot.self,
+            UserProfile.self, // Include the UserProfile model in the schema
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
         do {
-            let config = ModelConfiguration(isStoredInMemoryOnly: false)
-            container = try ModelContainer(
-                for: Plant.self, PlantInfo.self, SmartPot.self, JournalEntry.self,
-                configurations: config
-            )
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
-            fatalError("Failed to create ModelContainer: \(error.localizedDescription)")
+            fatalError("Could not create ModelContainer: \(error)")
         }
-    }
-    
+    }()
+
     var body: some Scene {
         WindowGroup {
             NavigationStack {
@@ -33,7 +35,8 @@ struct PetalPalApp: App {
             }
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
             .environmentObject(textSizeManager)
+            AppRootView()
         }
-        .modelContainer(container)
+        .modelContainer(sharedModelContainer)
     }
 }

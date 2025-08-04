@@ -1,11 +1,9 @@
-//
-//  HelpbotView.swift
-//  PetalPal
-//
-//  Created by Adishree Das on 7/22/25.
-//
-
 import SwiftUI
+import Charts
+import SwiftData
+import FirebaseAuth
+import FirebaseCore
+import FirebaseAppCheck
 
 struct HelpbotView: View {
     

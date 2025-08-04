@@ -1,10 +1,3 @@
-//
-//  WifiView.swift
-//  PetalPal
-//
-//  Created by Adishree Das on 7/22/25.
-//
-
 import SwiftUI
 import SwiftData
 
