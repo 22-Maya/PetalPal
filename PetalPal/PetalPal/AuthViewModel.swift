@@ -2,6 +2,7 @@ import Foundation
 import FirebaseAuth
 import Combine
 import SwiftUI
+import FirebaseFirestore
 
 @MainActor
 class AuthViewModel: ObservableObject {
@@ -57,13 +58,34 @@ class AuthViewModel: ObservableObject {
         }
     }
     
-    // Asynchronous function to register a new user.
-    func register(email: String, password: String) async {
+    // MARK: - Updated Register Function
+    // The register function now accepts 'name' and 'username' parameters.
+    func register(email: String, password: String, name: String, username: String) async {
         errorMessage = nil
         do {
+            // 1. Create the user with email and password in Firebase Auth.
             let result = try await Auth.auth().createUser(withEmail: email, password: password)
             self.user = result.user
+            
+            // 2. Set the user's display name in their Auth profile.
+            let changeRequest = result.user.createProfileChangeRequest()
+            changeRequest.displayName = name
+            try await changeRequest.commitChanges()
+            
+            // MARK: - Create User Document in Firestore
+            // 3. Create a new document in Firestore to store additional user data.
+            let db = Firestore.firestore()
+            let userData: [String: Any] = [
+                "username": username,
+                "name": name,
+                "bio": "", // Start with an empty bio
+                "creationDate": Timestamp(date: Date()) // Set the join date
+            ]
+            
+            try await db.collection("users").document(result.user.uid).setData(userData)
+            
             self.isAuthenticated = true
+            
         } catch {
             // Log the full error to the console for debugging purposes.
             print("Registration error details: \(error)")
