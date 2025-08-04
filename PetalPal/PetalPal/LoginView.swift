@@ -56,25 +56,25 @@ struct LoginView: View {
             // Validation messages
             if email.isEmpty && !password.isEmpty {
                 Text("Please enter an email address")
-                    .foregroundColor(.orange)
+                    .foregroundColor(Color(red: 212/255, green: 106/255, blue: 106/255))
                     .font(.caption)
                     .padding(.horizontal)
                     .padding(.top, 5)
             } else if password.isEmpty && !email.isEmpty {
                 Text("Please enter a password")
-                    .foregroundColor(.orange)
+                    .foregroundColor(Color(red: 212/255, green: 106/255, blue: 106/255))
                     .font(.caption)
                     .padding(.horizontal)
                     .padding(.top, 5)
             } else if !password.isEmpty && password.count < 6 {
                 Text("Password must be at least 6 characters")
-                    .foregroundColor(.orange)
+                    .foregroundColor(Color(red: 212/255, green: 106/255, blue: 106/255))
                     .font(.caption)
                     .padding(.horizontal)
                     .padding(.top, 5)
             } else if let errorMessage = authViewModel.errorMessage, !errorMessage.isEmpty {
                 Text(errorMessage)
-                    .foregroundColor(.red)
+                    .foregroundColor(Color(red: 212/255, green: 106/255, blue: 106/255))
                     .font(.caption)
                     .padding(.horizontal)
                     .padding(.top, 5)
