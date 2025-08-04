@@ -7,19 +7,21 @@ import PhotosUI
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     
+    // State for managing UI and profile data
     @State private var isEditing = false
     @State private var profileName: String = ""
-    
     @State private var username: String = ""
     @State private var joinedDate: Date?
     @State private var profileBio: String = ""
     
+    // State for the PhotosPicker
     @State private var selectedPhoto: PhotosPickerItem?
     @State private var profileImageData: Data?
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                // MARK: - Header
                 HStack {
                     Text("PetalPal")
                         .font(.custom("Prata-Regular", size: 28))
@@ -41,41 +43,54 @@ struct ProfileView: View {
                 .background(Color(red: 174/255, green: 213/255, blue: 214/255))
                 .padding(.bottom, 15)
                 
-                ScrollView {
-                    VStack {
-                        ProfileImageView(profileImageData: profileImageData, photoURL: authViewModel.user?.photoURL)
-                        
-                        if isEditing {
-                            PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()) {
-                                Text("Change Photo")
-                                    .font(.custom("Lato-Regular", size: 16))
-                                    .foregroundColor(Color(.tealShade))
+                // MARK: - Main Content Guard
+                // This is the key fix. We ensure that the user object is available before
+                // attempting to render the rest of the view.
+                if authViewModel.user != nil {
+                    ScrollView {
+                        VStack {
+                            // MARK: - Profile Image
+                            ProfileImageView(profileImageData: profileImageData, photoURL: authViewModel.user?.photoURL)
+                            
+                            // Show PhotosPicker only when editing
+                            if isEditing {
+                                PhotosPicker(selection: $selectedPhoto, matching: .images, photoLibrary: .shared()) {
+                                    Text("Change Photo")
+                                        .font(.custom("Lato-Regular", size: 16))
+                                        .foregroundColor(Color(.tealShade))
+                                }
+                                .padding(.bottom)
                             }
-                            .padding(.bottom)
-                        }
-                        
-                        if isEditing {
-                            editProfileView
-                        } else {
-                            displayProfileView
-                        }
-                        
-                        Button(action: {
-                            Task {
-                                await authViewModel.logout()
+                            
+                            // MARK: - Display or Edit UI
+                            if isEditing {
+                                editProfileView
+                            } else {
+                                displayProfileView
                             }
-                        }) {
-                            Text("Log Out")
-                                .font(.custom("Lato-Regular", size: 20))
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color(.pinkShade))
-                                .cornerRadius(15)
-                                .padding(.horizontal)
-                                .padding(.top, 20)
+                            
+                            // MARK: - Log Out Button
+                            Button(action: {
+                                Task {
+                                    await authViewModel.logout()
+                                }
+                            }) {
+                                Text("Log Out")
+                                    .font(.custom("Lato-Regular", size: 20))
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color(.pinkShade))
+                                    .cornerRadius(15)
+                                    .padding(.horizontal)
+                                    .padding(.top, 20)
+                            }
                         }
                     }
+                } else {
+                    // Show a loading indicator while waiting for authentication to complete.
+                    ProgressView()
+                    Spacer()
                 }
             }
             .background(Color(.backgroundShade))
@@ -91,16 +106,19 @@ struct ProfileView: View {
         }
     }
     
+    // MARK: - Display View
     private var displayProfileView: some View {
         VStack(spacing: 15) {
-            padding()
             Text(profileName)
-                .font(.custom("Lato-Bold", size: 30))
+                .font(.custom("Lato-Bold", size: 24))
             
+            // MARK: - Display Username and Joined Date
             HStack(spacing: 5) {
-                Text("@\(username)")
-                    .font(.custom("Lato-Regular", size: 16))
-                    .foregroundColor(.gray)
+                if !username.isEmpty {
+                    Text("@\(username)")
+                        .font(.custom("Lato-Regular", size: 16))
+                        .foregroundColor(.gray)
+                }
                 
                 if let joinedDate = joinedDate {
                     Text("· Joined \(joinedDate, formatter: itemFormatter)")
@@ -130,12 +148,14 @@ struct ProfileView: View {
         }
     }
     
+    // MARK: - Edit View
     private var editProfileView: some View {
         VStack(spacing: 20) {
             TextField("Name", text: $profileName)
                 .textFieldStyle(.roundedBorder)
                 .font(.custom("Lato-Regular", size: 18))
             
+            // MARK: - Username TextField
             TextField("Username", text: $username)
                 .textFieldStyle(.roundedBorder)
                 .font(.custom("Lato-Regular", size: 18))
@@ -160,6 +180,7 @@ struct ProfileView: View {
             
             Button("Cancel") {
                 isEditing = false
+                // Reset fields to original values
                 loadUserProfile()
             }
             .foregroundColor(.red)
@@ -167,10 +188,14 @@ struct ProfileView: View {
         .padding(.horizontal)
     }
     
+    // MARK: - Firebase Functions
+    
+    /// Loads the user's profile data from Firebase Auth and Firestore.
     private func loadUserProfile() {
         guard let user = authViewModel.user else { return }
         self.profileName = user.displayName ?? "No Name"
         
+        // Fetch bio, username, and creation date from Firestore
         let db = Firestore.firestore()
         db.collection("users").document(user.uid).getDocument { document, error in
             if let document = document, document.exists, let data = document.data() {
@@ -282,7 +307,3 @@ struct ProfileImageView: View {
     }
 }
 
-#Preview {
-    ProfileView()
-        .environmentObject(AuthViewModel())
-}
