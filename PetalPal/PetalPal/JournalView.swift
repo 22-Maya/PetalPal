@@ -21,7 +21,7 @@ struct JournalView: View {
         NavigationStack {
             HStack {
                 Text("PetalPal")
-                    .font(.custom("Prata-Regular", size: 28))
+                    .scaledFont("Prata-Regular", size: 28)
                     .foregroundColor(Color(.tealShade))
                     .padding(.leading, 20)
                 Spacer()
@@ -50,7 +50,7 @@ struct JournalView: View {
                             Image(systemName: "plus.circle.fill")
                             Text("Add New Note")
                         }
-                        .font(.custom("Lato-Bold", size: 18))
+                        .scaledFont("Lato-Bold", size: 18)
                         .foregroundColor(Color(.tealShade))
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -74,7 +74,7 @@ struct JournalView: View {
         }
         .navigationBarBackButtonHidden(true)
         .foregroundStyle(Color(.text))
-        .font(.custom("Lato-Regular", size: 20))
+        .scaledFont("Lato-Regular", size: 20)
         .background(Color(.backgroundShade))
     }
 }
@@ -87,12 +87,12 @@ struct JournalEntryView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 Text(entry.date.formatted(date: .abbreviated, time: .shortened))
-                    .font(.custom("Lato-Regular", size: 14))
+                    .scaledFont("Lato-Regular", size: 14)
                     .foregroundColor(Color(.text))
                 Spacer()
                 if let plant = entry.plant {
                     Text(plant.name)
-                        .font(.custom("Lato-Bold", size: 14))
+                        .scaledFont("Lato-Bold", size: 14)
                         .foregroundColor(Color(.tealShade))
                 }
                 Button(role: .destructive, action: {
@@ -109,7 +109,7 @@ struct JournalEntryView: View {
             }
             
             Text(entry.content)
-                .font(.custom("Lato-Regular", size: 16))
+                .scaledFont("Lato-Regular", size: 16)
                 .foregroundColor(Color(.text))
         }
         .padding()
@@ -133,14 +133,14 @@ struct AddNoteView: View {
         NavigationView {
             Form {
                 Section(header: Text("Note")
-                    .font(.custom("Lato-Bold", size: 16))
+                    .scaledFont("Lato-Bold", size: 16)
                     .foregroundColor(Color(.tealShade))) {
                     TextEditor(text: $noteContent)
                         .frame(height: 150)
                 }
                 
                 Section(header: Text("Related plant (optional)")
-                    .font(.custom("Lato-Bold", size: 16))
+                    .scaledFont("Lato-Bold", size: 16)
                     .foregroundColor(Color(.tealShade))) {
                     Picker("Select Plant", selection: $selectedPlant) {
                         Text("None").tag(Plant?.none)

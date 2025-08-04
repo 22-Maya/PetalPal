@@ -45,7 +45,7 @@ struct MainView: View {
                 // navbar
                 HStack {
                     Text("PetalPal")
-                        .font(.custom("Prata-Regular", size: 28))
+                        .scaledFont("Prata-Regular", size: 28)
                         .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                         .padding(.leading, 20)
                     Spacer()
@@ -73,7 +73,7 @@ struct MainView: View {
                             Text("Back")
                         }
                         .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                        .font(.custom("Lato-Regular", size: 18))
+                        .scaledFont("Lato-Regular", size: 18)
                     }
                     .padding(.leading, 20)
                     Spacer()
@@ -88,11 +88,11 @@ struct MainView: View {
                             .frame(width: 250, height: 350)
                         
                         Text(plant.name)
-                            .font(.custom("Prata-Regular", size: 50))
+                            .scaledFont("Prata-Regular", size: 50)
                             .foregroundColor(.black)
                         
                         Text(plant.type)
-                            .font(.system(size: 25))
+                            .scaledFont("Lato-Regular", size: 25)
                             .foregroundColor(.black.opacity(0.7))
                     }
                     .padding(.top, 30)
@@ -120,7 +120,7 @@ struct MainView: View {
                             HStack {
                                 Spacer()
                                 Text("More Info")
-                                    .font(.custom("Lato-Bold", size: 24))
+                                    .scaledFont("Lato-Bold", size: 24)
                                     .padding(.bottom, 5)
                                 Spacer()
                             }
@@ -173,7 +173,7 @@ struct MainView: View {
         }
         .navigationBarHidden(true)
         .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
-        .font(.custom("Lato-Regular", size: 20))
+        .scaledFont("Lato-Regular", size: 20)
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         .onAppear {
             if plantDatabase.isEmpty {
@@ -191,9 +191,9 @@ struct DetailSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.custom("Lato-Bold", size: 22))
+                .scaledFont("Lato-Bold", size: 22)
             Text(content)
-                .font(.custom("Lato-Regular", size: 18))
+                .scaledFont("Lato-Regular", size: 18)
         }
     }
 }

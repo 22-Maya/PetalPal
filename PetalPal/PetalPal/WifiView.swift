@@ -83,7 +83,7 @@ struct WifiView: View {
             .toolbar(.hidden, for: .navigationBar)
             .navigationBarBackButtonHidden(true)
             .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
-            .font(.custom("Lato-Regular", size: 20))
+            .scaledFont("Lato-Regular", size: 20)
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
         }
     }
@@ -91,7 +91,7 @@ struct WifiView: View {
     private var appHeader: some View {
         HStack {
             Text("PetalPal")
-                .font(.custom("Prata-Regular", size: 28))
+                .scaledFont("Prata-Regular", size: 28)
                 .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                 .padding(.leading, 20)
             Spacer()
@@ -118,15 +118,15 @@ struct WifiView: View {
             
             VStack(alignment: .leading, spacing: 15) {
                 Text("Connect a Smart Pot (Wi-Fi)")
-                    .font(.custom("Lato-Bold", size: 25))
+                    .scaledFont("Lato-Bold", size: 25)
                 
                 Text("Status: \(wifiManager.connectionStatus)")
-                    .font(.custom("Lato-Regular", size: 18))
+                    .scaledFont("Lato-Regular", size: 18)
                     .foregroundColor(.black.opacity(0.7))
                 
                 if let errorMessage = wifiManager.errorMessage {
                     Text(errorMessage)
-                        .font(.custom("Lato-Regular", size: 16))
+                        .scaledFont("Lato-Regular", size: 16)
                         .foregroundColor(.red)
                 }
                 
@@ -161,16 +161,16 @@ struct WifiView: View {
     private var plantInfoInput: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Plant Name")
-                .font(.custom("Lato-Bold", size: 16))
+                .scaledFont("Lato-Bold", size: 16)
                 .foregroundColor(.black.opacity(0.7))
             TextField("Enter plant name", text: $plantName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .font(.custom("Lato-Regular", size: 18))
+                .scaledFont("Lato-Regular", size: 18)
                 .background(Color.white)
                 .cornerRadius(8)
             
             Text("Plant Type")
-                .font(.custom("Lato-Bold", size: 16))
+                .scaledFont("Lato-Bold", size: 16)
                 .foregroundColor(.black.opacity(0.7))
                 .padding(.top, 8)
             Picker("Type", selection: $selectedType) {
@@ -193,7 +193,7 @@ struct WifiView: View {
             }
         }) {
             Text("Connect")
-                .font(.custom("Lato-Bold", size: 20))
+                .scaledFont("Lato-Bold", size: 20)
                 .foregroundColor(.white)
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -219,7 +219,7 @@ struct WifiView: View {
             wifiManager.fetchSmartPotData()
         }) {
             Text("Fetch Latest Data")
-                .font(.custom("Lato-Bold", size: 20))
+                .scaledFont("Lato-Bold", size: 20)
                 .foregroundColor(.white)
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -231,10 +231,10 @@ struct WifiView: View {
     private var lastReceivedDataDisplay: some View {
         VStack(alignment: .leading) {
             Text("Last Received Data:")
-                .font(.custom("Lato-Bold", size: 18))
+                .scaledFont("Lato-Bold", size: 18)
                 .padding(.top, 10)
             Text(wifiManager.lastReceivedData)
-                .font(.custom("Lato-Regular", size: 16))
+                .scaledFont("Lato-Regular", size: 16)
                 .foregroundColor(.black.opacity(0.8))
                 .padding(.horizontal)
                 .padding(.vertical, 5)

@@ -25,7 +25,7 @@ struct HelpbotView: View {
                 }
 
                 Text("PetalPal")
-                    .font(.custom("Prata-Regular", size: 28))
+                    .scaledFont("Prata-Regular", size: 28)
                     .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                     .padding(.leading, 5)
                 Spacer()
@@ -36,14 +36,14 @@ struct HelpbotView: View {
 
             ScrollView {
                 Text("FAQ & AI Helpbot View")
-                    .font(.custom("Lato-Bold", size: 25))
+                    .scaledFont("Lato-Bold", size: 25)
                     .padding()
             }
 
         }
         .navigationBarBackButtonHidden(true)
         .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
-        .font(.custom("Lato-Regular", size: 20))
+        .scaledFont("Lato-Regular", size: 20)
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
     }
 }

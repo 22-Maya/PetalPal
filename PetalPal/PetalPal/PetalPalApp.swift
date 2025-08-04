@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct PetalPalApp: App {
     let container: ModelContainer
+    @StateObject private var textSizeManager = TextSizeManager.shared
     
     init() {
         do {
@@ -31,6 +32,7 @@ struct PetalPalApp: App {
                     .background(Color(red: 249/255, green: 248/255, blue: 241/255))
             }
             .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+            .environmentObject(textSizeManager)
         }
         .modelContainer(container)
     }
