@@ -95,31 +95,14 @@ struct MainView: View {
                     .padding(.top, 30)
                     
                     // user's plant info
-                    VStack(alignment: .leading, spacing: 20) {
-                        if !plant.wateringFrequency.isEmpty {
-                            DetailSection(title: "Watering Frequency", content: plant.wateringFrequency)
-                        }
-                        if !plant.wateringAmount.isEmpty {
-                            DetailSection(title: "Watering Amount", content: plant.wateringAmount)
-                        }
-                        if !plant.sunlightNeeds.isEmpty {
-                            DetailSection(title: "Sunlight Needs", content: plant.sunlightNeeds)
-                        }
-                        if !plant.careInstructions.isEmpty {
-                            DetailSection(title: "Care Instructions", content: plant.careInstructions)
-                        }
-                    }
-                    
-                    // plant care details
-                    if let info = plantInfo {
-                        VStack(alignment: .leading, spacing: 25) {
-                            
-                            // Header with icon
+                    if !plant.wateringFrequency.isEmpty || !plant.wateringAmount.isEmpty || !plant.sunlightNeeds.isEmpty || !plant.careInstructions.isEmpty {
+                        VStack(alignment: .leading, spacing: 20) {
+                            // Header for user's custom info
                             HStack {
-                                Image(systemName: "info.circle.fill")
+                                Image(systemName: "person.circle.fill")
                                     .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                                     .font(.system(size: 24))
-                                Text("Care Information")
+                                Text("Your Care Notes")
                                     .scaledFont("Lato-Bold", size: 26)
                                     .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
                                 Spacer()
@@ -134,6 +117,68 @@ struct MainView: View {
                             .padding(.horizontal, 20)
                             .padding(.top, 20)
                             
+                            VStack(spacing: 16) {
+                                if !plant.wateringFrequency.isEmpty {
+                                    CareDetailSection(
+                                        title: "Watering Frequency",
+                                        content: plant.wateringFrequency,
+                                        icon: "drop.fill",
+                                        color: Color(red: 67/255, green: 137/255, blue: 124/255)
+                                    )
+                                }
+                                if !plant.wateringAmount.isEmpty {
+                                    CareDetailSection(
+                                        title: "Watering Amount",
+                                        content: plant.wateringAmount,
+                                        icon: "drop.fill",
+                                        color: Color(red: 67/255, green: 137/255, blue: 124/255)
+                                    )
+                                }
+                                if !plant.sunlightNeeds.isEmpty {
+                                    CareDetailSection(
+                                        title: "Sunlight Needs",
+                                        content: plant.sunlightNeeds,
+                                        icon: "sun.max.fill",
+                                        color: Color(red: 255/255, green: 193/255, blue: 7/255)
+                                    )
+                                }
+                                if !plant.careInstructions.isEmpty {
+                                    CareDetailSection(
+                                        title: "Care Instructions",
+                                        content: plant.careInstructions,
+                                        icon: "lightbulb.fill",
+                                        color: Color(red: 255/255, green: 152/255, blue: 0/255)
+                                    )
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                        }
+                    }
+                    
+                    // plant care details
+                    VStack(alignment: .leading, spacing: 25) {
+                        
+                        // Header with icon
+                        HStack {
+                            Image(systemName: "info.circle.fill")
+                                .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                                .font(.system(size: 24))
+                            Text("Care Information")
+                                .scaledFont("Lato-Bold", size: 26)
+                                .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 15)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
+                                .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
+                        )
+                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
+                        
+                        if let info = plantInfo {
                             // Care sections with improved styling
                             VStack(spacing: 16) {
                                 CareDetailSection(
@@ -165,6 +210,36 @@ struct MainView: View {
                                         color: Color(red: 255/255, green: 152/255, blue: 0/255)
                                     )
                                 }
+                            }
+                            .padding(.horizontal, 20)
+                        } else {
+                            // Fallback message when no detailed care info is available
+                            VStack(spacing: 16) {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    HStack {
+                                        Image(systemName: "exclamationmark.triangle.fill")
+                                            .foregroundColor(Color.orange)
+                                            .font(.system(size: 20, weight: .medium))
+                                            .frame(width: 24, height: 24)
+                                        
+                                        Text("No Detailed Care Information Available")
+                                            .scaledFont("Lato-Bold", size: 18)
+                                            .foregroundColor(Color.orange)
+                                        
+                                        Spacer()
+                                    }
+                                    
+                                    Text("We don't have detailed care information for \(plant.name) in our database yet. Please refer to your plant's care instructions or consult a gardening resource for specific care requirements.")
+                                        .scaledFont("Lato-Regular", size: 16)
+                                        .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                        .lineSpacing(2)
+                                }
+                                .padding(20)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 18)
+                                        .fill(Color.white)
+                                        .shadow(color: .gray.opacity(0.1), radius: 4, x: 0, y: 2)
+                                )
                             }
                             .padding(.horizontal, 20)
                         }

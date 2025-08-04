@@ -87,13 +87,56 @@ final class PlantInfo {
             PlantInfo(
                 name: "Cilantro",
                 type: "Herb",
-                wateringDetails: "",
+                wateringDetails: "Keep soil consistently moist, water when top inch feels dry",
                 sunlight: "Full sun, but may need shade in hot climates",
                 soil: "Loose, loamy, well-draining soil, slightly acidic pH",
                 notes: "Thrives in cooler temperatures. Harvest by cutting stems near the base, pinch off flower stalks before they mature. Delay bolting by watering well, provide some shade, harvest frequently."
             ),
-            
+            PlantInfo(
+                name: "Lavender",
+                type: "Flower",
+                wateringDetails: "Water sparingly, allow soil to dry between waterings",
+                sunlight: "Full sun, 6-8 hours of direct sunlight daily",
+                soil: "Well-draining, sandy or gravelly soil with alkaline pH",
+                notes: "Prune after flowering to maintain shape. Avoid overwatering as it's drought-tolerant. Plant in raised beds or containers for better drainage."
+            ),
+            PlantInfo(
+                name: "Mint",
+                type: "Herb",
+                wateringDetails: "Keep soil consistently moist, water when top feels dry",
+                sunlight: "Partial shade to full sun, 4-6 hours of sunlight",
+                soil: "Rich, moist, well-draining soil",
+                notes: "Plant in containers to prevent spreading. Harvest regularly to promote bushier growth. Cut back before flowering for best flavor."
+            ),
+            PlantInfo(
+                name: "Bell Pepper",
+                type: "Vegetable",
+                wateringDetails: "1-2 inches per week, water when soil feels dry",
+                sunlight: "Full sun, 6-8 hours of direct sunlight",
+                soil: "Rich, well-draining soil with organic matter",
+                notes: "Support plants with stakes or cages. Fertilize regularly during growing season. Harvest when firm and fully colored."
+            ),
+            PlantInfo(
+                name: "Lemon Tree",
+                type: "Fruit",
+                wateringDetails: "Water deeply but infrequently, allow soil to dry between waterings",
+                sunlight: "Full sun, 8-12 hours of direct sunlight",
+                soil: "Well-draining, slightly acidic soil",
+                notes: "Protect from frost. Prune to maintain shape and remove dead wood. Fertilize with citrus-specific fertilizer."
+            )
         ]
-   
+        
+        // Add all sample plants to the database
+        for plant in samplePlants {
+            modelContext.insert(plant)
+        }
+        
+        // Save the context
+        do {
+            try modelContext.save()
+            print("Successfully populated plant database with \(samplePlants.count) plants")
+        } catch {
+            print("Failed to save plant database: \(error)")
+        }
     }
 }

@@ -15,7 +15,7 @@ import SwiftData
 final class Plant {
     var id: UUID
     var name: String
-    var type: String 
+    var type: String
     var wateringFrequency: String
     var wateringAmount: String
     var sunlightNeeds: String
@@ -25,7 +25,7 @@ final class Plant {
     init(name: String, type: PlantType) {
         self.id = UUID()
         self.name = name
-        self.type = type.rawValue 
+        self.type = type.rawValue
         self.wateringFrequency = ""
         self.wateringAmount = ""
         self.sunlightNeeds = ""
@@ -33,7 +33,7 @@ final class Plant {
     }
     
     var plantType: PlantType {
-        PlantType(rawValue: type) ?? .flower 
+        PlantType(rawValue: type) ?? .flower
     }
 }
 
