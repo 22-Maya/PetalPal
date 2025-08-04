@@ -1,5 +1,9 @@
 import SwiftUI
+import Charts
 import SwiftData
+import FirebaseAuth
+import FirebaseCore
+import FirebaseAppCheck
 
 //journal entry settings
 

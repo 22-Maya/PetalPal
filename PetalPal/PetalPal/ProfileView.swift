@@ -1,9 +1,6 @@
 import SwiftUI
-import Charts
-import SwiftData
-import FirebaseCore
-import FirebaseAppCheck
 import FirebaseAuth
+import SwiftData
 
 struct ProfileView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
@@ -140,7 +137,7 @@ struct ProfileView: View {
             existingProfile.bio = profileBio
         } else {
             // Create a new profile.
-            let newProfile = UserProfile(name: profileName, bio: bio, userId: userId)
+            let newProfile = UserProfile(name: profileName, bio: profileBio, userId: userId)
             modelContext.insert(newProfile)
         }
         
@@ -151,8 +148,4 @@ struct ProfileView: View {
             print("Failed to save profile: \(error)")
         }
     }
-}
-
-#Preview {
-    ProfileView()
 }

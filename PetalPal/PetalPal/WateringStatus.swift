@@ -1,8 +1,19 @@
-//
-//  WateringStatus.swift
-//  PetalPal
-//
-//  Created by student on 7/30/25.
-//
+import SwiftUI
+import Charts
 
-import Foundation
+struct WateringStatus: Identifiable, Hashable {
+    let id = UUID()
+    let status: String
+    let count: Double
+    let color: Color
+}
+
+extension UUID: @retroactive Plottable {
+    public var primitivePlottable: String {
+        self.uuidString
+    }
+
+    public init?(primitivePlottable: String) {
+        self.init(uuidString: primitivePlottable)
+    }
+}
