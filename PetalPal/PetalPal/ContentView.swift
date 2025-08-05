@@ -76,10 +76,7 @@ struct ContentView: View {
 
                     ScrollView {
                         VStack(spacing: 30) {
-                            // MARK: - Corrected To-Do List
-                            // The TodoListView now correctly gets its data from the environment.
                             TodoListView()
-                                .padding()
                             
                             VStack(alignment: .leading, spacing: 20) {
                                 Text("Watering Overview")
@@ -127,7 +124,41 @@ struct ContentView: View {
                     }
                 }
 
-                // ... (rest of your TabView items)
+                PlantsView()
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "leaf.fill")
+                            Text("Plants")
+                        }
+                    }
+
+                WifiView()
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "plus.app.fill")
+                            Text("Add")
+                        }
+                    }
+
+                JournalView()
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "book.fill")
+                            Text("Journal")
+                        }
+                    }
+
+                ProfileView()
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "person.crop.circle.fill")
+                            Text("Profile")
+                        }
+                    }
             }
             .environmentObject(authViewModel)
             .foregroundStyle(Color(.text))
