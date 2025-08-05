@@ -1,73 +1,90 @@
 import SwiftUI
 
 struct TodoListView: View {
-    // MARK: - State Variables
-    // This array will hold the list of tasks.
-    @State private var tasks: [String] = ["Weed & prune plants", "Water plants"]
-    // This will hold the text for the new task being added.
+    // The view gets its data from the AuthViewModel.
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var newTask: String = ""
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Today's Tasks")
-                .scaledFont("Lato-Bold", size: 25)
-                .padding(.top, 20)
-                .padding(.bottom, 5)
-            
-            // MARK: - Task List
-            // The List view displays each task and supports deleting items.
-            List {
-                ForEach(tasks, id: \.self) { task in
-                    Text(task)
-                        .scaledFont("Lato-Regular", size: 18)
-                }
-                .onDelete(perform: deleteTask)
-            }
-            .listStyle(.plain) // Use a plain style to better match your design
-            
-            // MARK: - Add New Task UI
-            // This HStack contains the TextField and Button for adding new tasks.
-            HStack {
-                TextField("Add a new task...", text: $newTask)
-                    .textFieldStyle(.roundedBorder)
+        // The ScrollView has been added to ensure content is scrollable if the list grows.
+        ScrollView {
+            VStack(alignment: .leading) {
+                Text("Today's Tasks")
+                    .scaledFont("Lato-Bold", size: 25)
+                    .padding(.top, 20)
+                    .padding(.bottom, 5)
                 
-                Button(action: addTask) {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                // The list iterates over the tasks from the view model.
+                List {
+                    ForEach(authViewModel.tasks) { task in
+                        HStack {
+                            // Checkbox to toggle completion status
+                            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(task.isCompleted ? .green : .primary)
+                                .onTapGesture {
+                                    authViewModel.toggleTaskCompletion(task: task)
+                                }
+                            
+                            Text(task.name)
+                                .scaledFont("Lato-Regular", size: 18)
+                                .strikethrough(task.isCompleted, color: .primary)
+                        }
+                    }
+                    .onDelete(perform: deleteTask)
                 }
-                .disabled(newTask.isEmpty) // The button is disabled if the text field is empty
+                .listStyle(.plain)
+                
+                // UI for adding a new task
+                HStack {
+                    TextField("Add a new task...", text: $newTask)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    Button(action: addTask) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title)
+                            // The button color has been updated.
+                            .foregroundColor(Color(.greenShade))
+                    }
+                    .disabled(newTask.isEmpty)
+                }
+                .padding(.top, 10)
+                // Padding has been updated to match your new style.
+                .padding(.bottom, 20)
+                .padding(.trailing, 10)
             }
-            .padding(.top, 10)
+            .padding(.leading, 20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 25)
+                    // The background color has been updated.
+                    .fill(Color(.info))
+            )
+            .padding(.horizontal, 30)
+            // The EditButton has been added to the navigation bar.
+            .navigationBarItems(trailing: EditButton())
         }
-        .padding(.leading, 20)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
-        )
-        .padding(.horizontal, 30)
-        .navigationBarItems(trailing: EditButton()) // Adds an Edit button to the navigation bar
     }
     
-    // MARK: - Functions
-    
-    /// Adds the new task to the list and clears the text field.
+    // Calls the view model to add a new task.
     func addTask() {
         guard !newTask.isEmpty else { return }
-        tasks.append(newTask)
+        authViewModel.addTask(name: newTask)
         newTask = ""
     }
     
-    /// Deletes a task from the list at the specified offsets.
+    // Deletes tasks from the list.
     func deleteTask(at offsets: IndexSet) {
-        tasks.remove(atOffsets: offsets)
+        for index in offsets {
+            let task = authViewModel.tasks[index]
+            authViewModel.deleteTask(task: task)
+        }
     }
 }
 
 #Preview {
     NavigationView {
         TodoListView()
+            .environmentObject(AuthViewModel())
             .environmentObject(TextSizeManager.shared)
     }
 }
