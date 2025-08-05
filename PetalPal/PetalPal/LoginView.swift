@@ -46,7 +46,7 @@ struct LoginView: View {
                     .cornerRadius(10)
                     .autocapitalization(.words)
                     .padding(.horizontal)
-                
+              
                 // MARK: - Username TextField
                 // This field is only shown during registration.
                 TextField("Username", text: $username)
@@ -105,6 +105,8 @@ struct LoginView: View {
                 let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
                 impactFeedback.impactOccurred()
               
+                // MARK: - Corrected Task Call
+                // The name conflict is resolved by renaming the data model, so 'Swift.' is no longer needed.
                 Task {
                     authViewModel.errorMessage = nil
                   
