@@ -46,7 +46,6 @@ struct TodoListView: View {
                 .disabled(newTask.isEmpty)
             }
             .padding(.top, 10)
-            // Padding has been updated to match your new style.
             .padding(.bottom, 20)
             .padding(.trailing, 10)
         }
@@ -54,11 +53,9 @@ struct TodoListView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             RoundedRectangle(cornerRadius: 25)
-                // The background color has been updated.
                 .fill(Color(.info))
         )
-        .padding(.horizontal, 20)
-        .navigationBarItems(trailing: EditButton())
+        // MODIFIED: Removed the `.padding(.horizontal, 20)` modifier from here.
     }
     
     // Calls the view model to add a new task.
@@ -74,13 +71,5 @@ struct TodoListView: View {
             let task = authViewModel.tasks[index]
             authViewModel.deleteTask(task: task)
         }
-    }
-}
-
-#Preview {
-    NavigationView {
-        TodoListView()
-            .environmentObject(AuthViewModel())
-            .environmentObject(TextSizeManager.shared)
     }
 }

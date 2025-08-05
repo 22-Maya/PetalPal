@@ -77,7 +77,8 @@ struct ContentView: View {
                         VStack(spacing: 30) {
                             // The TodoListView gets its data from the environment.
                             TodoListView()
-                                .padding()
+                                // MODIFIED: Changed padding to match the "Watering Overview" below.
+                                .padding(.horizontal, 30)
                             
                             VStack(alignment: .leading, spacing: 20) {
                                 Text("Watering Overview")
@@ -174,11 +175,4 @@ struct ContentView: View {
                 .environmentObject(authViewModel)
         }
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: [SmartPot.self, Pot.self], inMemory: true)
-        .environmentObject(AuthViewModel())
-        .environmentObject(TextSizeManager.shared)
 }
