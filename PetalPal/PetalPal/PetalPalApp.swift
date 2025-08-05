@@ -3,7 +3,6 @@ import SwiftData
 import FirebaseAuth
 import FirebaseCore
 import FirebaseAppCheck
-import FirebaseAI
 
 @main
 struct PetalPalApp: App {

@@ -4,13 +4,6 @@
 <dict>
 	<key>FirebaseAppDelegateProxyEnabled</key>
 	<false/>
-	<key>FirebaseAIEnabled</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_petalpal-wifi._tcp.</string>
