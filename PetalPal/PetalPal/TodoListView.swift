@@ -8,17 +8,14 @@ struct TodoListView: View {
         VStack(alignment: .leading) {
             Text("Today's Tasks")
                 .scaledFont("Lato-Bold", size: 25)
-                .padding(.top, 20)
                 .padding(.bottom, 5)
             
             List {
                 ForEach(authViewModel.tasks) { task in
                     HStack {
-                        // Checkbox to toggle the task's completion status.
                         Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                             .foregroundColor(task.isCompleted ? .green : .primary)
                             .onTapGesture {
-                                // This calls the function in the viewModel to update the task.
                                 authViewModel.toggleTaskCompletion(task: task)
                             }
                         
@@ -30,43 +27,37 @@ struct TodoListView: View {
                 .onDelete(perform: deleteTask)
             }
             .listStyle(.plain)
+            // MODIFIED: Added a frame to give the list a defined height.
+            // This allows it to render correctly inside the VStack.
+            .frame(height: 200)
             
             HStack {
-                // The TextField is bound to the `newTask` state variable.
                 TextField("Add a new task...", text: $newTask)
                     .textFieldStyle(.roundedBorder)
                 
-                // The button to trigger adding the new task.
                 Button(action: addTask) {
                     Image(systemName: "plus.circle.fill")
                         .font(.title)
                         .foregroundColor(Color(.greenShade))
                 }
-                // The button is disabled if the text field is empty.
                 .disabled(newTask.isEmpty)
             }
             .padding(.top, 10)
-            .padding(.bottom, 20)
             .padding(.trailing, 10)
         }
-        .padding(.leading, 20)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding() // Add overall padding to the VStack
         .background(
             RoundedRectangle(cornerRadius: 25)
                 .fill(Color(.info))
         )
     }
     
-    /// Calls the view model to add a new task to Firestore.
     func addTask() {
-        // Ensure the task name is not empty.
         guard !newTask.isEmpty else { return }
         authViewModel.addTask(name: newTask)
-        // Clear the text field after the task is added.
         newTask = ""
     }
     
-    /// Calls the view model to delete tasks from the list.
     func deleteTask(at offsets: IndexSet) {
         for index in offsets {
             let task = authViewModel.tasks[index]

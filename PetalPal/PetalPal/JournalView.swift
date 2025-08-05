@@ -32,8 +32,6 @@ struct JournalView: View {
 
                 ScrollView {
                     VStack(spacing: 20) {
-                        // The extra padding modifier has been removed from here.
-                        
                         Button {
                             isAddingNote = true
                         } label: {

@@ -4,7 +4,6 @@ import SwiftData
 import FirebaseAuth
 
 struct ContentView: View {
-    // The AuthViewModel is now correctly received from the environment.
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var textSizeManager: TextSizeManager
     
@@ -55,7 +54,7 @@ struct ContentView: View {
                     HStack {
                         Text("PetalPal")
                             .scaledFont("Prata-Regular", size: 28)
-                            .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                            .foregroundColor(Color(.tealShade))
                             .padding(.leading, 20)
                         Spacer()
                         NavigationLink {
@@ -65,7 +64,7 @@ struct ContentView: View {
                             Image(systemName: "questionmark.circle")
                                 .resizable()
                                 .frame(width: 28, height: 28)
-                                .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                                .foregroundColor(Color(.greenShade))
                                 .padding(.trailing, 20)
                         }
                     }
@@ -75,13 +74,10 @@ struct ContentView: View {
 
                     ScrollView {
                         VStack(spacing: 30) {
-                            // The TodoListView gets its data from the environment.
                             TodoListView()
-                                // MODIFIED: Changed padding to match the "Watering Overview" below.
                                 .padding(.horizontal, 30)
                             
                             VStack(alignment: .leading, spacing: 20) {
-                                
                                 Text("Watering Overview")
                                     .scaledFont("Lato-Bold", size: 25)
                                     .padding(.top, 16)
@@ -92,7 +88,6 @@ struct ContentView: View {
                                         .frame(width: 200, height: 200)
                                         .frame(maxWidth: .infinity, alignment: .center)
                                 } else {
-                                    // Optionally, show a message when there's no data
                                     Text("No watering data available yet.")
                                         .scaledFont("Lato-Regular", size: 16)
                                         .frame(width: 200, height: 200, alignment: .center)
@@ -122,8 +117,7 @@ struct ContentView: View {
                                 RoundedRectangle(cornerRadius: 25)
                                     .fill(Color(.info))
                             )
-                            .padding(.leading, 30)
-                            .padding(.trailing, 30)
+                            .padding(.horizontal, 30)
                         }
                         .padding(.top, 10)
                     }
