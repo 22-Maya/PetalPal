@@ -52,50 +52,32 @@ struct ContentView: View {
             TabView {
                 NavigationStack {
                     HStack {
-                    Text("PetalPal")
-                        .scaledFont("Prata-Regular", size: 28)
-                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                        .padding(.leading, 20)
-                    Spacer()
-                    NavigationLink {
-                        HelpbotView()
-                            .navigationBarBackButtonHidden(true)
-                    } label: {
-                        Image(systemName: "questionmark.circle")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
-                            .padding(.trailing, 20)
+                        Text("PetalPal")
+                            .scaledFont("Prata-Regular", size: 28)
+                            .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                            .padding(.leading, 20)
+                        Spacer()
+                        NavigationLink {
+                            HelpbotView()
+                                .navigationBarBackButtonHidden(true)
+                        } label: {
+                            Image(systemName: "questionmark.circle")
+                                .resizable()
+                                .frame(width: 28, height: 28)
+                                .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                                .padding(.trailing, 20)
+                        }
                     }
-                }
-                .frame(height: 56)
-                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
-                .padding(.bottom, 15)
+                    .frame(height: 56)
+                    .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                    .padding(.bottom, 15)
 
                     ScrollView {
                         VStack(spacing: 30) {
-                            VStack(alignment: .leading) {
-                                Text("Today's Tasks")
-                                    .scaledFont("Lato-Bold", size: 25)
-                                    .padding(.top, 20)
-                                    .padding(.bottom, 5)
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("- Weed & prune plants")
-                                        .scaledFont("Lato-Regular", size: 18)
-                                    Text("- Water plants")
-                                        .scaledFont("Lato-Regular", size: 18)
-                                }
-                                .padding(.bottom, 20)
-                            }
-                            .padding(.leading, 20)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(
-                                RoundedRectangle(cornerRadius: 25)
-                                    .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
-                            )
-                            .padding(.leading, 30)
-                            .padding(.trailing, 30)
-
+                            // MARK: - Implemented To-Do List
+                            // The static task list has been replaced with the functional TodoListView.
+                            TodoListView()
+                            
                             VStack(alignment: .leading, spacing: 20) {
                                 Text("Watering Overview")
                                     .scaledFont("Lato-Bold", size: 25)
@@ -193,4 +175,5 @@ struct ContentView: View {
     ContentView()
         .modelContainer(for: [Plant.self, PlantInfo.self, SmartPot.self, JournalEntry.self, Pot.self, UserProfile.self], inMemory: true)
         .environmentObject(AuthViewModel())
+        .environmentObject(TextSizeManager.shared)
 }
