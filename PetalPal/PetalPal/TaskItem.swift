@@ -1,8 +1,7 @@
 import Foundation
 import FirebaseFirestore
 
-// This struct represents a single to-do item.
-// It's Codable so it can be easily saved to and loaded from Firestore.
+// The model has been renamed to TaskItem to avoid conflicts with Swift's concurrency Task.
 struct TaskItem: Identifiable, Codable, Hashable {
     @DocumentID var id: String?
     var name: String

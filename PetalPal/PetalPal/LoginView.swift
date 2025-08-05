@@ -131,11 +131,11 @@ struct LoginView: View {
             }) {
                 Text(isRegistering ? "Register" : "Log In")
                     .font(.custom("Lato-Bold", size: 20))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(.text))
                     .frame(maxWidth: .infinity)
                     .padding()
             }
-            .background(formIsValid ? Color(.blueShade) : Color.gray.opacity(0.5))
+            .background(formIsValid ? Color(red: 121/255, green: 175/255, blue: 169/255) : Color(.blueShade))
             .cornerRadius(15)
             .padding(.horizontal)
             .padding(.top, 20)
@@ -162,7 +162,7 @@ struct LoginView: View {
           
             Spacer()
         }
-        .background(Color(red: 249/255, green: 248/255, blue: 241/255).ignoresSafeArea())
+        .background(Color(.backgroundShade).ignoresSafeArea())
     }
 }
 

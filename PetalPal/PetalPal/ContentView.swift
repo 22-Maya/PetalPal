@@ -4,10 +4,9 @@ import SwiftData
 import FirebaseAuth
 
 struct ContentView: View {
-    @StateObject private var authViewModel = AuthViewModel()
+    // The AuthViewModel is now correctly received from the environment.
+    @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var textSizeManager: TextSizeManager
-    
-    // The local 'tasks' state has been removed, as tasks are now managed by AuthViewModel.
     
     @State private var wateringData: [WateringStatus] = [
         .init(status: "Watered on time", count: 70, color: Color(.blueShade)),
@@ -71,12 +70,14 @@ struct ContentView: View {
                         }
                     }
                     .frame(height: 56)
-                    .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                    .background(Color(.blueShade))
                     .padding(.bottom, 15)
 
                     ScrollView {
                         VStack(spacing: 30) {
+                            // The TodoListView gets its data from the environment.
                             TodoListView()
+                                .padding()
                             
                             VStack(alignment: .leading, spacing: 20) {
                                 Text("Watering Overview")
@@ -125,6 +126,7 @@ struct ContentView: View {
                 }
 
                 PlantsView()
+                    .environmentObject(authViewModel)
                     .environmentObject(textSizeManager)
                     .tabItem {
                         VStack {
@@ -134,6 +136,7 @@ struct ContentView: View {
                     }
 
                 WifiView()
+                    .environmentObject(authViewModel)
                     .environmentObject(textSizeManager)
                     .tabItem {
                         VStack {
@@ -143,6 +146,7 @@ struct ContentView: View {
                     }
 
                 JournalView()
+                    .environmentObject(authViewModel)
                     .environmentObject(textSizeManager)
                     .tabItem {
                         VStack {
@@ -152,6 +156,7 @@ struct ContentView: View {
                     }
 
                 ProfileView()
+                    .environmentObject(authViewModel)
                     .environmentObject(textSizeManager)
                     .tabItem {
                         VStack {
@@ -173,7 +178,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Plant.self, PlantInfo.self, SmartPot.self, JournalEntry.self, Pot.self, UserProfile.self], inMemory: true)
+        .modelContainer(for: [SmartPot.self, Pot.self], inMemory: true)
         .environmentObject(AuthViewModel())
         .environmentObject(TextSizeManager.shared)
 }

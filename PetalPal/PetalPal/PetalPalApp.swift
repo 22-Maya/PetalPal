@@ -1,37 +1,31 @@
 import SwiftUI
-import SwiftData
 import FirebaseAuth
 import FirebaseCore
-import FirebaseAppCheck
 
 @main
 struct PetalPalApp: App {
+    // This sets up Firebase when your app starts.
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var textSizeManager = TextSizeManager.shared
+    // The AuthViewModel is now created here, at the root of the app.
+    @StateObject private var authViewModel = AuthViewModel()
     
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Plant.self,
-            PlantInfo.self,
-            SmartPot.self,
-            JournalEntry.self,
-            Pot.self,
-            UserProfile.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     var body: some Scene {
         WindowGroup {
-            AppRootView()
+            // The ContentView now handles the main logic of the app.
+            ContentView()
                 .environmentObject(textSizeManager)
+                // The AuthViewModel is injected into the environment for all child views.
+                .environmentObject(authViewModel)
         }
-        .modelContainer(sharedModelContainer)
+    }
+}
+
+// This class is used to configure Firebase.
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        return true
     }
 }

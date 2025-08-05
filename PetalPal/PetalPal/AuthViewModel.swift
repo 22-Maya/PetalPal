@@ -10,13 +10,16 @@ class AuthViewModel: ObservableObject {
     @Published var isAuthenticated: Bool = false
     @Published var errorMessage: String? = nil
     @Published var user: User?
-    
-    // MARK: - Published Tasks
-    // This array will hold the user's tasks and update the UI when changed.
     @Published var tasks: [TaskItem] = []
+    @Published var journalEntries: [JournalEntry] = []
+    
+    // MARK: - Published Plants
+    @Published var plants: [Plant] = []
     
     private var db = Firestore.firestore()
     private var listenerRegistration: ListenerRegistration?
+    private var journalListenerRegistration: ListenerRegistration?
+    private var plantsListenerRegistration: ListenerRegistration?
     private var authStateHandle: AuthStateDidChangeListenerHandle?
 
     init() {
@@ -27,12 +30,18 @@ class AuthViewModel: ObservableObject {
             self.isAuthenticated = user != nil
             
             if let user = user {
-                // If a user is logged in, start listening for task updates.
+                // If a user is logged in, start listening for data updates.
                 self.fetchTasks(userId: user.uid)
+                self.fetchJournalEntries(userId: user.uid)
+                self.fetchPlants(userId: user.uid)
             } else {
-                // If the user logs out, stop listening and clear the tasks.
+                // If the user logs out, stop listening and clear data.
                 self.listenerRegistration?.remove()
+                self.journalListenerRegistration?.remove()
+                self.plantsListenerRegistration?.remove()
                 self.tasks = []
+                self.journalEntries = []
+                self.plants = []
             }
         }
     }
@@ -42,6 +51,8 @@ class AuthViewModel: ObservableObject {
             Auth.auth().removeStateDidChangeListener(handle)
         }
         listenerRegistration?.remove()
+        journalListenerRegistration?.remove()
+        plantsListenerRegistration?.remove()
     }
     
     // MARK: - Authentication Functions
@@ -160,6 +171,46 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Journal Functions
+    
+    /// Sets up a real-time listener to fetch journal entries from Firestore.
+    func fetchJournalEntries(userId: String) {
+        journalListenerRegistration?.remove()
+        
+        let query = db.collection("users").document(userId).collection("journalEntries").order(by: "date", descending: true)
+        
+        self.journalListenerRegistration = query.addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("Error fetching journal entries: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            self.journalEntries = documents.compactMap { document -> JournalEntry? in
+                try? document.data(as: JournalEntry.self)
+            }
+        }
+    }
+    
+    /// Adds a new journal entry to the user's subcollection in Firestore.
+    func addJournalEntry(content: String, plantName: String?) {
+        guard let userId = user?.uid else { return }
+        
+        let newEntry = JournalEntry(content: content, date: Timestamp(date: Date()), plantName: plantName)
+        
+        do {
+            _ = try db.collection("users").document(userId).collection("journalEntries").addDocument(from: newEntry)
+        } catch {
+            print("Error adding journal entry: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Deletes a journal entry from Firestore.
+    func deleteJournalEntry(entry: JournalEntry) {
+        guard let userId = user?.uid, let entryId = entry.id else { return }
+        
+        db.collection("users").document(userId).collection("journalEntries").document(entryId).delete()
+    }
+    
     // MARK: - Task Functions
     
     /// Sets up a real-time listener to fetch tasks from Firestore.
@@ -174,8 +225,6 @@ class AuthViewModel: ObservableObject {
                 return
             }
             
-            // MARK: - Corrected Line
-            // The return type of the closure now correctly matches the 'tasks' property.
             self.tasks = documents.compactMap { document -> TaskItem? in
                 try? document.data(as: TaskItem.self)
             }
@@ -213,5 +262,45 @@ class AuthViewModel: ObservableObject {
         } catch {
             print("Error updating task: \(error.localizedDescription)")
         }
+    }
+    
+    // MARK: - Plant Functions
+    
+    /// Sets up a real-time listener to fetch plants from Firestore.
+    func fetchPlants(userId: String) {
+        plantsListenerRegistration?.remove()
+        
+        let query = db.collection("users").document(userId).collection("plants")
+        
+        self.plantsListenerRegistration = query.addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("Error fetching plants: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            self.plants = documents.compactMap { document -> Plant? in
+                try? document.data(as: Plant.self)
+            }
+        }
+    }
+    
+    /// Adds a new plant to the user's subcollection in Firestore.
+    func addPlant(name: String, type: PlantType, wateringFrequency: String, wateringAmount: String, sunlightNeeds: String, careInstructions: String) {
+        guard let userId = user?.uid else { return }
+        
+        let newPlant = Plant(name: name, type: type.rawValue, wateringFrequency: wateringFrequency, wateringAmount: wateringAmount, sunlightNeeds: sunlightNeeds, careInstructions: careInstructions)
+        
+        do {
+            _ = try db.collection("users").document(userId).collection("plants").addDocument(from: newPlant)
+        } catch {
+            print("Error adding plant: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Deletes a plant from Firestore.
+    func deletePlant(plant: Plant) {
+        guard let userId = user?.uid, let plantId = plant.id else { return }
+        
+        db.collection("users").document(userId).collection("plants").document(plantId).delete()
     }
 }

@@ -1,101 +1,95 @@
 import SwiftUI
-import Charts
-import SwiftData
-import FirebaseAuth
-import FirebaseCore
-import FirebaseAppCheck
+import FirebaseFirestore
 
 struct JournalView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var plants: [Plant]
-    @Query private var entries: [JournalEntry]
-    
-    @State private var newNote = ""
-    @State private var selectedPlant: Plant?
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var isAddingNote = false
     
     var body: some View {
         NavigationStack {
-            HStack {
-                Text("PetalPal")
-                    .scaledFont("Prata-Regular", size: 28)
-                    .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
-                    .padding(.leading, 20)
-                Spacer()
-                NavigationLink {
-                    HelpbotView()
-                        .navigationBarBackButtonHidden(true)
-                } label: {
-                    Image(systemName: "questionmark.circle")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
-                        .padding(.trailing, 20)
-                }
-            }
-            .frame(height: 56)
-            .background(Color(red: 174/255, green: 213/255, blue: 214/255))
-            .padding(.bottom, 15)
-
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Add Note Button
-                    Button {
-                        isAddingNote = true
-                    } label: {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Add New Note")
-                        }
-                        .scaledFont("Lato-Bold", size: 18)
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Text("PetalPal")
+                        .scaledFont("Prata-Regular", size: 28)
                         .foregroundColor(Color(.tealShade))
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            RoundedRectangle(cornerRadius: 15)
-                                .fill(Color(.backgroundShade))
-                                .shadow(radius: 2)
-                        )
+                        .padding(.leading, 20)
+                    Spacer()
+                    NavigationLink {
+                        HelpbotView()
+                            .navigationBarBackButtonHidden(true)
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(Color(.greenShade))
+                            .padding(.trailing, 20)
                     }
-                    .padding(.horizontal)
-                    
-                    // Journal Entries
-                    ForEach(entries.sorted(by: { $0.date > $1.date })) { entry in
-                        JournalEntryView(entry: entry)
+                }
+                .frame(height: 56)
+                .background(Color(.blueShade))
+                .padding(.bottom, 15)
+
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // The extra padding modifier has been removed from here.
+                        
+                        Button {
+                            isAddingNote = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                Text("Add New Note")
+                            }
+                            .scaledFont("Lato-Bold", size: 18)
+                            .foregroundColor(Color(.tealShade))
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color(.backgroundShade))
+                                    .shadow(radius: 2)
+                            )
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 20) // Padding is now correctly applied to the button.
+                        
+                        ForEach(authViewModel.journalEntries) { entry in
+                            JournalEntryView(entry: entry)
+                        }
                     }
                 }
             }
+            .sheet(isPresented: $isAddingNote) {
+                AddNoteView(isPresented: $isAddingNote)
+            }
+            .navigationBarBackButtonHidden(true)
+            .foregroundStyle(Color(.text))
+            .scaledFont("Lato-Regular", size: 20)
+            .background(Color(.backgroundShade))
         }
-        .sheet(isPresented: $isAddingNote) {
-            AddNoteView(isPresented: $isAddingNote)
-        }
-        .navigationBarBackButtonHidden(true)
-        .foregroundStyle(Color(.text))
-        .scaledFont("Lato-Regular", size: 20)
-        .background(Color(.backgroundShade))
     }
 }
 
 struct JournalEntryView: View {
-    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject var authViewModel: AuthViewModel
     let entry: JournalEntry
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(entry.date.formatted(date: .abbreviated, time: .shortened))
+                Text(entry.date.dateValue(), style: .date)
                     .scaledFont("Lato-Regular", size: 14)
                     .foregroundColor(Color(.text))
                 Spacer()
-                if let plant = entry.plant {
-                    Text(plant.name)
+                if let plantName = entry.plantName, !plantName.isEmpty {
+                    Text(plantName)
                         .scaledFont("Lato-Bold", size: 14)
                         .foregroundColor(Color(.tealShade))
                 }
                 Button(role: .destructive, action: {
                     withAnimation {
-                        modelContext.delete(entry)
-                        try? modelContext.save()
+                        authViewModel.deleteJournalEntry(entry: entry)
                     }
                 }) {
                     Image(systemName: "trash")
@@ -119,13 +113,12 @@ struct JournalEntryView: View {
 }
 
 struct AddNoteView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var plants: [Plant]
+    @EnvironmentObject var authViewModel: AuthViewModel
     @Binding var isPresented: Bool
     
     @State private var noteContent = ""
-    @State private var selectedPlant: Plant?
-    
+    @State private var plantName = ""
+
     var body: some View {
         NavigationView {
             Form {
@@ -139,12 +132,8 @@ struct AddNoteView: View {
                 Section(header: Text("Related plant (optional)")
                     .scaledFont("Lato-Bold", size: 16)
                     .foregroundColor(Color(.tealShade))) {
-                    Picker("Select Plant", selection: $selectedPlant) {
-                        Text("None").tag(Plant?.none)
-                        ForEach(plants) { plant in
-                            Text(plant.name).tag(Plant?.some(plant))
-                        }
-                    }
+                    // The plant picker has been replaced with a TextField.
+                    TextField("Enter plant name", text: $plantName)
                 }
             }
             .navigationTitle("New Note")
@@ -158,8 +147,8 @@ struct AddNoteView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        let entry = JournalEntry(content: noteContent, plant: selectedPlant)
-                        modelContext.insert(entry)
+                        // Saving is now handled by the AuthViewModel.
+                        authViewModel.addJournalEntry(content: noteContent, plantName: plantName)
                         isPresented = false
                     }
                     .disabled(noteContent.isEmpty)
@@ -172,4 +161,6 @@ struct AddNoteView: View {
 
 #Preview {
     JournalView()
+        .environmentObject(AuthViewModel())
+        .environmentObject(TextSizeManager.shared)
 }

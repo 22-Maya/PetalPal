@@ -1,43 +1,17 @@
-//
-//  Plant.swift
-//  PetalPal
-//
-//  Created by Adishree Das on 7/31/25
-//
+import Foundation
+import FirebaseFirestore
 
-//this is the database of the plants that the user has
-
-
-import SwiftUI
-import SwiftData
-
-@Model
-final class Plant {
-    var id: UUID
+struct Plant: Identifiable, Codable, Hashable {
+    @DocumentID var id: String?
     var name: String
     var type: String
     var wateringFrequency: String
     var wateringAmount: String
     var sunlightNeeds: String
     var careInstructions: String
-    @Relationship(deleteRule: .cascade) var journalEntries: [JournalEntry] = []
-    
-    init(name: String, type: PlantType) {
-        self.id = UUID()
-        self.name = name
-        self.type = type.rawValue
-        self.wateringFrequency = ""
-        self.wateringAmount = ""
-        self.sunlightNeeds = ""
-        self.careInstructions = ""
-    }
-    
-    var plantType: PlantType {
-        PlantType(rawValue: type) ?? .flower
-    }
 }
 
-// Keep PlantType enum separate for UI
+// This enum is used for UI pickers and can be kept as is.
 enum PlantType: String, Codable, Identifiable, CaseIterable {
     case fruit = "Fruit"
     case vegetable = "Vegetable"
