@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct TodoListView: View {
-    // The view gets its data from the AuthViewModel.
     @EnvironmentObject var authViewModel: AuthViewModel
     @State private var newTask: String = ""
 
@@ -12,14 +11,14 @@ struct TodoListView: View {
                 .padding(.top, 20)
                 .padding(.bottom, 5)
             
-            // The list iterates over the tasks from the view model.
             List {
                 ForEach(authViewModel.tasks) { task in
                     HStack {
-                        // Checkbox to toggle completion status
+                        // Checkbox to toggle the task's completion status.
                         Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
                             .foregroundColor(task.isCompleted ? .green : .primary)
                             .onTapGesture {
+                                // This calls the function in the viewModel to update the task.
                                 authViewModel.toggleTaskCompletion(task: task)
                             }
                         
@@ -32,17 +31,18 @@ struct TodoListView: View {
             }
             .listStyle(.plain)
             
-            // UI for adding a new task
             HStack {
+                // The TextField is bound to the `newTask` state variable.
                 TextField("Add a new task...", text: $newTask)
                     .textFieldStyle(.roundedBorder)
                 
+                // The button to trigger adding the new task.
                 Button(action: addTask) {
                     Image(systemName: "plus.circle.fill")
                         .font(.title)
-                        // The button color has been updated.
                         .foregroundColor(Color(.greenShade))
                 }
+                // The button is disabled if the text field is empty.
                 .disabled(newTask.isEmpty)
             }
             .padding(.top, 10)
@@ -55,17 +55,18 @@ struct TodoListView: View {
             RoundedRectangle(cornerRadius: 25)
                 .fill(Color(.info))
         )
-        // MODIFIED: Removed the `.padding(.horizontal, 20)` modifier from here.
     }
     
-    // Calls the view model to add a new task.
+    /// Calls the view model to add a new task to Firestore.
     func addTask() {
+        // Ensure the task name is not empty.
         guard !newTask.isEmpty else { return }
         authViewModel.addTask(name: newTask)
+        // Clear the text field after the task is added.
         newTask = ""
     }
     
-    // Deletes tasks from the list.
+    /// Calls the view model to delete tasks from the list.
     func deleteTask(at offsets: IndexSet) {
         for index in offsets {
             let task = authViewModel.tasks[index]

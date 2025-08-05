@@ -81,14 +81,23 @@ struct ContentView: View {
                                 .padding(.horizontal, 30)
                             
                             VStack(alignment: .leading, spacing: 20) {
+                                
                                 Text("Watering Overview")
                                     .scaledFont("Lato-Bold", size: 25)
                                     .padding(.top, 16)
                                     .padding(.leading, 20)
                                 
-                                PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
-                                    .frame(width: 200, height: 200)
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                if totalWaterings > 0 {
+                                    PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
+                                        .frame(width: 200, height: 200)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                } else {
+                                    // Optionally, show a message when there's no data
+                                    Text("No watering data available yet.")
+                                        .scaledFont("Lato-Regular", size: 16)
+                                        .frame(width: 200, height: 200, alignment: .center)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                }
                                 
                                 VStack(alignment: .leading, spacing: 12) {
                                     ForEach(wateringData) { dataPoint in
