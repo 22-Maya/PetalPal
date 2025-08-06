@@ -1,12 +1,11 @@
 import SwiftUI
 import FirebaseAuth
 
-// MARK: - Main View
+// main view
 struct MainView: View {
     @Environment(\.dismiss) private var dismiss
     let plant: Plant
     
-    // State variable to manage the dropdown's visibility
     @State private var isCareInfoExpanded: Bool = false
     
     private var plantInfo: PlantInfo? {
@@ -34,7 +33,7 @@ struct MainView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
-                // Navbar
+                    // navbar
                 HStack {
                     Text("PetalPal")
                         .scaledFont("Prata-Regular", size: 28)
@@ -55,7 +54,7 @@ struct MainView: View {
                 .frame(height: 56)
                 .background(Color(.blueShade))
                 
-                // Back button
+                    // back button
                 HStack {
                     Button(action: { dismiss() }) {
                         HStack {
@@ -71,7 +70,7 @@ struct MainView: View {
                 .padding(.vertical, 10)
                 
                 ScrollView {
-                    // Plant Display
+                    // plant display
                     VStack(spacing: 10) {
                         getPlantImage(for: plant.type)
                             .resizable()
@@ -87,7 +86,7 @@ struct MainView: View {
                     }
                     .padding(.top, 30)
                     
-                    // User's plant info
+                    // user's plant info
                     if !plant.wateringFrequency.isEmpty || !plant.wateringAmount.isEmpty || !plant.sunlightNeeds.isEmpty || !plant.careInstructions.isEmpty {
                         VStack(alignment: .leading, spacing: 20) {
                             HStack {
@@ -147,9 +146,9 @@ struct MainView: View {
                         }
                     }
                     
-                    // General plant care details (Dropdown Section)
+                    // general plant care details (dropdown section)
                     VStack(alignment: .leading, spacing: 0) {
-                        // Header: Tappable area with a rotating chevron
+                        // header: tappable area with a rotating chevron
                         HStack {
                             Image(systemName: "info.circle.fill")
                                 .foregroundColor(Color(.text))
@@ -180,7 +179,7 @@ struct MainView: View {
                             }
                         }
                         
-                        // Content: Conditionally displayed based on state
+                        // content: conditionally displayed based on state
                         if isCareInfoExpanded {
                             if let info = plantInfo {
                                 VStack(spacing: 16) {
@@ -274,13 +273,12 @@ struct DetailSection: View {
     }
 }
 
-// Enhanced care detail section with icons and better styling
 struct CareDetailSection: View {
     let title: String
     let content: String
     let icon: String
     let color: Color
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 12) {
