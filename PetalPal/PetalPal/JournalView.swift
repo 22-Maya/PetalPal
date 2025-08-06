@@ -40,12 +40,12 @@ struct JournalView: View {
                                 Text("Add New Note")
                             }
                             .scaledFont("Lato-Bold", size: 18)
-                            .foregroundColor(Color(.tealShade))
+                            .foregroundColor(Color(.text))
                             .padding()
                             .frame(maxWidth: .infinity)
                             .background(
                                 RoundedRectangle(cornerRadius: 15)
-                                    .fill(Color(.backgroundShade))
+                                    .fill(Color(.info))
                                     .shadow(radius: 2)
                             )
                         }

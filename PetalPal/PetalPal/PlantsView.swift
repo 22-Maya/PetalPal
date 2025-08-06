@@ -10,7 +10,7 @@ struct PlantsView: View {
                 HStack {
                     Text("PetalPal")
                         .scaledFont("Prata-Regular", size: 28)
-                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .foregroundColor(Color(.tealShade))
                         .padding(.leading, 20)
                     Spacer()
                     NavigationLink {
@@ -20,7 +20,7 @@ struct PlantsView: View {
                         Image(systemName: "questionmark.circle")
                             .resizable()
                             .frame(width: 28, height: 28)
-                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                            .foregroundColor(Color(.greenShade))
                             .padding(.trailing, 20)
                     }
                 }
@@ -77,7 +77,7 @@ struct PlantCardView: View {
         ZStack {
             RoundedRectangle(cornerRadius: 25)
                 .frame(height: 175)
-                .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
+                .foregroundColor(Color(.info))
             
             VStack(alignment: .leading) {
                 Text(plant.name)

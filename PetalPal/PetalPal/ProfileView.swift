@@ -25,7 +25,7 @@ struct ProfileView: View {
                 HStack {
                     Text("PetalPal")
                         .font(.custom("Prata-Regular", size: 28))
-                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .foregroundColor(Color(.tealShade))
                         .padding(.leading, 20)
                     Spacer()
                     NavigationLink {
@@ -35,12 +35,12 @@ struct ProfileView: View {
                         Image(systemName: "gearshape.fill")
                             .resizable()
                             .frame(width: 28, height: 28)
-                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                            .foregroundColor(Color(.greenShade))
                             .padding(.trailing, 20)
                     }
                 }
                 .frame(height: 56)
-                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                .background(Color(.blueShade))
                 .padding(.bottom, 15)
                 
                 // MARK: - Main Content Guard

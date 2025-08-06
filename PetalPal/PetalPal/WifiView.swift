@@ -149,7 +149,7 @@ struct WifiView: View {
     private var connectSmartPotSection: some View {
         ZStack(alignment: .topLeading) {
             RoundedRectangle(cornerRadius: 25)
-                .foregroundColor(Color(red: 216/255, green: 232/255, blue: 202/255))
+                .foregroundColor(Color(.info))
             
             VStack(alignment: .leading, spacing: 15) {
                 Text("Connect a Smart Pot (Wi-Fi)")

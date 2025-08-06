@@ -30,19 +30,19 @@ struct SettingsView: View {
                         Image(systemName: "chevron.left")
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                            .foregroundColor(Color(.tealShade))
                             .padding(.leading, 20)
                     }
                     
                     Text("PetalPal")
                         .scaledFont("Prata-Regular", size: 28)
-                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .foregroundColor(Color(.tealShade))
                         .padding(.leading, 5)
                     
                     Spacer()
                 }
                 .frame(height: 56)
-                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                .background(Color(.blueShade))
                 .padding(.bottom, 15)
                 
                 ScrollView {
@@ -51,7 +51,7 @@ struct SettingsView: View {
                         VStack(alignment: .leading, spacing: 20) {
                                  Text("Manual / Automatic")
                                      .scaledFont("Lato-Bold", size: 28)
-                                     .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                     .foregroundColor(Color(.text))
                                  
                                  VStack(alignment: .leading, spacing: 15) {
                                                                            Toggle(isOn: $isAutomaticMode) {
@@ -82,7 +82,7 @@ struct SettingsView: View {
                                  .padding()
                                  .background(
                                      RoundedRectangle(cornerRadius: 15)
-                                         .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
+                                        .fill(Color(.info))
                                          .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
                                  )
                              }
@@ -92,35 +92,35 @@ struct SettingsView: View {
                             VStack(alignment: .leading, spacing: 20) {
                                 Text("Accessibility")
                                     .scaledFont("Lato-Bold", size: 28)
-                                    .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                    .foregroundColor(Color(.text))
                                 
                                 VStack(alignment: .leading, spacing: 15) {
                                     Text("Text Size")
                                         .scaledFont("Lato-Bold", size: 20)
-                                        .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                        .foregroundColor(Color(.text))
                                     
                                     HStack {
                                         Text("Small")
                                             .scaledFont("Lato-Regular", size: 16)
-                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                            .foregroundColor(Color(.text))
                                         
                                         Slider(value: $textSizeManager.textSizeMultiplier, in: 0.7...1.5, step: 0.1)
                                             .accentColor(Color(red: 0/255, green: 122/255, blue: 69/255))
                                         
                                         Text("Large")
                                             .scaledFont("Lato-Regular", size: 16)
-                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                            .foregroundColor(Color(.text))
                                     }
                                     
                                     // Preview text
                                     VStack(alignment: .leading, spacing: 10) {
                                         Text("Preview:")
                                             .scaledFont("Lato-Bold", size: 16)
-                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                            .foregroundColor(Color(.text))
                                         
-                                        Text("This is how your text will appear throughout the app.")
+                                        Text("Lorem ipsum dolor sit amet consectetur adipiscing elit quisque faucibus ex sapien vitae pellentesque sem.")
                                             .font(textSizeManager.getScaledCustomFont("Lato-Regular", baseSize: 18))
-                                            .foregroundColor(Color(red: 13/255, green: 47/255, blue: 68/255))
+                                            .foregroundColor(Color(.text))
                                             .padding()
                                             .background(
                                                 RoundedRectangle(cornerRadius: 10)
@@ -134,7 +134,7 @@ struct SettingsView: View {
                                     }) {
                                         Text("Reset to Default")
                                             .scaledFont("Lato-Regular", size: 16)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(Color(.backgroundShade))
                                             .padding(.horizontal, 20)
                                             .padding(.vertical, 10)
                                             .background(
@@ -146,13 +146,11 @@ struct SettingsView: View {
                                 .padding()
                                 .background(
                                     RoundedRectangle(cornerRadius: 15)
-                                        .fill(Color(red: 216/255, green: 232/255, blue: 202/255))
+                                        .fill(Color(.info))
                                         .shadow(color: .gray.opacity(0.2), radius: 5, x: 0, y: 2)
                                 )
                             }
                             .padding(.horizontal, 20)
-                            
-                            Spacer()
                             
                             VStack {
                                 Button(role: .destructive) {
@@ -196,9 +194,9 @@ struct SettingsView: View {
                     Text(error)
                 }
         }
-        .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
+        .foregroundStyle(Color(.text))
         .scaledFont("Lato-Regular", size: 20)
-        .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+        .background(Color(.backgroundShade))
     }
 }
 

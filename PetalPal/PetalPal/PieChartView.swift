@@ -20,7 +20,7 @@ struct PieChartView: View {
                 if selectedStatusID == nil || dataPoint.id == selectedStatusID {
                     Text(String(format: "%.0f%%", (dataPoint.count / totalValue) * 100))
                         .font(.custom("Lato-Bold", size: 15))
-                        .foregroundColor(Color(red: 26/255, green: 26/255, blue: 26/255))
+                        .foregroundColor(Color(.text))
                         .shadow(color: .white.opacity(0.5), radius: 1)
                 }
             }

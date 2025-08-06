@@ -10,7 +10,7 @@ struct ContentView: View {
     @State private var wateringData: [WateringStatus] = [
         .init(status: "Watered on time", count: 70, color: Color(.blueShade)),
         .init(status: "Skipped/Late", count: 15, color: Color(.pinkShade)),
-        .init(status: "Due soon", count: 15, color: Color(red: 255/255, green: 215/255, blue: 0/255))
+        .init(status: "Due soon", count: 15, color: Color(.yellowShade))
     ]
 
     @State private var selectedStatusID: UUID?
@@ -122,6 +122,7 @@ struct ContentView: View {
                         .padding(.top, 10)
                     }
                 }
+                .background(Color(.backgroundShade))
                 .tabItem {
                     VStack {
                         Image(systemName: "house.fill")
@@ -172,7 +173,6 @@ struct ContentView: View {
             .environmentObject(authViewModel)
             .foregroundStyle(Color(.text))
             .scaledFont("Lato-Regular", size: 20)
-            .background(Color(.backgroundShade))
         } else {
             LoginView()
                 .environmentObject(authViewModel)
