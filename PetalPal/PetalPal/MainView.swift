@@ -4,12 +4,20 @@ import FirebaseAuth
 // main view
 struct MainView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var authViewModel: AuthViewModel
     let plant: Plant
     
     @State private var isCareInfoExpanded: Bool = false
+    @State private var isEditing: Bool = false
+    @State private var editedPlant: Plant
     
     private var plantInfo: PlantInfo? {
         PlantInfoDatabase.find(for: plant.name)
+    }
+    
+    init(plant: Plant) {
+        self.plant = plant
+        self._editedPlant = State(initialValue: plant)
     }
     
     private func getPlantImage(for type: String) -> Image {
@@ -22,8 +30,10 @@ struct MainView: View {
             return Image(.herb)
         case "Fruit":
             return Image(.fruit)
+        case "Other":
+            return Image(.other)
         default:
-            return Image(.flower)
+            return Image(.other)
         }
     }
     
@@ -54,7 +64,7 @@ struct MainView: View {
                 .frame(height: 56)
                 .background(Color(.blueShade))
                 
-                    // back button
+                    // back button and edit button
                 HStack {
                     Button(action: { dismiss() }) {
                         HStack {
@@ -66,23 +76,68 @@ struct MainView: View {
                     }
                     .padding(.leading, 20)
                     Spacer()
+                    
+                    Button(action: { 
+                        if isEditing {
+                            // Save changes
+                            authViewModel.updatePlant(plant: editedPlant)
+                        }
+                        isEditing.toggle()
+                    }) {
+                        Text(isEditing ? "Save" : "Edit")
+                            .foregroundColor(Color(.tealShade))
+                            .scaledFont("Lato-Bold", size: 18)
+                    }
+                    .padding(.trailing, 20)
                 }
                 .padding(.vertical, 10)
                 
                 ScrollView {
                     // plant display
                     VStack(spacing: 10) {
-                        getPlantImage(for: plant.type)
+                        getPlantImage(for: isEditing ? editedPlant.type : plant.type)
                             .resizable()
+                            .scaledToFit()
                             .frame(width: 250, height: 350)
                         
-                        Text(plant.name)
-                            .scaledFont("Prata-Regular", size: 50)
-                            .foregroundColor(.text)
-                        
-                        Text(plant.type)
-                            .scaledFont("Lato-Regular", size: 25)
-                            .foregroundColor(.text.opacity(0.7))
+                        if isEditing {
+                            VStack(spacing: 8) {
+                                TextField("Plant Name", text: $editedPlant.name)
+                                    .scaledFont("Prata-Regular", size: 50)
+                                    .foregroundColor(.text)
+                                    .multilineTextAlignment(.center)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                
+                                TextField("Plant Pal Name", text: $editedPlant.plantPalName)
+                                    .scaledFont("Lato-Regular", size: 20)
+                                    .foregroundColor(.text.opacity(0.7))
+                                    .multilineTextAlignment(.center)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                
+                                Picker("Plant Type", selection: $editedPlant.type) {
+                                    ForEach(PlantType.allCases) { type in
+                                        Text(type.rawValue).tag(type.rawValue)
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                                .scaledFont("Lato-Regular", size: 25)
+                                .foregroundColor(.text.opacity(0.7))
+                            }
+                        } else {
+                            Text(plant.name)
+                                .scaledFont("Prata-Regular", size: 50)
+                                .foregroundColor(.text)
+                            
+                            if !plant.plantPalName.isEmpty && plant.plantPalName != plant.name {
+                                Text(plant.plantPalName)
+                                    .scaledFont("Lato-Regular", size: 20)
+                                    .foregroundColor(.text.opacity(0.7))
+                            }
+                            
+                            Text(plant.type)
+                                .scaledFont("Lato-Regular", size: 25)
+                                .foregroundColor(.text.opacity(0.7))
+                        }
                     }
                     .padding(.top, 30)
                     
@@ -308,9 +363,8 @@ struct CareDetailSection: View {
     }
 }
 
-// MARK: - Preview
-#Preview {
-    NavigationStack {
-        MainView(plant: Plant(name: "Basil", type: "Herb", wateringFrequency: "Daily", wateringAmount: "1 cup", sunlightNeeds: "Full Sun", careInstructions: "Prune often"))
-    }
-}
+//// MARK: - Preview
+//#Preview {
+//    NavigationStack {
+//    }
+//}

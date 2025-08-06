@@ -84,6 +84,11 @@ struct PlantCardView: View {
             VStack(alignment: .leading) {
                 Text(plant.name)
                     .scaledFont("Lato-Bold", size: 20)
+                if !plant.plantPalName.isEmpty && plant.plantPalName != plant.name {
+                    Text(plant.plantPalName)
+                        .scaledFont("Lato-Regular", size: 14)
+                        .foregroundColor(Color(.text).opacity(0.7))
+                }
                 Text(plant.type)
                     .scaledFont("Lato-Regular", size: 16)
                 Spacer()

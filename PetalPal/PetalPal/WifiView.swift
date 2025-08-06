@@ -104,6 +104,7 @@ struct WifiView: View {
     
     @State private var newDeviceAddress: String = ""
     @State private var plantName = ""
+    @State private var plantPalName = ""
     @State private var selectedType = PlantType.flower
     
     var body: some View {
@@ -204,6 +205,16 @@ struct WifiView: View {
                 .background(Color.white)
                 .cornerRadius(8)
             
+            Text("Name Your Plant Pal")
+                .scaledFont("Lato-Bold", size: 16)
+                .foregroundColor(.black.opacity(0.7))
+                .padding(.top, 8)
+            TextField("Enter a fun name for your plant (OPTIONAl)", text: $plantPalName)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .scaledFont("Lato-Regular", size: 18)
+                .background(Color.white)
+                .cornerRadius(8)
+            
             Text("Plant Type")
                 .scaledFont("Lato-Bold", size: 16)
                 .foregroundColor(.black.opacity(0.7))
@@ -243,6 +254,7 @@ struct WifiView: View {
                 // Create and save the new plant via the AuthViewModel.
                 authViewModel.addPlant(
                     name: plantName,
+                    plantPalName: plantPalName.isEmpty ? plantName : plantPalName,
                     type: selectedType,
                     wateringFrequency: "",
                     wateringAmount: "",
@@ -252,6 +264,7 @@ struct WifiView: View {
                 
                 // Reset form for next plant
                 plantName = ""
+                plantPalName = ""
                 selectedType = .flower
             }
         }

@@ -4,6 +4,7 @@ import FirebaseFirestore
 struct Plant: Identifiable, Codable, Hashable {
     @DocumentID var id: String?
     var name: String
+    var plantPalName: String
     var type: String
     var wateringFrequency: String
     var wateringAmount: String

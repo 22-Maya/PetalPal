@@ -325,15 +325,26 @@ class AuthViewModel: ObservableObject {
     }
     
     /// Adds a new plant to the user's subcollection in Firestore.
-    func addPlant(name: String, type: PlantType, wateringFrequency: String, wateringAmount: String, sunlightNeeds: String, careInstructions: String) {
+    func addPlant(name: String, plantPalName: String, type: PlantType, wateringFrequency: String, wateringAmount: String, sunlightNeeds: String, careInstructions: String) {
         guard let userId = user?.uid else { return }
         
-        let newPlant = Plant(name: name, type: type.rawValue, wateringFrequency: wateringFrequency, wateringAmount: wateringAmount, sunlightNeeds: sunlightNeeds, careInstructions: careInstructions)
+        let newPlant = Plant(name: name, plantPalName: plantPalName, type: type.rawValue, wateringFrequency: wateringFrequency, wateringAmount: wateringAmount, sunlightNeeds: sunlightNeeds, careInstructions: careInstructions)
         
         do {
             _ = try db.collection("users").document(userId).collection("plants").addDocument(from: newPlant)
         } catch {
             print("Error adding plant: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Updates an existing plant in Firestore.
+    func updatePlant(plant: Plant) {
+        guard let userId = user?.uid, let plantId = plant.id else { return }
+        
+        do {
+            try db.collection("users").document(userId).collection("plants").document(plantId).setData(from: plant)
+        } catch {
+            print("Error updating plant: \(error.localizedDescription)")
         }
     }
     

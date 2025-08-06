@@ -115,7 +115,7 @@ struct AddNoteView: View {
     @Binding var isPresented: Bool
     
     @State private var noteContent = ""
-    @State private var plantName = ""
+    @State private var selectedPlant: Plant?
 
     var body: some View {
         NavigationView {
@@ -130,8 +130,22 @@ struct AddNoteView: View {
                 Section(header: Text("Related plant (optional)")
                     .scaledFont("Lato-Bold", size: 16)
                     .foregroundColor(Color(.tealShade))) {
-                    // The plant picker has been replaced with a TextField.
-                    TextField("Enter plant name", text: $plantName)
+                    
+                    if !authViewModel.plants.isEmpty {
+                        Picker("Select a plant", selection: $selectedPlant) {
+                            Text("None").tag(nil as Plant?)
+                            ForEach(authViewModel.plants) { plant in
+                                Text(plant.name).tag(plant as Plant?)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                    }
+                    
+                    if authViewModel.plants.isEmpty {
+                        Text("No plants available")
+                            .foregroundColor(.secondary)
+                            .scaledFont("Lato-Regular", size: 14)
+                    }
                 }
             }
             .navigationTitle("New Note")
@@ -145,7 +159,7 @@ struct AddNoteView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        // Saving is now handled by the AuthViewModel.
+                        let plantName = selectedPlant?.name ?? ""
                         authViewModel.addJournalEntry(content: noteContent, plantName: plantName)
                         isPresented = false
                     }
