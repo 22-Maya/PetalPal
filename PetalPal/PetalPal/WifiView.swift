@@ -260,6 +260,9 @@ struct WifiView: View {
                     careInstructions: ""
                 )
                 
+                // Automatically fetch data for the new plant
+                wifiManager.fetchSmartPotData()
+                
                 // Reset form for next plant
                 plantName = ""
                 plantPalName = ""

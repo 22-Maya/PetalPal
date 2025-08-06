@@ -12,6 +12,11 @@ struct MainView: View {
     @State private var editedPlant: Plant
     @StateObject private var wifiManager = WifiManager.shared
     
+    // Get the current plant data from AuthViewModel to ensure we have the latest data
+    private var currentPlant: Plant {
+        authViewModel.plants.first(where: { $0.id == plant.id }) ?? plant
+    }
+    
     private var plantInfo: PlantInfo? {
         PlantInfoDatabase.find(for: plant.name)
     }
@@ -96,7 +101,7 @@ struct MainView: View {
                 ScrollView {
                     // plant display
                     VStack(spacing: 10) {
-                        getPlantImage(for: isEditing ? editedPlant.type : plant.type)
+                        getPlantImage(for: isEditing ? editedPlant.type : currentPlant.type)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 250, height: 350)
@@ -125,17 +130,17 @@ struct MainView: View {
                                 .foregroundColor(.text.opacity(0.7))
                             }
                         } else {
-                            Text(plant.name)
+                            Text(currentPlant.name)
                                 .scaledFont("Prata-Regular", size: 50)
                                 .foregroundColor(.text)
                             
-                            if !plant.plantPalName.isEmpty && plant.plantPalName != plant.name {
-                                Text(plant.plantPalName)
+                            if !currentPlant.plantPalName.isEmpty && currentPlant.plantPalName != currentPlant.name {
+                                Text(currentPlant.plantPalName)
                                     .scaledFont("Lato-Regular", size: 20)
                                     .foregroundColor(.text.opacity(0.7))
                             }
                             
-                            Text(plant.type)
+                            Text(currentPlant.type)
                                 .scaledFont("Lato-Regular", size: 25)
                                 .foregroundColor(.text.opacity(0.7))
                         }
@@ -159,10 +164,10 @@ struct MainView: View {
                                 .frame(maxWidth: .infinity)
                                 .background(Color(.care))
                                 .cornerRadius(18)
-                            } else if !plant.lastReceivedData.isEmpty {
+                            } else if !currentPlant.lastReceivedData.isEmpty {
                                 CareDetailSection(
                                     title: "Soil Moisture",
-                                    content: plant.lastReceivedData,
+                                    content: currentPlant.lastReceivedData,
                                     icon: "drop.fill",
                                     color: Color(red: 67/255, green: 137/255, blue: 124/255)
                                 )
@@ -189,7 +194,7 @@ struct MainView: View {
                         Button(action: {
                             wifiManager.fetchSmartPotData()
                             // Update the current plant's data
-                            if let plantId = plant.id {
+                            if let plantId = currentPlant.id {
                                 authViewModel.updatePlantData(plantId: plantId, data: wifiManager.lastReceivedData)
                             }
                         }) {
@@ -212,7 +217,7 @@ struct MainView: View {
                     .padding(.top, 20)
                     
                     // user's plant info
-                    if !plant.wateringFrequency.isEmpty || !plant.wateringAmount.isEmpty || !plant.sunlightNeeds.isEmpty || !plant.careInstructions.isEmpty {
+                    if !currentPlant.wateringFrequency.isEmpty || !currentPlant.wateringAmount.isEmpty || !currentPlant.sunlightNeeds.isEmpty || !currentPlant.careInstructions.isEmpty {
                         VStack(alignment: .leading, spacing: 20) {
                             HStack {
                                 Image(systemName: "person.circle.fill")
@@ -234,34 +239,34 @@ struct MainView: View {
                             .padding(.top, 20)
                             
                             VStack(spacing: 16) {
-                                if !plant.wateringFrequency.isEmpty {
+                                if !currentPlant.wateringFrequency.isEmpty {
                                     CareDetailSection(
                                         title: "Watering Frequency",
-                                        content: plant.wateringFrequency,
+                                        content: currentPlant.wateringFrequency,
                                         icon: "drop.fill",
                                         color: Color(red: 67/255, green: 137/255, blue: 124/255)
                                     )
                                 }
-                                if !plant.wateringAmount.isEmpty {
+                                if !currentPlant.wateringAmount.isEmpty {
                                     CareDetailSection(
                                         title: "Watering Amount",
-                                        content: plant.wateringAmount,
+                                        content: currentPlant.wateringAmount,
                                         icon: "drop.fill",
                                         color: Color(red: 67/255, green: 137/255, blue: 124/255)
                                     )
                                 }
-                                if !plant.sunlightNeeds.isEmpty {
+                                if !currentPlant.sunlightNeeds.isEmpty {
                                     CareDetailSection(
                                         title: "Sunlight Needs",
-                                        content: plant.sunlightNeeds,
+                                        content: currentPlant.sunlightNeeds,
                                         icon: "sun.max.fill",
                                         color: Color(red: 255/255, green: 193/255, blue: 7/255)
                                     )
                                 }
-                                if !plant.careInstructions.isEmpty {
+                                if !currentPlant.careInstructions.isEmpty {
                                     CareDetailSection(
                                         title: "Care Instructions",
-                                        content: plant.careInstructions,
+                                        content: currentPlant.careInstructions,
                                         icon: "lightbulb.fill",
                                         color: Color(red: 255/255, green: 152/255, blue: 0/255)
                                     )

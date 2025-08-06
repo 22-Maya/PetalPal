@@ -91,14 +91,6 @@ struct PlantCardView: View {
                 }
                 Text(plant.type)
                     .scaledFont("Lato-Regular", size: 16)
-                
-                if !plant.lastReceivedData.isEmpty {
-                    Text(plant.lastReceivedData)
-                        .scaledFont("Lato-Regular", size: 12)
-                        .foregroundColor(Color(.tealShade))
-                        .padding(.top, 4)
-                }
-                
                 Spacer()
                 HStack {
                     Spacer()
