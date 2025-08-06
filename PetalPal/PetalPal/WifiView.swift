@@ -28,7 +28,7 @@ class WifiManager: ObservableObject {
                 self.deviceAddress = fullAddress
                 self.connectionStatus = "Connected: You can now connect another pot"
                 self.isConnecting = false
-                self.lastReceivedData = "Temperature: 22°C\nHumidity: 65%\nSoil Moisture: 80%"
+                self.lastReceivedData = "Soil Moisture: 80%"
                 self.deviceAddress = "http://192.168.1.100"
             } else {
                 self.errorMessage = "Failed to connect to \(fullAddress). Check the address or network."
@@ -48,7 +48,7 @@ class WifiManager: ObservableObject {
         
         // Simulate data fetch
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.lastReceivedData = "Temperature: 22°C\nHumidity: 65%\nSoil Moisture: 80%"
+            self?.lastReceivedData = "Soil Moisture: 80%"
             self?.connectionStatus = "Connected: You can now connect another pot"
         }
     }
@@ -93,7 +93,7 @@ class WifiManager: ObservableObject {
         // Simulate checking current mode from WiFi pot
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             self?.connectionStatus = "Connected: You can now connect another pot"
-            self?.lastReceivedData = "Current mode: automatic"
+            self?.lastReceivedData = "Soil Moisture: 75%"
         }
     }
 }
@@ -169,7 +169,6 @@ struct WifiView: View {
                 deviceAddressInput
                 plantInfoInput
                 connectionButtons
-                fetchDataButton
                 lastReceivedDataDisplay
             }
             .padding(.horizontal, 20)
@@ -209,7 +208,7 @@ struct WifiView: View {
                 .scaledFont("Lato-Bold", size: 16)
                 .foregroundColor(.black.opacity(0.7))
                 .padding(.top, 8)
-            TextField("Enter a fun name for your plant (OPTIONAl)", text: $plantPalName)
+            TextField("Optional fun name for your plant pal", text: $plantPalName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .scaledFont("Lato-Regular", size: 18)
                 .background(Color.white)
@@ -270,19 +269,7 @@ struct WifiView: View {
         }
     }
     
-    private var fetchDataButton: some View {
-        Button(action: {
-            wifiManager.fetchSmartPotData()
-        }) {
-            Text("Fetch Latest Data")
-                .scaledFont("Lato-Bold", size: 20)
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color(red: 67/255, green: 137/255, blue: 124/255))
-                .cornerRadius(15)
-        }
-    }
+
     
     private var lastReceivedDataDisplay: some View {
         VStack(alignment: .leading) {

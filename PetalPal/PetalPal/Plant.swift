@@ -10,6 +10,7 @@ struct Plant: Identifiable, Codable, Hashable {
     var wateringAmount: String
     var sunlightNeeds: String
     var careInstructions: String
+    var lastReceivedData: String
 }
 
 enum PlantType: String, Codable, Identifiable, CaseIterable {

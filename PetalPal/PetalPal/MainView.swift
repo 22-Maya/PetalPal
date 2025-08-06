@@ -10,6 +10,7 @@ struct MainView: View {
     @State private var isCareInfoExpanded: Bool = false
     @State private var isEditing: Bool = false
     @State private var editedPlant: Plant
+    @StateObject private var wifiManager = WifiManager.shared
     
     private var plantInfo: PlantInfo? {
         PlantInfoDatabase.find(for: plant.name)
@@ -140,6 +141,90 @@ struct MainView: View {
                         }
                     }
                     .padding(.top, 30)
+                    
+                    // last received data section
+                    VStack(alignment: .leading, spacing: 15) {
+                        HStack {
+                            Image(systemName: "drop.fill")
+                                .foregroundColor(Color(.tealShade))
+                                .font(.system(size: 24))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 15)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color(.info))
+                                .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
+                        )
+                        .padding(.horizontal, 20)
+                        .padding(.top, 20)
+                        
+                        VStack(spacing: 16) {
+                            if wifiManager.isSendingCommand {
+                                HStack {
+                                    ProgressView()
+                                        .scaleEffect(0.8)
+                                        .foregroundColor(Color(.tealShade))
+                                    Text("Fetching soil moisture data...")
+                                        .scaledFont("Lato-Regular", size: 16)
+                                        .foregroundColor(Color(.text))
+                                }
+                                .padding(20)
+                                .frame(maxWidth: .infinity)
+                                .background(Color(.care))
+                                .cornerRadius(18)
+                            } else if !plant.lastReceivedData.isEmpty {
+                                CareDetailSection(
+                                    title: "Soil Moisture",
+                                    content: plant.lastReceivedData,
+                                    icon: "drop.fill",
+                                    color: Color(red: 67/255, green: 137/255, blue: 124/255)
+                                )
+                            } else {
+                                HStack {
+                                    Image(systemName: "info.circle")
+                                        .foregroundColor(Color(.text).opacity(0.6))
+                                        .font(.system(size: 20))
+                                    Text("No soil moisture data available. Tap 'Fetch Latest Soil Moisture' to get current readings.")
+                                        .scaledFont("Lato-Regular", size: 16)
+                                        .foregroundColor(Color(.text).opacity(0.6))
+                                }
+                                .padding(20)
+                                .frame(maxWidth: .infinity)
+                                .background(Color(.care))
+                                .cornerRadius(18)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                    }
+                    
+                    // fetch data button
+                    VStack(spacing: 16) {
+                        Button(action: {
+                            wifiManager.fetchSmartPotData()
+                            // Update the current plant's data
+                            if let plantId = plant.id {
+                                authViewModel.updatePlantData(plantId: plantId, data: wifiManager.lastReceivedData)
+                            }
+                        }) {
+                            HStack {
+                                Image(systemName: "arrow.clockwise")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 18, weight: .medium))
+                                Text("Fetch Latest Soil Moisture")
+                                    .scaledFont("Lato-Bold", size: 18)
+                                    .foregroundColor(.white)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color(.tealShade))
+                            .cornerRadius(15)
+                        }
+                        .disabled(wifiManager.isSendingCommand)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
                     
                     // user's plant info
                     if !plant.wateringFrequency.isEmpty || !plant.wateringAmount.isEmpty || !plant.sunlightNeeds.isEmpty || !plant.careInstructions.isEmpty {

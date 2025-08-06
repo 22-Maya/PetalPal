@@ -328,7 +328,7 @@ class AuthViewModel: ObservableObject {
     func addPlant(name: String, plantPalName: String, type: PlantType, wateringFrequency: String, wateringAmount: String, sunlightNeeds: String, careInstructions: String) {
         guard let userId = user?.uid else { return }
         
-        let newPlant = Plant(name: name, plantPalName: plantPalName, type: type.rawValue, wateringFrequency: wateringFrequency, wateringAmount: wateringAmount, sunlightNeeds: sunlightNeeds, careInstructions: careInstructions)
+        let newPlant = Plant(name: name, plantPalName: plantPalName, type: type.rawValue, wateringFrequency: wateringFrequency, wateringAmount: wateringAmount, sunlightNeeds: sunlightNeeds, careInstructions: careInstructions, lastReceivedData: "")
         
         do {
             _ = try db.collection("users").document(userId).collection("plants").addDocument(from: newPlant)
@@ -345,6 +345,19 @@ class AuthViewModel: ObservableObject {
             try db.collection("users").document(userId).collection("plants").document(plantId).setData(from: plant)
         } catch {
             print("Error updating plant: \(error.localizedDescription)")
+        }
+    }
+    
+    /// Updates the last received data for a specific plant.
+    func updatePlantData(plantId: String, data: String) {
+        guard let userId = user?.uid else { return }
+        
+        db.collection("users").document(userId).collection("plants").document(plantId).updateData([
+            "lastReceivedData": data
+        ]) { error in
+            if let error = error {
+                print("Error updating plant data: \(error.localizedDescription)")
+            }
         }
     }
     
