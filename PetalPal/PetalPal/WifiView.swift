@@ -169,7 +169,6 @@ struct WifiView: View {
                 deviceAddressInput
                 plantInfoInput
                 connectionButtons
-                lastReceivedDataDisplay
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 18)
@@ -271,21 +270,7 @@ struct WifiView: View {
     
 
     
-    private var lastReceivedDataDisplay: some View {
-        VStack(alignment: .leading) {
-            Text("Last Received Data:")
-                .scaledFont("Lato-Bold", size: 18)
-                .padding(.top, 10)
-            Text(wifiManager.lastReceivedData)
-                .scaledFont("Lato-Regular", size: 16)
-                .foregroundColor(.black.opacity(0.8))
-                .padding(.horizontal)
-                .padding(.vertical, 5)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.white.opacity(0.7))
-                .cornerRadius(10)
-        }
-    }
+
 }
 
 #Preview {

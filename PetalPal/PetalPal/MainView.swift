@@ -144,21 +144,6 @@ struct MainView: View {
                     
                     // last received data section
                     VStack(alignment: .leading, spacing: 15) {
-                        HStack {
-                            Image(systemName: "drop.fill")
-                                .foregroundColor(Color(.tealShade))
-                                .font(.system(size: 24))
-                            Spacer()
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 15)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(Color(.info))
-                                .shadow(color: .gray.opacity(0.1), radius: 3, x: 0, y: 2)
-                        )
-                        .padding(.horizontal, 20)
-                        .padding(.top, 20)
                         
                         VStack(spacing: 16) {
                             if wifiManager.isSendingCommand {
