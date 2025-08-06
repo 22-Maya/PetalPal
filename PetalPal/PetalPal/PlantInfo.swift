@@ -1,7 +1,7 @@
 import Foundation
 
-// MARK: - Plant Info Model
-// This struct defines the structure for general plant information.
+// plant Info model
+// structure for general plant info
 struct PlantInfo {
     var name: String
     var type: String
@@ -11,7 +11,7 @@ struct PlantInfo {
     var notes: String?
 }
 
-// A simple data store for the general plant information.
+// general plant information.
 struct PlantInfoDatabase {
     static let allPlants: [PlantInfo] = [
         PlantInfo(
@@ -71,44 +71,12 @@ struct PlantInfoDatabase {
             notes: "Adding organic matter to soil can improve growth, but not too much. Check for pests/diseases."
         ),
         PlantInfo(
-            name: "Cilantro",
-            type: "Herb",
-            wateringDetails: "Keep soil consistently moist, water when top inch feels dry",
-            sunlight: "Full sun, but may need shade in hot climates",
-            soil: "Loose, loamy, well-draining soil, slightly acidic pH",
-            notes: "Thrives in cooler temperatures. Harvest by cutting stems near the base, pinch off flower stalks before they mature. Delay bolting by watering well, provide some shade, harvest frequently."
-        ),
-        PlantInfo(
-            name: "Lavender",
-            type: "Flower",
-            wateringDetails: "Water sparingly, allow soil to dry between waterings",
-            sunlight: "Full sun, 6-8 hours of direct sunlight daily",
-            soil: "Well-draining, sandy or gravelly soil with alkaline pH",
-            notes: "Prune after flowering to maintain shape. Avoid overwatering as it's drought-tolerant. Plant in raised beds or containers for better drainage."
-        ),
-        PlantInfo(
-            name: "Mint",
-            type: "Herb",
-            wateringDetails: "Keep soil consistently moist, water when top feels dry",
-            sunlight: "Partial shade to full sun, 4-6 hours of sunlight",
-            soil: "Rich, moist, well-draining soil",
-            notes: "Plant in containers to prevent spreading. Harvest regularly to promote bushier growth. Cut back before flowering for best flavor."
-        ),
-        PlantInfo(
-            name: "Bell Pepper",
-            type: "Vegetable",
-            wateringDetails: "1-2 inches per week, water when soil feels dry",
-            sunlight: "Full sun, 6-8 hours of direct sunlight",
-            soil: "Rich, well-draining soil with organic matter",
-            notes: "Support plants with stakes or cages. Fertilize regularly during growing season. Harvest when firm and fully colored."
-        ),
-        PlantInfo(
-            name: "Lemon Tree",
-            type: "Fruit",
-            wateringDetails: "Water deeply but infrequently, allow soil to dry between waterings",
-            sunlight: "Full sun, 8-12 hours of direct sunlight",
-            soil: "Well-draining, slightly acidic soil",
-            notes: "Protect from frost. Prune to maintain shape and remove dead wood. Fertilize with citrus-specific fertilizer."
+            name: "Cactus",
+            type: "Other",
+            wateringDetails: "Water deeply when the top inch is dry - every 1-2 weeks",
+            sunlight: "Direct sunlight, 4-6 hours",
+            soil: "Specialized cactus soil with excellent drainage & aeration",
+            notes: "Water infrequently and make sure it recieves plenty of sunlight"
         )
     ]
 

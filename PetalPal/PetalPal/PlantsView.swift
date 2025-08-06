@@ -68,8 +68,10 @@ struct PlantCardView: View {
             return Image(.herb)
         case "Fruit":
             return Image(.fruit)
+        case "Other":
+            return Image(.other)
         default:
-            return Image(.flower)
+            return Image(.other)
         }
     }
     

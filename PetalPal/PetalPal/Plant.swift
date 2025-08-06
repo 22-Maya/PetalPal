@@ -11,12 +11,11 @@ struct Plant: Identifiable, Codable, Hashable {
     var careInstructions: String
 }
 
-// This enum is used for UI pickers and can be kept as is.
 enum PlantType: String, Codable, Identifiable, CaseIterable {
     case fruit = "Fruit"
     case vegetable = "Vegetable"
     case herb = "Herb"
     case flower = "Flower"
-    
+    case other = "Other"
     var id: String { self.rawValue }
 }
