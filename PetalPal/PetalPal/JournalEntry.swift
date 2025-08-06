@@ -1,24 +1,10 @@
-import SwiftUI
-import Charts
-import SwiftData
-import FirebaseAuth
-import FirebaseCore
-import FirebaseAppCheck
+import Foundation
+import FirebaseFirestore
 
-//journal entry settings
-
-
-@Model
-final class JournalEntry {
-    @Attribute(.unique) let id: UUID
+struct JournalEntry: Identifiable, Codable, Hashable {
+    @DocumentID var id: String?
     var content: String
-    var date: Date
-    @Relationship(deleteRule: .nullify, inverse: \Plant.journalEntries) var plant: Plant?
-    
-    init(content: String, plant: Plant? = nil) {
-        self.id = UUID()
-        self.content = content
-        self.date = Date()
-        self.plant = plant
-    }
+    var date: Timestamp
+    var plantName: String?
 }
+

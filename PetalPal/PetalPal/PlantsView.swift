@@ -1,24 +1,12 @@
-//
-//  PlantsView.swift
-//  PetalPal
-//
-//  Created by Adishree Das on 7/22/25.
-//
-
 import SwiftUI
-import SwiftData
 
 struct PlantsView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var plants: [Plant]
-    
-    func deletePlant(_ plant: Plant) {
-        modelContext.delete(plant)
-    }
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                // Header
                 HStack {
                     Text("PetalPal")
                         .scaledFont("Prata-Regular", size: 28)
@@ -37,27 +25,20 @@ struct PlantsView: View {
                     }
                 }
                 .frame(height: 56)
-                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                .background(Color(.blueShade))
                 .padding(.bottom, 15)
                 
                 ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
-                    ], spacing: 20) {
-                        ForEach(plants) { plant in
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
+                        ForEach(authViewModel.plants) { plant in
                             ZStack(alignment: .topTrailing) {
-                                NavigationLink {
-                                    MainView(plant: plant)
-                                } label: {
+                                NavigationLink(destination: MainView(plant: plant)) {
                                     PlantCardView(plant: plant)
                                 }
                                 
-                                Button {
-                                    deletePlant(plant)
-                                } label: {
+                                Button(action: { authViewModel.deletePlant(plant: plant) }) {
                                     Image(systemName: "minus.circle.fill")
-                                        .foregroundColor(Color(.pink))
+                                        .foregroundColor(Color.red)
                                         .font(.system(size: 24))
                                 }
                                 .padding(8)
@@ -67,19 +48,59 @@ struct PlantsView: View {
                     }
                     .padding(.horizontal, 20)
                 }
-                
-                Spacer()
             }
             .navigationBarHidden(true)
-            .navigationBarBackButtonHidden(true)
-            .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
-            .scaledFont("Lato-Regular", size: 20)
-            .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+            .background(Color(.backgroundShade))
+        }
+    }
+}
+
+struct PlantCardView: View {
+    let plant: Plant
+    
+    private func getPlantImage(for type: String) -> Image {
+        switch type {
+        case "Flower":
+            return Image(.flower)
+        case "Vegetable":
+            return Image(.veggie)
+        case "Herb":
+            return Image(.herb)
+        case "Fruit":
+            return Image(.fruit)
+        default:
+            return Image(.flower)
+        }
+    }
+    
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 25)
+                .frame(height: 175)
+                .foregroundColor(Color(red: 173/255, green: 194/255, blue: 153/255))
+            
+            VStack(alignment: .leading) {
+                Text(plant.name)
+                    .scaledFont("Lato-Bold", size: 20)
+                Text(plant.type)
+                    .scaledFont("Lato-Regular", size: 16)
+                Spacer()
+                HStack {
+                    Spacer()
+                    getPlantImage(for: plant.type)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 85)
+                }
+            }
+            .padding()
+            .foregroundColor(Color(.text))
         }
     }
 }
 
 #Preview {
     PlantsView()
-        .modelContainer(for: Plant.self, inMemory: true)
+        .environmentObject(AuthViewModel())
+        .environmentObject(TextSizeManager.shared)
 }

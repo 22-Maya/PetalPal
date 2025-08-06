@@ -1,5 +1,4 @@
 import SwiftUI
-import SwiftData
 
 class WifiManager: ObservableObject {
     static let shared = WifiManager()
@@ -30,7 +29,6 @@ class WifiManager: ObservableObject {
                 self.connectionStatus = "Connected: You can now connect another pot"
                 self.isConnecting = false
                 self.lastReceivedData = "Temperature: 22°C\nHumidity: 65%\nSoil Moisture: 80%"
-                // Reset device address for next connection
                 self.deviceAddress = "http://192.168.1.100"
             } else {
                 self.errorMessage = "Failed to connect to \(fullAddress). Check the address or network."
@@ -72,8 +70,8 @@ class WifiManager: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             self?.isSendingCommand = false
             if fromSettings {
-                let message = isAutomatic ? 
-                    "Sent: your pot is now automatic, it will water for you." : 
+                let message = isAutomatic ?
+                    "Sent: your pot is now automatic, it will water for you." :
                     "Sent: your pot is now manual, you must water yourself"
                 self?.connectionStatus = message
             } else {
@@ -101,8 +99,9 @@ class WifiManager: ObservableObject {
 }
 
 struct WifiView: View {
-    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject var authViewModel: AuthViewModel
     @StateObject private var wifiManager = WifiManager.shared
+    
     @State private var newDeviceAddress: String = ""
     @State private var plantName = ""
     @State private var selectedType = PlantType.flower
@@ -120,11 +119,7 @@ struct WifiView: View {
                 Spacer()
             }
             .navigationBarHidden(true)
-            .toolbar(.hidden, for: .navigationBar)
-            .navigationBarBackButtonHidden(true)
-            .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
-            .scaledFont("Lato-Regular", size: 20)
-            .background(Color(red: 249/255, green: 248/255, blue: 241/255))
+            .background(Color(.backgroundShade))
         }
     }
     
@@ -132,7 +127,7 @@ struct WifiView: View {
         HStack {
             Text("PetalPal")
                 .scaledFont("Prata-Regular", size: 28)
-                .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                .foregroundColor(Color(.tealShade))
                 .padding(.leading, 20)
             Spacer()
             NavigationLink {
@@ -142,12 +137,12 @@ struct WifiView: View {
                 Image(systemName: "questionmark.circle")
                     .resizable()
                     .frame(width: 28, height: 28)
-                    .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                    .foregroundColor(Color(.greenShade))
                     .padding(.trailing, 20)
             }
         }
         .frame(height: 56)
-        .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+        .background(Color(.blueShade))
         .padding(.bottom, 15)
     }
     
@@ -241,11 +236,19 @@ struct WifiView: View {
                 .cornerRadius(15)
         }
         .disabled(wifiManager.isConnecting || plantName.isEmpty)
+        // MARK: - Firebase Integration
+        // This now calls the AuthViewModel to save the new plant to Firebase.
         .onChange(of: wifiManager.connectionStatus) { newStatus in
             if newStatus.contains("Connected") && !plantName.isEmpty {
-                // Create and save new plant
-                let newPlant = Plant(name: plantName, type: selectedType)
-                modelContext.insert(newPlant)
+                // Create and save the new plant via the AuthViewModel.
+                authViewModel.addPlant(
+                    name: plantName,
+                    type: selectedType,
+                    wateringFrequency: "",
+                    wateringAmount: "",
+                    sunlightNeeds: "",
+                    careInstructions: ""
+                )
                 
                 // Reset form for next plant
                 plantName = ""
@@ -287,5 +290,7 @@ struct WifiView: View {
 
 #Preview {
     WifiView()
-        .modelContainer(for: Plant.self, inMemory: true)
+        // The preview now provides the necessary environment objects.
+        .environmentObject(AuthViewModel())
+        .environmentObject(TextSizeManager.shared)
 }

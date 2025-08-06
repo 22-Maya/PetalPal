@@ -1,37 +1,35 @@
 import SwiftUI
-import SwiftData
 import FirebaseAuth
 import FirebaseCore
 import FirebaseAppCheck
 
 @main
 struct PetalPalApp: App {
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @StateObject private var textSizeManager = TextSizeManager.shared
+    @StateObject private var authViewModel = AuthViewModel()
     
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Plant.self,
-            PlantInfo.self,
-            SmartPot.self,
-            JournalEntry.self,
-            Pot.self,
-            UserProfile.self
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     var body: some Scene {
         WindowGroup {
-            AppRootView()
+            ContentView()
                 .environmentObject(textSizeManager)
+                .environmentObject(authViewModel)
         }
-        .modelContainer(sharedModelContainer)
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
+        #if DEBUG
+        let providerFactory = AppCheckDebugProviderFactory()
+        AppCheck.setAppCheckProviderFactory(providerFactory)
+        #endif
+        
+        FirebaseApp.configure()
+        
+        return true
     }
 }

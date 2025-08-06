@@ -1,35 +1,21 @@
 import SwiftUI
-import Charts
-import SwiftData
 import FirebaseAuth
-import FirebaseCore
-import FirebaseAppCheck
 
 struct MainView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
-    @Query private var plantDatabase: [PlantInfo]
-    
     let plant: Plant
     
-    // finds the plant info from PlantModel
     private var plantInfo: PlantInfo? {
-        plantDatabase.first { $0.name.lowercased() == plant.name.lowercased() }
+        PlantInfoDatabase.find(for: plant.name)
     }
     
-    // gets plant image based on type
     private func getPlantImage(for type: String) -> Image {
         switch type {
-        case "Flower":
-            return Image(.flower)
-        case "Vegetable":
-            return Image(.veggie)
-        case "Herb":
-            return Image(.herb)
-        case "Fruit":
-            return Image(.fruit)
-        default:
-            return Image(.flower)
+        case "Flower": return Image(.flower)
+        case "Vegetable": return Image(.veggie)
+        case "Herb": return Image(.herb)
+        case "Fruit": return Image(.fruit)
+        default: return Image(.flower)
         }
     }
     
@@ -43,7 +29,7 @@ struct MainView: View {
                 HStack {
                     Text("PetalPal")
                         .scaledFont("Prata-Regular", size: 28)
-                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .foregroundColor(Color(.tealShade))
                         .padding(.leading, 20)
                     Spacer()
                     NavigationLink{
@@ -53,23 +39,21 @@ struct MainView: View {
                         Image(systemName: "questionmark.circle")
                             .resizable()
                             .frame(width: 28, height: 28)
-                            .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                            .foregroundColor(Color(.greenShade))
                             .padding(.trailing, 20)
                     }
                 }
                 .frame(height: 56)
-                .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                .background(Color(.backgroundShade))
                 
                 // back button
                 HStack {
-                    Button(action: {
-                        dismiss()
-                    }) {
+                    Button(action: { dismiss() }) {
                         HStack {
                             Image(systemName: "chevron.left")
                             Text("Back")
                         }
-                        .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                        .foregroundColor(Color(.tealShade))
                         .scaledFont("Lato-Regular", size: 18)
                     }
                     .padding(.leading, 20)
@@ -86,15 +70,15 @@ struct MainView: View {
                         
                         Text(plant.name)
                             .scaledFont("Prata-Regular", size: 50)
-                            .foregroundColor(.black)
+                            .foregroundColor(.text)
                         
                         Text(plant.type)
                             .scaledFont("Lato-Regular", size: 25)
-                            .foregroundColor(.black.opacity(0.7))
+                            .foregroundColor(.text.opacity(0.7))
                     }
                     .padding(.top, 30)
                     
-                    // user's plant info
+                    // User's plant info
                     if !plant.wateringFrequency.isEmpty || !plant.wateringAmount.isEmpty || !plant.sunlightNeeds.isEmpty || !plant.careInstructions.isEmpty {
                         VStack(alignment: .leading, spacing: 20) {
                             // Header for user's custom info
@@ -155,9 +139,8 @@ struct MainView: View {
                         }
                     }
                     
-                    // plant care details
+                    // General plant care details
                     VStack(alignment: .leading, spacing: 25) {
-                        
                         // Header with icon
                         HStack {
                             Image(systemName: "info.circle.fill")
@@ -254,11 +237,6 @@ struct MainView: View {
         .foregroundStyle(Color(red: 13/255, green: 47/255, blue: 68/255))
         .scaledFont("Lato-Regular", size: 20)
         .background(Color(red: 249/255, green: 248/255, blue: 241/255))
-        .onAppear {
-            if plantDatabase.isEmpty {
-                PlantInfo.populateDatabase(modelContext: modelContext)
-            }
-        }
     }
 }
 
@@ -315,7 +293,8 @@ struct CareDetailSection: View {
 
 #Preview {
     NavigationStack {
-        MainView(plant: Plant(name: "Basil", type: .herb))
+        // The preview now correctly creates a Plant object.
+        MainView(plant: Plant(name: "Basil", type: "Herb", wateringFrequency: "Daily", wateringAmount: "1 cup", sunlightNeeds: "Full Sun", careInstructions: "Prune often"))
     }
-    .modelContainer(for: [Plant.self, PlantInfo.self], inMemory: true)
+    // The modelContainer is no longer needed here.
 }

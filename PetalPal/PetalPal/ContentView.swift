@@ -4,10 +4,8 @@ import SwiftData
 import FirebaseAuth
 
 struct ContentView: View {
-    @StateObject private var authViewModel = AuthViewModel()
+    @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var textSizeManager: TextSizeManager
-    
-    // The local 'tasks' state has been removed, as tasks are now managed by AuthViewModel.
     
     @State private var wateringData: [WateringStatus] = [
         .init(status: "Watered on time", count: 70, color: Color(.blueShade)),
@@ -56,7 +54,7 @@ struct ContentView: View {
                     HStack {
                         Text("PetalPal")
                             .scaledFont("Prata-Regular", size: 28)
-                            .foregroundColor(Color(red: 67/255, green: 137/255, blue: 124/255))
+                            .foregroundColor(Color(.tealShade))
                             .padding(.leading, 20)
                         Spacer()
                         NavigationLink {
@@ -66,20 +64,18 @@ struct ContentView: View {
                             Image(systemName: "questionmark.circle")
                                 .resizable()
                                 .frame(width: 28, height: 28)
-                                .foregroundColor(Color(red: 0/255, green: 122/255, blue: 69/255))
+                                .foregroundColor(Color(.greenShade))
                                 .padding(.trailing, 20)
                         }
                     }
                     .frame(height: 56)
-                    .background(Color(red: 174/255, green: 213/255, blue: 214/255))
+                    .background(Color(.blueShade))
                     .padding(.bottom, 15)
 
                     ScrollView {
                         VStack(spacing: 30) {
-                            // MARK: - Corrected To-Do List
-                            // The TodoListView now correctly gets its data from the environment.
                             TodoListView()
-                                .padding()
+                                .padding(.horizontal, 30)
                             
                             VStack(alignment: .leading, spacing: 20) {
                                 Text("Watering Overview")
@@ -87,9 +83,16 @@ struct ContentView: View {
                                     .padding(.top, 16)
                                     .padding(.leading, 20)
                                 
-                                PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
-                                    .frame(width: 200, height: 200)
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                if totalWaterings > 0 {
+                                    PieChartView(data: wateringData, selectedStatusID: $selectedStatusID, totalValue: totalWaterings)
+                                        .frame(width: 200, height: 200)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                } else {
+                                    Text("No watering data available yet.")
+                                        .scaledFont("Lato-Regular", size: 16)
+                                        .frame(width: 200, height: 200, alignment: .center)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                }
                                 
                                 VStack(alignment: .leading, spacing: 12) {
                                     ForEach(wateringData) { dataPoint in
@@ -114,8 +117,7 @@ struct ContentView: View {
                                 RoundedRectangle(cornerRadius: 25)
                                     .fill(Color(.info))
                             )
-                            .padding(.leading, 30)
-                            .padding(.trailing, 30)
+                            .padding(.horizontal, 30)
                         }
                         .padding(.top, 10)
                     }
@@ -127,7 +129,45 @@ struct ContentView: View {
                     }
                 }
 
-                // ... (rest of your TabView items)
+                PlantsView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "leaf.fill")
+                            Text("Plants")
+                        }
+                    }
+
+                WifiView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "plus.app.fill")
+                            Text("Add")
+                        }
+                    }
+
+                JournalView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "book.fill")
+                            Text("Journal")
+                        }
+                    }
+
+                ProfileView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(textSizeManager)
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "person.crop.circle.fill")
+                            Text("Profile")
+                        }
+                    }
             }
             .environmentObject(authViewModel)
             .foregroundStyle(Color(.text))
@@ -138,11 +178,4 @@ struct ContentView: View {
                 .environmentObject(authViewModel)
         }
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: [Plant.self, PlantInfo.self, SmartPot.self, JournalEntry.self, Pot.self, UserProfile.self], inMemory: true)
-        .environmentObject(AuthViewModel())
-        .environmentObject(TextSizeManager.shared)
 }
