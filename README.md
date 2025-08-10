@@ -1,5 +1,7 @@
 # PetalPal
 
+VIDEO DEMO: https://youtu.be/GzzdjZqq4YE
+
 PetalPal is a smart plant pot connected to a companion app that allows novice gardeners to learn about planting and enables busy gardeners to avoid worrying about watering schedules.
 
 I renamed this project halfway through, the other project is Petal Pal.
