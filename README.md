@@ -9,7 +9,17 @@ PetalPal is a smart plant pot system paired with a companion iOS app that helps 
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green.svg">
 </p>
 
+<p align="center">
+  <a href="https://www.canva.com/design/DAGt6AVYIB4/-r9frlrhGgifQqxNvLB5-g/view">View the Business Pitch Deck</a>
+</p>
+
 ---
+
+## Business Pitch Deck
+
+For a full overview of the product vision, market positioning, and business model behind PetalPal, see the pitch deck:
+
+**[PetalPal Pitch Deck →](https://www.canva.com/design/DAGt6AVYIB4/-r9frlrhGgifQqxNvLB5-g/view)**
 
 ## Features
 
@@ -60,15 +70,14 @@ struct PetalPalApp: App {
 
 Once running, the app connects to a paired smart pot to surface plant status, watering reminders, and care guidance.
 
-For a product overview, see the [PetalPal pitch deck](https://www.canva.com/design/DAGt6AVYIB4/-r9frlrhGgifQqxNvLB5-g/view).
-
 ## Contributing
 
-This project is maintained as a personal and academic effort. Guidelines for external contributions are not currently defined.
+This project is maintained as a personal and academic effort.
 
 ## License
 
 This project is licensed under the MIT License.
 
 ---
+
 <p align="center">Designed and developed by Maya Itskovich</p>
