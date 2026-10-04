@@ -23,7 +23,7 @@ For a full overview of the product vision, market positioning, and business mode
 
 ## Features
 
-- **Smart Pot Integration** — The app pairs with a connected smart pot to provide guided, hardware-informed plant care.
+- **Smart Pot Integration** — The app pairs with a connected smart pot via ESP32 microcontroller to provide guided, hardware-informed plant care.
 - **Beginner-Friendly Guidance** — Clear explanations and care tips designed for users new to plant ownership.
 - **Watering Reminders and Tracking** — Simple scheduling and tracking to help busy users stay on top of plant maintenance.
 - **Modular Architecture** — A clean, modular codebase structured to support future feature expansion.
@@ -80,4 +80,4 @@ This project is licensed under the MIT License.
 
 ---
 
-<p align="center">Designed and developed by Maya Itskovich</p>
+<p align="center">Designed and developed by Maya Itskovich & Adishree Das</p>
